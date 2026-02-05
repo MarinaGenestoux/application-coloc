@@ -1,4 +1,5 @@
-﻿import { createContext, useContext, useState, useEffect, useCallback } from 'react';
+/* eslint-disable react-refresh/only-export-components */
+import { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import type { ReactNode } from 'react';
 import { colocationApi } from '../api';
 import type { Colocation, ColocationWithMembers } from '../types';
@@ -25,6 +26,7 @@ export function ColocationProvider({ children }: { children: ReactNode }) {
   const [currentColocation, setCurrentColocation] = useState<ColocationWithMembers | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const hasAutoSelected = useRef(false);
 
   const refreshColocations = useCallback(async () => {
     if (!isAuthenticated) return;
@@ -35,15 +37,14 @@ export function ColocationProvider({ children }: { children: ReactNode }) {
       const data = await colocationApi.list();
       setColocations(data);
 
-      // Auto-select saved colocation or first one
-      const savedId = localStorage.getItem(CURRENT_COLOC_KEY);
-      if (savedId && data.some((c) => c.id === savedId)) {
-        const full = await colocationApi.get(savedId);
+      // Auto-select saved colocation or first one (only once)
+      if (!hasAutoSelected.current && data.length > 0) {
+        hasAutoSelected.current = true;
+        const savedId = localStorage.getItem(CURRENT_COLOC_KEY);
+        const targetId = savedId && data.some((c) => c.id === savedId) ? savedId : data[0].id;
+        const full = await colocationApi.get(targetId);
         setCurrentColocation(full);
-      } else if (data.length > 0 && !currentColocation) {
-        const full = await colocationApi.get(data[0].id);
-        setCurrentColocation(full);
-        localStorage.setItem(CURRENT_COLOC_KEY, data[0].id);
+        localStorage.setItem(CURRENT_COLOC_KEY, targetId);
       }
     } catch (err) {
       setError('Erreur lors du chargement des colocations');
@@ -51,9 +52,9 @@ export function ColocationProvider({ children }: { children: ReactNode }) {
     } finally {
       setIsLoading(false);
     }
-  }, [isAuthenticated, currentColocation]);
+  }, [isAuthenticated]);
 
-  const selectColocation = async (id: string) => {
+  const selectColocation = useCallback(async (id: string) => {
     setIsLoading(true);
     try {
       const full = await colocationApi.get(id);
@@ -65,9 +66,9 @@ export function ColocationProvider({ children }: { children: ReactNode }) {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
-  const refreshCurrentColocation = async () => {
+  const refreshCurrentColocation = useCallback(async () => {
     if (!currentColocation) return;
     try {
       const full = await colocationApi.get(currentColocation.id);
@@ -75,7 +76,7 @@ export function ColocationProvider({ children }: { children: ReactNode }) {
     } catch (err) {
       console.error(err);
     }
-  };
+  }, [currentColocation]);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -83,8 +84,9 @@ export function ColocationProvider({ children }: { children: ReactNode }) {
     } else {
       setColocations([]);
       setCurrentColocation(null);
+      hasAutoSelected.current = false;
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, refreshColocations]);
 
   return (
     <ColocationContext.Provider

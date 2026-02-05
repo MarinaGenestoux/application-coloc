@@ -12,14 +12,14 @@ service UserService {
   // Get current user profile
   rpc GetCurrentUser(GetCurrentUserRequest) returns (User) {
     option (google.api.http) = {
-      get: "/api/users/me"
+      get: "/api/me"
     };
   }
 
   // Update current user profile
   rpc UpdateCurrentUser(UpdateUserRequest) returns (User) {
     option (google.api.http) = {
-      put: "/api/users/me"
+      put: "/api/me"
       body: "*"
     };
   }
@@ -27,7 +27,7 @@ service UserService {
   // Delete current user account
   rpc DeleteCurrentUser(DeleteCurrentUserRequest) returns (DeleteUserResponse) {
     option (google.api.http) = {
-      delete: "/api/users/me"
+      delete: "/api/me"
     };
   }
 

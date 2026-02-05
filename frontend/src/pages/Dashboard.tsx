@@ -1,3 +1,4 @@
+import type React from 'react';
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import {
@@ -8,6 +9,11 @@ import {
   ArrowRight,
   Plus,
   Calendar,
+  Copy,
+  RefreshCcw,
+  KeyRound,
+  LogIn,
+  Check,
 } from 'lucide-react';
 import {
   AreaChart,
@@ -22,6 +28,7 @@ import {
   Cell,
 } from 'recharts';
 import { useColocation } from '../context/ColocationContext';
+import { useBalanceRefresh } from '../context/BalanceRefreshContext';
 import { useAuth } from '../context/AuthContext';
 import { expenseApi, balanceApi, categoryApi, colocationApi } from '../api';
 import {
@@ -42,7 +49,8 @@ import type { Expense, UserBalance, CategoryStat, SimplifiedDebt } from '../type
 
 export function Dashboard() {
   const { user } = useAuth();
-  const { currentColocation, refreshColocations } = useColocation();
+  const { currentColocation, refreshColocations, refreshCurrentColocation } = useColocation();
+  const { refreshKey } = useBalanceRefresh();
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [balances, setBalances] = useState<UserBalance[]>([]);
   const [categoryStats, setCategoryStats] = useState<CategoryStat[]>([]);
@@ -52,22 +60,48 @@ export function Dashboard() {
   const [isCreating, setIsCreating] = useState(false);
   const [createError, setCreateError] = useState('');
   const [createForm, setCreateForm] = useState({ name: '', description: '', address: '' });
+  const [joinCode, setJoinCode] = useState('');
+  const [joinError, setJoinError] = useState('');
+  const [joinSuccess, setJoinSuccess] = useState(false);
+  const [isJoining, setIsJoining] = useState(false);
+  const [copyStatus, setCopyStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const inviteCode =
+    currentColocation?.invite_code ??
+    (currentColocation && 'inviteCode' in currentColocation
+      ? (currentColocation as { inviteCode?: string }).inviteCode ?? ''
+      : '');
+  const displayInviteCode = inviteCode ? inviteCode.toUpperCase() : '';
+  const canCopyInviteCode = Boolean(inviteCode);
+  const [isRegeneratingCode, setIsRegeneratingCode] = useState(false);
+
+  const colocationId = currentColocation?.id;
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!currentColocation) return;
+      if (!colocationId) return;
       setIsLoading(true);
       try {
-        const [expensesRes, balancesRes, statsRes, debtsRes] = await Promise.all([
-          expenseApi.list({ colocation_id: currentColocation.id, per_page: 5 }),
-          balanceApi.getBalances(currentColocation.id),
-          categoryApi.getStats({ colocation_id: currentColocation.id }),
-          balanceApi.getSimplifiedDebts(currentColocation.id),
+        // Fetch expenses and categories (these work)
+        const [expensesRes, statsRes] = await Promise.all([
+          expenseApi.list({ colocation_id: colocationId, per_page: 5 }),
+          categoryApi.getStats({ colocation_id: colocationId }),
         ]);
         setExpenses(expensesRes.expenses);
-        setBalances(balancesRes);
         setCategoryStats(statsRes);
-        setDebts(debtsRes);
+
+        // Try to fetch balances (may fail if payments table missing)
+        try {
+          const [balancesRes, debtsRes] = await Promise.all([
+            balanceApi.getBalances(colocationId),
+            balanceApi.getSimplifiedDebts(colocationId),
+          ]);
+          setBalances(balancesRes);
+          setDebts(debtsRes);
+        } catch {
+          // Silently ignore balance errors (table may not exist)
+          setBalances([]);
+          setDebts([]);
+        }
       } catch (error) {
         console.error('Error fetching dashboard data:', error);
       } finally {
@@ -75,7 +109,7 @@ export function Dashboard() {
       }
     };
     fetchData();
-  }, [currentColocation]);
+  }, [colocationId, refreshKey]);
 
   const userBalance = balances.find((b) => b.user_id === user?.id);
   const totalExpenses = expenses.reduce((sum, e) => sum + e.amount, 0);
@@ -116,6 +150,84 @@ export function Dashboard() {
     }
   };
 
+  const handleJoinCodeChange = (value: string) => {
+    const normalized = value.replace(/\s+/g, '').toUpperCase();
+    setJoinCode(normalized);
+    setJoinError('');
+    setJoinSuccess(false);
+  };
+
+  const handleJoinColocation = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!joinCode.trim()) {
+      setJoinError('Le code est obligatoire');
+      return;
+    }
+    setIsJoining(true);
+    setJoinError('');
+    setJoinSuccess(false);
+    try {
+      await colocationApi.join(joinCode.trim().toLowerCase());
+      setJoinCode('');
+      setJoinSuccess(true);
+      setTimeout(() => setJoinSuccess(false), 3000);
+      await refreshColocations();
+    } catch (error) {
+      console.error('Erreur lors de la tentative de rejoindre la colocation:', error);
+      setJoinError('Code invalide ou invitation expirée.');
+    } finally {
+      setIsJoining(false);
+    }
+  };
+
+  const handleCopyInviteCode = async () => {
+    if (!inviteCode) return;
+    const code = inviteCode;
+    try {
+      let copied = false;
+      if (navigator?.clipboard?.writeText) {
+        await navigator.clipboard.writeText(code);
+        copied = true;
+      } else {
+        const textArea = document.createElement('textarea');
+        textArea.value = code;
+        textArea.setAttribute('readonly', '');
+        textArea.style.position = 'fixed';
+        textArea.style.left = '-9999px';
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        copied = document.execCommand('copy');
+        document.body.removeChild(textArea);
+      }
+
+      if (!copied) {
+        throw new Error('copy command failed');
+      }
+
+      setCopyStatus('success');
+      setTimeout(() => setCopyStatus('idle'), 2500);
+    } catch (error) {
+      console.error('Impossible de copier le code:', error);
+      setCopyStatus('error');
+      setTimeout(() => setCopyStatus('idle'), 4000);
+    }
+  };
+
+  const handleRegenerateInviteCode = async () => {
+    if (!currentColocation) return;
+    setIsRegeneratingCode(true);
+    try {
+      await colocationApi.regenerateInviteCode(currentColocation.id);
+      await refreshCurrentColocation();
+      setCopyStatus('idle');
+    } catch (error) {
+      console.error('Impossible de regenerer le code:', error);
+    } finally {
+      setIsRegeneratingCode(false);
+    }
+  };
+
   // No colocation state
   if (!currentColocation) {
     return (
@@ -130,6 +242,43 @@ export function Dashboard() {
             icon: <Plus className="w-5 h-5" />,
           }}
         />
+
+        <Card padding="lg" elevation="flat" className="max-w-md mx-auto w-full mt-4">
+          <div className="space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center">
+                <KeyRound className="w-5 h-5" />
+              </div>
+              <div>
+                <p className="text-base sm:text-lg font-semibold text-slate-800">Rejoindre une colocation</p>
+                <p className="text-sm text-slate-500">
+                  Utilisez le code partagé par vos colocataires pour les rejoindre.
+                </p>
+              </div>
+            </div>
+            <form className="space-y-4" onSubmit={handleJoinColocation}>
+              <Input
+                label="Code d'invitation"
+                placeholder="Ex : ABCD1234"
+                value={joinCode}
+                onChange={(e) => handleJoinCodeChange(e.target.value)}
+                error={joinError}
+                autoComplete="off"
+              />
+              {joinSuccess && (
+                <p className="text-sm text-emerald-600 flex items-center gap-1">
+                  <Check className="w-4 h-4" />
+                  Rejoint avec succès !
+                </p>
+              )}
+              <div className="flex justify-end">
+                <Button type="submit" leftIcon={<LogIn className="w-4 h-4" />} isLoading={isJoining}>
+                  Rejoindre la colocation
+                </Button>
+              </div>
+            </form>
+          </div>
+        </Card>
 
         <Modal
           isOpen={isCreateModalOpen}
@@ -228,6 +377,104 @@ export function Dashboard() {
           Nouvelle dépense
         </Button>
       </div>
+
+      <Card padding="md" elevation="flat" className="bg-primary/5 border border-primary/10">
+        <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+          <div className="space-y-2">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-2xl bg-white border border-primary/20 text-primary flex items-center justify-center">
+                <KeyRound className="w-5 h-5" />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-primary">Code d'invitation</p>
+                <p className="text-sm text-slate-500">Partagez ce code pour inviter de nouveaux colocataires.</p>
+              </div>
+            </div>
+            <Input
+              label="Code actuel"
+              value={displayInviteCode}
+              readOnly
+              placeholder="Code en cours de génération"
+              onFocus={(e) => e.target.select()}
+              className="font-mono tracking-[0.35em] uppercase"
+            />
+            {copyStatus === 'success' && (
+              <p className="text-sm text-emerald-600 flex items-center gap-1">
+                <Check className="w-4 h-4" />
+                Code copié !
+              </p>
+            )}
+            {copyStatus === 'error' && (
+              <p className="text-sm text-red-500">
+                Impossible de copier automatiquement. Sélectionnez le code et faites Ctrl+C.
+              </p>
+            )}
+          </div>
+          <div className="flex flex-col sm:flex-row gap-2">
+            <Button
+              variant="secondary"
+              leftIcon={<Copy className="w-4 h-4" />}
+              onClick={handleCopyInviteCode}
+              disabled={!canCopyInviteCode}
+            >
+              {copyStatus === 'success' ? 'Code copié' : 'Copier le code'}
+            </Button>
+            <Button
+              variant="ghost"
+              leftIcon={<RefreshCcw className="w-4 h-4" />}
+              onClick={handleRegenerateInviteCode}
+              isLoading={isRegeneratingCode}
+              disabled={!currentColocation}
+            >
+              Régénérer
+            </Button>
+          </div>
+        </div>
+      </Card>
+
+      <Card padding="md" elevation="flat" className="border border-primary/10">
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div className="flex items-start gap-3">
+            <div className="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
+              <LogIn className="w-5 h-5" />
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-slate-800">Rejoindre une autre colocation</p>
+              <p className="text-sm text-slate-500">
+                Collez ci-dessous un code reçu pour accéder instantanément à une nouvelle coloc.
+              </p>
+            </div>
+          </div>
+          <form className="flex flex-col sm:flex-row gap-3 w-full md:max-w-md" onSubmit={handleJoinColocation}>
+            <div className="flex-1">
+              <Input
+                label="Code d'invitation"
+                placeholder="Ex : ABCD1234"
+                value={joinCode}
+                onChange={(e) => handleJoinCodeChange(e.target.value)}
+                error={joinError}
+                autoComplete="off"
+              />
+              {joinSuccess && (
+                <p className="text-sm text-emerald-600 flex items-center gap-1 mt-2">
+                  <Check className="w-4 h-4" />
+                  Rejoint avec succès !
+                </p>
+              )}
+            </div>
+            <div className="sm:self-end">
+              <Button
+                type="submit"
+                leftIcon={<LogIn className="w-4 h-4" />}
+                isLoading={isJoining}
+                disabled={!joinCode || isJoining}
+              >
+                Rejoindre
+              </Button>
+            </div>
+          </form>
+        </div>
+      </Card>
 
       {/* Stats Grid */}
       <motion.div

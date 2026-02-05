@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Plus,
@@ -6,15 +6,14 @@ import {
   Filter,
   Receipt,
   Calendar,
-  ChevronDown,
   Trash2,
   Edit2,
 } from 'lucide-react';
 import { useColocation } from '../context/ColocationContext';
+import { useBalanceRefresh } from '../context/BalanceRefreshContext';
 import { expenseApi, categoryApi } from '../api';
 import {
   Card,
-  CardHeader,
   Button,
   Input,
   Badge,
@@ -29,12 +28,17 @@ import type { Expense, Category, SplitType } from '../types';
 
 export function Expenses() {
   const { currentColocation } = useColocation();
+  const { triggerRefresh, refreshKey } = useBalanceRefresh();
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSavingExpense, setIsSavingExpense] = useState(false);
+  const [deletingExpenseId, setDeletingExpenseId] = useState<string | null>(null);
+  const isSavingExpenseRef = useRef(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [showNewExpenseModal, setShowNewExpenseModal] = useState(false);
+  const [categoryFieldError, setCategoryFieldError] = useState('');
 
   const [newExpense, setNewExpense] = useState({
     title: '',
@@ -45,25 +49,47 @@ export function Expenses() {
     description: '',
   });
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!currentColocation) return;
-      setIsLoading(true);
-      try {
-        const [expensesRes, categoriesRes] = await Promise.all([
-          expenseApi.list({ colocation_id: currentColocation.id }),
-          categoryApi.list(currentColocation.id),
-        ]);
-        setExpenses(expensesRes.expenses);
-        setCategories(categoriesRes);
-      } catch (error) {
-        console.error('Error fetching expenses:', error);
-      } finally {
-        setIsLoading(false);
+  const resetExpenseForm = () => {
+    setNewExpense({
+      title: '',
+      amount: '',
+      category_id: '',
+      split_type: 'equal' as SplitType,
+      expense_date: new Date().toISOString().split('T')[0],
+      description: '',
+    });
+    setCategoryFieldError('');
+  };
+
+  const loadExpensesAndCategories = useCallback(async () => {
+    const colocationId = currentColocation?.id;
+    if (!colocationId) return;
+    setIsLoading(true);
+    try {
+      const [expensesResult, categoriesResult] = await Promise.allSettled([
+        expenseApi.list({ colocation_id: colocationId }),
+        categoryApi.list(colocationId),
+      ]);
+
+      if (expensesResult.status === 'fulfilled') {
+        setExpenses(expensesResult.value.expenses);
+      } else {
+        console.error('Error fetching expenses:', expensesResult.reason);
       }
-    };
-    fetchData();
-  }, [currentColocation]);
+
+      if (categoriesResult.status === 'fulfilled') {
+        setCategories(categoriesResult.value);
+      } else {
+        console.error('Error fetching categories:', categoriesResult.reason);
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  }, [currentColocation?.id]);
+
+  useEffect(() => {
+    loadExpensesAndCategories();
+  }, [loadExpensesAndCategories, refreshKey]);
 
   const filteredExpenses = expenses.filter((expense) => {
     const matchesSearch = expense.title.toLowerCase().includes(searchQuery.toLowerCase());
@@ -73,7 +99,14 @@ export function Expenses() {
 
   const handleCreateExpense = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!currentColocation) return;
+    if (!currentColocation || isSavingExpenseRef.current) return;
+    if (!newExpense.category_id) {
+      setCategoryFieldError('La catégorie est obligatoire');
+      return;
+    }
+
+    isSavingExpenseRef.current = true;
+    setIsSavingExpense(true);
     try {
       const expense = await expenseApi.create({
         colocation_id: currentColocation.id,
@@ -84,18 +117,33 @@ export function Expenses() {
         expense_date: newExpense.expense_date,
         description: newExpense.description || undefined,
       });
-      setExpenses([expense, ...expenses]);
-      setShowNewExpenseModal(false);
-      setNewExpense({
-        title: '',
-        amount: '',
-        category_id: '',
-        split_type: 'equal',
-        expense_date: new Date().toISOString().split('T')[0],
-        description: '',
+      setCategoryFieldError('');
+      setExpenses((prev) => {
+        const remaining = prev.filter((existing) => existing.id !== expense.id);
+        return [expense, ...remaining];
       });
+      triggerRefresh();
+      setShowNewExpenseModal(false);
+      resetExpenseForm();
     } catch (error) {
       console.error('Error creating expense:', error);
+    } finally {
+      isSavingExpenseRef.current = false;
+      setIsSavingExpense(false);
+    }
+  };
+
+  const handleDeleteExpense = async (expenseId: string) => {
+    if (!currentColocation || deletingExpenseId) return;
+    setDeletingExpenseId(expenseId);
+    try {
+      await expenseApi.delete(currentColocation.id, expenseId);
+      setExpenses((prev) => prev.filter((expense) => expense.id !== expenseId));
+      triggerRefresh();
+    } catch (error) {
+      console.error('Error deleting expense:', error);
+    } finally {
+      setDeletingExpenseId(null);
     }
   };
 
@@ -271,7 +319,11 @@ export function Expenses() {
                     <button className="p-2 sm:p-3 rounded-lg sm:rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-all duration-200">
                       <Edit2 className="w-4 h-4 sm:w-5 sm:h-5" />
                     </button>
-                    <button className="p-2 sm:p-3 rounded-lg sm:rounded-xl text-slate-400 hover:text-red-500 hover:bg-red-50 transition-all duration-200">
+                    <button
+                      className="p-2 sm:p-3 rounded-lg sm:rounded-xl text-slate-400 hover:text-red-500 hover:bg-red-50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                      onClick={() => handleDeleteExpense(expense.id)}
+                      disabled={deletingExpenseId === expense.id}
+                    >
                       <Trash2 className="w-4 h-4 sm:w-5 sm:h-5" />
                     </button>
                   </div>
@@ -285,7 +337,10 @@ export function Expenses() {
       {/* New Expense Modal */}
       <Modal
         isOpen={showNewExpenseModal}
-        onClose={() => setShowNewExpenseModal(false)}
+        onClose={() => {
+          setShowNewExpenseModal(false);
+          resetExpenseForm();
+        }}
         title="Nouvelle dépense"
         size="lg"
       >
@@ -311,11 +366,17 @@ export function Expenses() {
               label="Catégorie"
               options={categories.map((cat) => ({
                 value: cat.id,
-                label: `${cat.icon} ${cat.name}`,
+                label: cat.name,
               }))}
               value={newExpense.category_id}
-              onChange={(value) => setNewExpense({ ...newExpense, category_id: value })}
+              onChange={(value) => {
+                setNewExpense({ ...newExpense, category_id: value });
+                setCategoryFieldError('');
+              }}
               placeholder="Sélectionner..."
+              error={categoryFieldError}
+              disabled={categories.length === 0}
+              hint={categories.length === 0 ? 'Aucune catégorie disponible pour le moment.' : undefined}
             />
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -348,10 +409,19 @@ export function Expenses() {
             />
           </div>
           <div className="flex justify-end gap-3 pt-4">
-            <Button type="button" variant="secondary" onClick={() => setShowNewExpenseModal(false)}>
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={() => {
+                setShowNewExpenseModal(false);
+                resetExpenseForm();
+              }}
+            >
               Annuler
             </Button>
-            <Button type="submit">Créer la dépense</Button>
+            <Button type="submit" isLoading={isSavingExpense} disabled={isSavingExpense}>
+              Créer la dépense
+            </Button>
           </div>
         </form>
       </Modal>

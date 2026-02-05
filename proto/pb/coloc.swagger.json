@@ -1349,7 +1349,7 @@
         ]
       }
     },
-    "/api/users/me": {
+    "/api/me": {
       "get": {
         "summary": "Get current user profile",
         "operationId": "UserService_GetCurrentUser",
@@ -1711,14 +1711,6 @@
         }
       }
     },
-    "colocCancelPaymentResponse": {
-      "type": "object",
-      "properties": {
-        "success": {
-          "type": "boolean"
-        }
-      }
-    },
     "colocCategory": {
       "type": "object",
       "properties": {
@@ -1856,24 +1848,6 @@
         }
       }
     },
-    "colocContributorSummary": {
-      "type": "object",
-      "properties": {
-        "userId": {
-          "type": "string"
-        },
-        "userNom": {
-          "type": "string"
-        },
-        "userPrenom": {
-          "type": "string"
-        },
-        "totalContributed": {
-          "type": "number",
-          "format": "double"
-        }
-      }
-    },
     "colocCreateColocationRequest": {
       "type": "object",
       "properties": {
@@ -1931,47 +1905,7 @@
         }
       }
     },
-    "colocDeleteContributionResponse": {
-      "type": "object",
-      "properties": {
-        "success": {
-          "type": "boolean"
-        }
-      }
-    },
-    "colocDeleteDecisionResponse": {
-      "type": "object",
-      "properties": {
-        "success": {
-          "type": "boolean"
-        }
-      }
-    },
-    "colocDeleteEventResponse": {
-      "type": "object",
-      "properties": {
-        "success": {
-          "type": "boolean"
-        }
-      }
-    },
     "colocDeleteExpenseResponse": {
-      "type": "object",
-      "properties": {
-        "success": {
-          "type": "boolean"
-        }
-      }
-    },
-    "colocDeleteFundResponse": {
-      "type": "object",
-      "properties": {
-        "success": {
-          "type": "boolean"
-        }
-      }
-    },
-    "colocDeleteNotificationResponse": {
       "type": "object",
       "properties": {
         "success": {
@@ -2168,60 +2102,6 @@
         }
       }
     },
-    "colocGetParticipantsResponse": {
-      "type": "object",
-      "properties": {
-        "participants": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/colocEventParticipant"
-          }
-        },
-        "goingCount": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "maybeCount": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "notGoingCount": {
-          "type": "integer",
-          "format": "int32"
-        }
-      }
-    },
-    "colocGetResultsResponse": {
-      "type": "object",
-      "properties": {
-        "decisionId": {
-          "type": "string"
-        },
-        "status": {
-          "$ref": "#/definitions/colocDecisionStatus"
-        },
-        "results": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/colocOptionResult"
-          }
-        },
-        "totalVotes": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "totalVoters": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "winningOptionIndex": {
-          "type": "integer",
-          "format": "int32"
-        }
-      }
-    },
     "colocGetSimplifiedDebtsResponse": {
       "type": "object",
       "properties": {
@@ -2231,15 +2111,6 @@
             "type": "object",
             "$ref": "#/definitions/colocSimplifiedDebt"
           }
-        }
-      }
-    },
-    "colocGetUnreadCountResponse": {
-      "type": "object",
-      "properties": {
-        "count": {
-          "type": "integer",
-          "format": "int32"
         }
       }
     },
@@ -2320,66 +2191,6 @@
         }
       }
     },
-    "colocListContributionsResponse": {
-      "type": "object",
-      "properties": {
-        "contributions": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/colocContribution"
-          }
-        }
-      }
-    },
-    "colocListDecisionsResponse": {
-      "type": "object",
-      "properties": {
-        "decisions": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/colocDecision"
-          }
-        },
-        "totalCount": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "page": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "pageSize": {
-          "type": "integer",
-          "format": "int32"
-        }
-      }
-    },
-    "colocListEventsResponse": {
-      "type": "object",
-      "properties": {
-        "events": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/colocEvent"
-          }
-        },
-        "totalCount": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "page": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "pageSize": {
-          "type": "integer",
-          "format": "int32"
-        }
-      }
-    },
     "colocListExpensesResponse": {
       "type": "object",
       "properties": {
@@ -2404,18 +2215,6 @@
         }
       }
     },
-    "colocListFundsResponse": {
-      "type": "object",
-      "properties": {
-        "funds": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/colocFund"
-          }
-        }
-      }
-    },
     "colocListInvitationsResponse": {
       "type": "object",
       "properties": {
@@ -2425,58 +2224,6 @@
             "type": "object",
             "$ref": "#/definitions/colocInvitation"
           }
-        }
-      }
-    },
-    "colocListNotificationsResponse": {
-      "type": "object",
-      "properties": {
-        "notifications": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/colocNotification"
-          }
-        },
-        "totalCount": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "unreadCount": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "page": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "pageSize": {
-          "type": "integer",
-          "format": "int32"
-        }
-      }
-    },
-    "colocListPaymentsResponse": {
-      "type": "object",
-      "properties": {
-        "payments": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/colocPayment"
-          }
-        },
-        "totalCount": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "page": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "pageSize": {
-          "type": "integer",
-          "format": "int32"
         }
       }
     },
@@ -2519,31 +2266,6 @@
         }
       }
     },
-    "colocMarkAllAsReadRequest": {
-      "type": "object",
-      "properties": {
-        "colocationId": {
-          "type": "string"
-        }
-      }
-    },
-    "colocMarkAllAsReadResponse": {
-      "type": "object",
-      "properties": {
-        "markedCount": {
-          "type": "integer",
-          "format": "int32"
-        }
-      }
-    },
-    "colocMarkAsReadResponse": {
-      "type": "object",
-      "properties": {
-        "success": {
-          "type": "boolean"
-        }
-      }
-    },
     "colocMemberRole": {
       "type": "string",
       "enum": [
@@ -2573,42 +2295,6 @@
         }
       }
     },
-    "colocOptionResult": {
-      "type": "object",
-      "properties": {
-        "optionIndex": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "optionText": {
-          "type": "string"
-        },
-        "voteCount": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "percentage": {
-          "type": "number",
-          "format": "double"
-        },
-        "voters": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/colocVoter"
-          },
-          "title": "Empty if is_anonymous"
-        }
-      }
-    },
-    "colocRSVPResponse": {
-      "type": "object",
-      "properties": {
-        "success": {
-          "type": "boolean"
-        }
-      }
-    },
     "colocRecurrence": {
       "type": "string",
       "enum": [
@@ -2619,6 +2305,85 @@
         "RECURRENCE_YEARLY"
       ],
       "default": "RECURRENCE_UNSPECIFIED"
+    },
+    "colocRecurringExpense": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "colocationId": {
+          "type": "string"
+        },
+        "paidBy": {
+          "type": "string"
+        },
+        "paidByNom": {
+          "type": "string"
+        },
+        "paidByPrenom": {
+          "type": "string"
+        },
+        "categoryId": {
+          "type": "string"
+        },
+        "categoryName": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "number",
+          "format": "double"
+        },
+        "splitType": {
+          "$ref": "#/definitions/colocSplitType"
+        },
+        "recurrence": {
+          "$ref": "#/definitions/colocRecurrence"
+        },
+        "nextDueDate": {
+          "type": "string"
+        },
+        "endDate": {
+          "type": "string"
+        },
+        "isActive": {
+          "type": "boolean"
+        },
+        "createdAt": {
+          "type": "string"
+        },
+        "splits": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/colocRecurringExpenseSplit"
+          }
+        }
+      }
+    },
+    "colocRecurringExpenseSplit": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string"
+        },
+        "percentage": {
+          "type": "number",
+          "format": "double"
+        },
+        "userNom": {
+          "type": "string"
+        },
+        "userPrenom": {
+          "type": "string"
+        }
+      }
     },
     "colocRefreshTokenRequest": {
       "type": "object",
@@ -2816,28 +2581,6 @@
           "type": "string"
         },
         "avatarUrl": {
-          "type": "string"
-        }
-      }
-    },
-    "colocVoteResponse": {
-      "type": "object",
-      "properties": {
-        "success": {
-          "type": "boolean"
-        }
-      }
-    },
-    "colocVoter": {
-      "type": "object",
-      "properties": {
-        "userId": {
-          "type": "string"
-        },
-        "userNom": {
-          "type": "string"
-        },
-        "userPrenom": {
           "type": "string"
         }
       }
