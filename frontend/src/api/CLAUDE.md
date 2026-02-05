@@ -7,10 +7,9 @@
 
 | ID | Time | T | Title | Read |
 |----|------|---|-------|------|
-| #49 | 9:41 AM | ✅ | Payment API Export Removed from Barrel File | ~196 |
-| #48 | " | ✅ | Payment API Module Deleted | ~259 |
-| #41 | 9:38 AM | 🔵 | Comprehensive Frontend Feature Audit Identifying Implementation Status | ~573 |
-| #40 | " | 🔵 | Payment API Client with Confirmation Workflow | ~428 |
-| #39 | 9:37 AM | 🔵 | API Module Barrel Exports | ~278 |
-| #37 | " | 🔵 | Expense API Client with Snake Case to Camel Case Mapping | ~487 |
+| #110 | 2:33 PM | 🔵 | Frontend balance.ts: Has snake/camelCase Adapter but Route and Response Shape Issues | ~432 |
+| #109 | " | 🔵 | Frontend colocation.ts: Routes Match Backend Except Potential camelCase Mismatches | ~355 |
+| #107 | " | 🔵 | Frontend Has No /me or /users Route References | ~241 |
+| #106 | " | 🔵 | Frontend API Client: Axios with Auto Token Refresh and localStorage Persistence | ~413 |
+| #105 | 2:32 PM | 🔵 | Frontend Auth API Client Exists with Snake_case/camelCase Normalization | ~282 |
 </claude-mem-context>

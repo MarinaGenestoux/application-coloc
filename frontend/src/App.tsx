@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ColocationProvider } from './context/ColocationContext';
+import { BalanceRefreshProvider } from './context/BalanceRefreshContext';
 import { AppLayout } from './components/layout';
 import { Login, Register, Dashboard, Expenses, Balances } from './pages';
 
@@ -24,9 +25,11 @@ function ProtectedRoute() {
 
   return (
     <ColocationProvider>
-      <AppLayout>
-        <Outlet />
-      </AppLayout>
+      <BalanceRefreshProvider>
+        <AppLayout>
+          <Outlet />
+        </AppLayout>
+      </BalanceRefreshProvider>
     </ColocationProvider>
   );
 }

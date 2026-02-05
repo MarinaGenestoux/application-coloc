@@ -1,7 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import {
-  Wallet,
   TrendingUp,
   TrendingDown,
   ArrowRight,
@@ -9,6 +8,7 @@ import {
   ChevronRight,
 } from 'lucide-react';
 import { useColocation } from '../context/ColocationContext';
+import { useBalanceRefresh } from '../context/BalanceRefreshContext';
 import { useAuth } from '../context/AuthContext';
 import { balanceApi } from '../api';
 import {
@@ -25,17 +25,19 @@ import type { UserBalance, SimplifiedDebt } from '../types';
 export function Balances() {
   const { user } = useAuth();
   const { currentColocation } = useColocation();
+  const { refreshKey } = useBalanceRefresh();
   const [balances, setBalances] = useState<UserBalance[]>([]);
   const [debts, setDebts] = useState<SimplifiedDebt[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const fetchData = async () => {
-    if (!currentColocation) return;
+  const fetchData = useCallback(async () => {
+    const colocationId = currentColocation?.id;
+    if (!colocationId) return;
     setIsLoading(true);
     try {
       const [balancesRes, debtsRes] = await Promise.all([
-        balanceApi.getBalances(currentColocation.id),
-        balanceApi.getSimplifiedDebts(currentColocation.id),
+        balanceApi.getBalances(colocationId),
+        balanceApi.getSimplifiedDebts(colocationId),
       ]);
       setBalances(balancesRes);
       setDebts(debtsRes);
@@ -44,11 +46,11 @@ export function Balances() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [currentColocation?.id]);
 
   useEffect(() => {
     fetchData();
-  }, [currentColocation]);
+  }, [fetchData, refreshKey]);
 
   const positiveBalances = balances.filter((b) => b.net_balance > 0);
   const negativeBalances = balances.filter((b) => b.net_balance < 0);

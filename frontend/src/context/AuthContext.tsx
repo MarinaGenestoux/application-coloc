@@ -1,4 +1,5 @@
-﻿import { createContext, useContext, useState, useEffect } from 'react';
+/* eslint-disable react-refresh/only-export-components */
+import { createContext, useContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import { authApi, getAccessToken, getRefreshToken, clearTokens } from '../api';
 import type { UserInfo, LoginRequest, RegisterRequest } from '../types';
@@ -90,3 +91,4 @@ export function useAuth() {
   }
   return context;
 }
+
