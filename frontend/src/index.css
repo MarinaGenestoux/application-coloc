@@ -1,0 +1,218 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Instrument+Serif:ital@0;1&display=swap');
+
+@import "tailwindcss";
+
+/* ── Spacing & Typography Conventions ──────────────────
+ *
+ * Spacing (4px base):
+ *   Form fields:        space-y-4
+ *   Modal button row:   gap-3
+ *   List items:         gap-3 sm:gap-4  /  p-3 sm:p-4
+ *   Grid gaps (cards):  gap-4 sm:gap-6 lg:gap-8
+ *   Page sections:      space-y-6 lg:space-y-8 xl:space-y-10
+ *
+ * Typography (responsive):
+ *   Page h1:            text-xl sm:text-2xl lg:text-3xl
+ *   Page subtitle:      text-sm sm:text-base lg:text-lg
+ *   Stat value:         text-2xl lg:text-3xl
+ *   Balance hero:       text-3xl sm:text-4xl lg:text-5xl
+ *
+ * Card padding (via prop):
+ *   sm: p-3 sm:p-4 lg:p-5
+ *   md: p-4 sm:p-5 lg:p-6
+ *   lg: p-5 sm:p-6 lg:p-8
+ *
+ * Breakpoints: sm=640 lg=1024 xl=1280
+ * ──────────────────────────────────────── */
+
+@theme {
+  /* Colors */
+  --color-primary: #5682F2;
+  --color-primary-dark: #4A6FD9;
+  --color-primary-light: #EEF2FF;
+  --color-accent: #F1C086;
+  --color-accent-dark: #E5AE6A;
+  --color-accent-light: #FDF4EB;
+
+  /* Typography */
+  --font-sans: 'DM Sans', system-ui, sans-serif;
+  --font-serif: 'Instrument Serif', Georgia, serif;
+
+  /* Shadows - Finary-inspired depth hierarchy */
+  --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.03);
+  --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.04), 0 1px 2px -1px rgb(0 0 0 / 0.04);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.06), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.08), 0 8px 10px -6px rgb(0 0 0 / 0.05);
+  --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.15);
+
+  /* Colored shadows for primary elements */
+  --shadow-primary-sm: 0 2px 8px -2px rgb(86 130 242 / 0.25);
+  --shadow-primary: 0 4px 14px -3px rgb(86 130 242 / 0.35);
+  --shadow-primary-lg: 0 8px 20px -4px rgb(86 130 242 / 0.4);
+  --shadow-accent: 0 4px 14px -3px rgb(241 192 134 / 0.35);
+  --shadow-success: 0 4px 14px -3px rgb(16 185 129 / 0.35);
+  --shadow-danger: 0 4px 14px -3px rgb(239 68 68 / 0.35);
+}
+
+/* ── Base ─────────────────────────────────────────── */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  background-color: #F8FAFC;
+  color: #1E293B;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* ── Typography ───────────────────────────────────── */
+
+.font-display {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-weight: 400;
+}
+
+/* ── Links ────────────────────────────────────────── */
+
+a {
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+/* ── Form resets ──────────────────────────────────── */
+
+button {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
+
+input, select, textarea {
+  font-family: 'DM Sans', system-ui, sans-serif;
+}
+
+/* ── Scrollbar ────────────────────────────────────── */
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 100px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+}
+
+/* ── Animations ───────────────────────────────────── */
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-in-left {
+  from { opacity: 0; transform: translateX(-12px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.4s ease-out both;
+}
+
+.animate-slide-in {
+  animation: slide-in-left 0.3s ease-out both;
+}
+
+.animate-scale-in {
+  animation: scale-in 0.2s ease-out both;
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 2s ease-in-out infinite;
+}
+
+/* ── Utility classes ─────────────────────────────── */
+
+.shadow-card {
+  box-shadow: var(--shadow-sm);
+}
+
+.shadow-card-hover {
+  box-shadow: var(--shadow-md);
+}
+
+.shadow-elevated {
+  box-shadow: var(--shadow-md);
+}
+
+.shadow-elevated-hover {
+  box-shadow: var(--shadow-lg);
+}
+
+.shadow-primary-glow {
+  box-shadow: var(--shadow-primary);
+}
+
+.shadow-primary-glow-lg {
+  box-shadow: var(--shadow-primary-lg);
+}
+
+/* ── Transitions ─────────────────────────────────── */
+
+.transition-shadow {
+  transition: box-shadow 0.2s ease;
+}
+
+.transition-lift {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+}

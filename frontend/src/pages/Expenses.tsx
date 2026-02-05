@@ -1,0 +1,360 @@
+import { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  Plus,
+  Search,
+  Filter,
+  Receipt,
+  Calendar,
+  ChevronDown,
+  Trash2,
+  Edit2,
+} from 'lucide-react';
+import { useColocation } from '../context/ColocationContext';
+import { expenseApi, categoryApi } from '../api';
+import {
+  Card,
+  CardHeader,
+  Button,
+  Input,
+  Badge,
+  Avatar,
+  Modal,
+  Select,
+  Skeleton,
+  SkeletonList,
+  EmptyState,
+} from '../components/ui';
+import type { Expense, Category, SplitType } from '../types';
+
+export function Expenses() {
+  const { currentColocation } = useColocation();
+  const [expenses, setExpenses] = useState<Expense[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [showNewExpenseModal, setShowNewExpenseModal] = useState(false);
+
+  const [newExpense, setNewExpense] = useState({
+    title: '',
+    amount: '',
+    category_id: '',
+    split_type: 'equal' as SplitType,
+    expense_date: new Date().toISOString().split('T')[0],
+    description: '',
+  });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!currentColocation) return;
+      setIsLoading(true);
+      try {
+        const [expensesRes, categoriesRes] = await Promise.all([
+          expenseApi.list({ colocation_id: currentColocation.id }),
+          categoryApi.list(currentColocation.id),
+        ]);
+        setExpenses(expensesRes.expenses);
+        setCategories(categoriesRes);
+      } catch (error) {
+        console.error('Error fetching expenses:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchData();
+  }, [currentColocation]);
+
+  const filteredExpenses = expenses.filter((expense) => {
+    const matchesSearch = expense.title.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCategory = !selectedCategory || expense.category_id === selectedCategory;
+    return matchesSearch && matchesCategory;
+  });
+
+  const handleCreateExpense = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!currentColocation) return;
+    try {
+      const expense = await expenseApi.create({
+        colocation_id: currentColocation.id,
+        title: newExpense.title,
+        amount: parseFloat(newExpense.amount),
+        category_id: newExpense.category_id,
+        split_type: newExpense.split_type,
+        expense_date: newExpense.expense_date,
+        description: newExpense.description || undefined,
+      });
+      setExpenses([expense, ...expenses]);
+      setShowNewExpenseModal(false);
+      setNewExpense({
+        title: '',
+        amount: '',
+        category_id: '',
+        split_type: 'equal',
+        expense_date: new Date().toISOString().split('T')[0],
+        description: '',
+      });
+    } catch (error) {
+      console.error('Error creating expense:', error);
+    }
+  };
+
+  const getSplitTypeLabel = (type: SplitType) => {
+    switch (type) {
+      case 'equal':
+        return 'Égal';
+      case 'percentage':
+        return 'Pourcentage';
+      case 'custom':
+        return 'Personnalisé';
+    }
+  };
+
+  const totalAmount = filteredExpenses.reduce((sum, e) => sum + e.amount, 0);
+
+  const categoryOptions = [
+    { value: '', label: 'Toutes les catégories' },
+    ...categories.map((cat) => ({ value: cat.id, label: cat.name })),
+  ];
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="space-y-6 lg:space-y-8">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="space-y-2">
+            <Skeleton variant="text" width={150} height={32} />
+            <Skeleton variant="text" width={280} />
+          </div>
+          <Skeleton variant="rectangular" width={180} height={48} />
+        </div>
+
+        <Card elevation="elevated" padding="sm">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+            <Skeleton variant="rectangular" className="flex-1" height={48} />
+            <Skeleton variant="rectangular" width={140} height={48} />
+          </div>
+        </Card>
+
+        <div className="flex items-center gap-6 sm:gap-10 px-4 py-4 sm:px-6 sm:py-5 rounded-2xl bg-slate-100 animate-pulse">
+          <div className="space-y-2">
+            <Skeleton variant="text" width={60} />
+            <Skeleton variant="text" width={100} height={28} />
+          </div>
+          <div className="w-px h-12 bg-slate-200" />
+          <div className="space-y-2">
+            <Skeleton variant="text" width={120} />
+            <Skeleton variant="text" width={40} height={28} />
+          </div>
+        </div>
+
+        <Card elevation="flat" padding="none">
+          <SkeletonList count={5} className="p-6" />
+        </Card>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6 lg:space-y-8">
+      {/* Header */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="text-xl sm:text-2xl lg:text-3xl font-semibold text-slate-800">Dépenses</h1>
+          <p className="text-sm sm:text-base lg:text-lg text-slate-500 mt-1">Gérez les dépenses de votre colocation</p>
+        </div>
+        <Button size="lg" leftIcon={<Plus className="w-5 h-5" />} onClick={() => setShowNewExpenseModal(true)} className="w-full sm:w-auto">
+          Nouvelle dépense
+        </Button>
+      </div>
+
+      {/* Filters */}
+      <Card elevation="elevated" padding="sm">
+        <div className="flex flex-col gap-3 p-1 sm:flex-row sm:items-center sm:gap-4">
+          <div className="flex-1">
+            <Input
+              placeholder="Rechercher une dépense..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              leftIcon={<Search className="w-5 h-5" />}
+            />
+          </div>
+          <div className="w-full sm:w-56">
+            <Select
+              options={categoryOptions}
+              value={selectedCategory}
+              onChange={setSelectedCategory}
+              leftIcon={<Filter className="w-4 h-4" />}
+              placeholder="Catégorie"
+            />
+          </div>
+        </div>
+      </Card>
+
+      {/* Stats bar */}
+      <div className="flex items-center gap-6 sm:gap-10 px-4 py-4 sm:px-6 sm:py-5 rounded-2xl bg-linear-to-r from-primary/5 to-primary/10 border border-primary/10 shadow-sm">
+        <div>
+          <p className="text-sm text-primary font-medium mb-1">Total</p>
+          <p className="text-xl sm:text-2xl lg:text-3xl font-semibold text-primary">{totalAmount.toFixed(2)} €</p>
+        </div>
+        <div className="w-px h-12 bg-primary/20" />
+        <div>
+          <p className="text-sm text-primary font-medium mb-1">Nombre de dépenses</p>
+          <p className="text-xl sm:text-2xl lg:text-3xl font-semibold text-primary">{filteredExpenses.length}</p>
+        </div>
+      </div>
+
+      {/* Expenses List */}
+      <Card elevation="flat" padding="none" className="overflow-hidden">
+        <div className="divide-y divide-slate-100">
+          <AnimatePresence>
+            {filteredExpenses.length === 0 ? (
+              <EmptyState
+                icon={<Receipt className="w-10 h-10" />}
+                title="Aucune dépense trouvée"
+                description="Commencez par ajouter une dépense pour suivre les frais de votre colocation."
+                action={{
+                  label: 'Nouvelle dépense',
+                  onClick: () => setShowNewExpenseModal(true),
+                  icon: <Plus className="w-5 h-5" />,
+                }}
+              />
+            ) : (
+              filteredExpenses.map((expense, index) => (
+                <motion.div
+                  key={expense.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ delay: index * 0.03 }}
+                  className="flex items-center gap-3 sm:gap-4 px-4 py-3.5 sm:px-5 sm:py-4 hover:bg-slate-50/80 transition-all duration-200 cursor-pointer"
+                >
+                  <div
+                    className="w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 rounded-xl flex items-center justify-center shrink-0 shadow-sm"
+                    style={{
+                      backgroundColor: expense.category?.color ? `${expense.category.color}12` : '#f1f5f9',
+                    }}
+                  >
+                    <span className="text-xl">{expense.category?.icon || '💰'}</span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-3">
+                      <p className="font-medium text-slate-800 truncate text-base">{expense.title}</p>
+                      <Badge variant="default" size="sm">
+                        {getSplitTypeLabel(expense.split_type)}
+                      </Badge>
+                    </div>
+                    <div className="flex items-center gap-4 mt-1.5 text-sm text-slate-400">
+                      <span className="flex items-center gap-2">
+                        <Avatar
+                          name={expense.payer ? `${expense.payer.prenom} ${expense.payer.nom}` : 'Utilisateur'}
+                          size="sm"
+                          className="w-5 h-5 text-[9px]"
+                        />
+                        {expense.payer?.prenom || 'Inconnu'}
+                      </span>
+                      <span className="flex items-center gap-1.5">
+                        <Calendar className="w-4 h-4" />
+                        {new Date(expense.expense_date).toLocaleDateString('fr-FR')}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-lg font-semibold text-slate-800">{expense.amount.toFixed(2)} €</p>
+                    {expense.splits && expense.splits.length > 0 && (
+                      <p className="text-sm text-slate-400 mt-0.5">
+                        {(expense.amount / expense.splits.length).toFixed(2)} €/pers
+                      </p>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-0.5 sm:gap-1">
+                    <button className="p-2 sm:p-3 rounded-lg sm:rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-all duration-200">
+                      <Edit2 className="w-4 h-4 sm:w-5 sm:h-5" />
+                    </button>
+                    <button className="p-2 sm:p-3 rounded-lg sm:rounded-xl text-slate-400 hover:text-red-500 hover:bg-red-50 transition-all duration-200">
+                      <Trash2 className="w-4 h-4 sm:w-5 sm:h-5" />
+                    </button>
+                  </div>
+                </motion.div>
+              ))
+            )}
+          </AnimatePresence>
+        </div>
+      </Card>
+
+      {/* New Expense Modal */}
+      <Modal
+        isOpen={showNewExpenseModal}
+        onClose={() => setShowNewExpenseModal(false)}
+        title="Nouvelle dépense"
+        size="lg"
+      >
+        <form onSubmit={handleCreateExpense} className="space-y-4">
+          <Input
+            label="Titre"
+            placeholder="Ex: Courses Carrefour"
+            value={newExpense.title}
+            onChange={(e) => setNewExpense({ ...newExpense, title: e.target.value })}
+            required
+          />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <Input
+              label="Montant (€)"
+              type="number"
+              step="0.01"
+              placeholder="0.00"
+              value={newExpense.amount}
+              onChange={(e) => setNewExpense({ ...newExpense, amount: e.target.value })}
+              required
+            />
+            <Select
+              label="Catégorie"
+              options={categories.map((cat) => ({
+                value: cat.id,
+                label: `${cat.icon} ${cat.name}`,
+              }))}
+              value={newExpense.category_id}
+              onChange={(value) => setNewExpense({ ...newExpense, category_id: value })}
+              placeholder="Sélectionner..."
+            />
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <Input
+              label="Date"
+              type="date"
+              value={newExpense.expense_date}
+              onChange={(e) => setNewExpense({ ...newExpense, expense_date: e.target.value })}
+              required
+            />
+            <Select
+              label="Mode de partage"
+              options={[
+                { value: 'equal', label: 'Égal entre tous' },
+                { value: 'percentage', label: 'Par pourcentage' },
+                { value: 'custom', label: 'Montants personnalisés' },
+              ]}
+              value={newExpense.split_type}
+              onChange={(value) => setNewExpense({ ...newExpense, split_type: value as SplitType })}
+            />
+          </div>
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-slate-700">Description (optionnel)</label>
+            <textarea
+              className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-sm text-slate-800 outline-none shadow-sm hover:shadow-md hover:border-slate-300 focus:border-primary focus:ring-4 focus:ring-primary/10 focus:shadow-md transition-all duration-200 resize-none"
+              rows={3}
+              placeholder="Ajouter une description..."
+              value={newExpense.description}
+              onChange={(e) => setNewExpense({ ...newExpense, description: e.target.value })}
+            />
+          </div>
+          <div className="flex justify-end gap-3 pt-4">
+            <Button type="button" variant="secondary" onClick={() => setShowNewExpenseModal(false)}>
+              Annuler
+            </Button>
+            <Button type="submit">Créer la dépense</Button>
+          </div>
+        </form>
+      </Modal>
+    </div>
+  );
+}
