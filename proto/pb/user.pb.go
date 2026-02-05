@@ -417,12 +417,12 @@ const file_user_proto_rawDesc = "" +
 	"updated_at\x18\t \x01(\tR\tupdatedAtB\f\n" +
 	"\n" +
 	"_telephoneB\r\n" +
-	"\v_avatar_url2\xd5\x02\n" +
-	"\vUserService\x12L\n" +
-	"\x0eGetCurrentUser\x12\x1c.coloc.GetCurrentUserRequest\x1a\v.coloc.User\"\x0f\x82\xd3\xe4\x93\x02\t\x12\a/api/me\x12N\n" +
-	"\x11UpdateCurrentUser\x12\x18.coloc.UpdateUserRequest\x1a\v.coloc.User\"\x12\x82\xd3\xe4\x93\x02\f:\x01*\x1a\a/api/me\x12`\n" +
-	"\x11DeleteCurrentUser\x12\x1f.coloc.DeleteCurrentUserRequest\x1a\x19.coloc.DeleteUserResponse\"\x0f\x82\xd3\xe4\x93\x02\t*\a/api/me\x12F\n" +
-	"\aGetUser\x12\x15.coloc.GetUserRequest\x1a\v.coloc.User\"\x17\x82\xd3\xe4\x93\x02\x11\x12\x0f/api/users/{id}B,Z*github.com/vblanchet22/back_coloc/proto/pbb\x06proto3"
+	"\v_avatar_url2\xe7\x02\n" +
+	"\vUserService\x12R\n" +
+	"\x0eGetCurrentUser\x12\x1c.coloc.GetCurrentUserRequest\x1a\v.coloc.User\"\x15\x82\xd3\xe4\x93\x02\x0f\x12\r/api/users/me\x12T\n" +
+	"\x11UpdateCurrentUser\x12\x18.coloc.UpdateUserRequest\x1a\v.coloc.User\"\x18\x82\xd3\xe4\x93\x02\x12:\x01*\x1a\r/api/users/me\x12f\n" +
+	"\x11DeleteCurrentUser\x12\x1f.coloc.DeleteCurrentUserRequest\x1a\x19.coloc.DeleteUserResponse\"\x15\x82\xd3\xe4\x93\x02\x0f*\r/api/users/me\x12F\n" +
+	"\aGetUser\x12\x15.coloc.GetUserRequest\x1a\v.coloc.User\"\x17\x82\xd3\xe4\x93\x02\x11\x12\x0f/api/users/{id}B,Z*github.com/MarinaGenestoux/application-coloc/proto/pbb\x06proto3"
 
 var (
 	file_user_proto_rawDescOnce sync.Once

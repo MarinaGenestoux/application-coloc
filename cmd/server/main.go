@@ -11,27 +11,31 @@ import (
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/joho/godotenv"
-	"github.com/vblanchet22/back_coloc/internal/infra/auth"
-	"github.com/vblanchet22/back_coloc/internal/infra/config"
-	handler "github.com/vblanchet22/back_coloc/internal/infra/grpc"
-	"github.com/vblanchet22/back_coloc/internal/infra/repository/postgres"
-	"github.com/vblanchet22/back_coloc/internal/application/service"
-	pb "github.com/vblanchet22/back_coloc/proto/pb"
+	"github.com/MarinaGenestoux/application-coloc/internal/infra/auth"
+	"github.com/MarinaGenestoux/application-coloc/internal/infra/config"
+	handler "github.com/MarinaGenestoux/application-coloc/internal/infra/grpc"
+	"github.com/MarinaGenestoux/application-coloc/internal/infra/repository/postgres"
+	"github.com/MarinaGenestoux/application-coloc/internal/application/service"
+	pb "github.com/MarinaGenestoux/application-coloc/proto/pb"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/reflection"
 )
 
 type server struct {
-	cfg               *config.Config
-	pool              *pgxpool.Pool
-	jwtManager        *auth.JWTManager
-	authHandler       *handler.AuthHandler
-	userHandler       *handler.UserHandler
-	colocationHandler *handler.ColocationHandler
-	categoryHandler   *handler.CategoryHandler
-	expenseHandler    *handler.ExpenseHandler
-	balanceHandler    *handler.BalanceHandler
+	cfg                 *config.Config
+	pool                *pgxpool.Pool
+	jwtManager          *auth.JWTManager
+	authHandler         *handler.AuthHandler
+	userHandler         *handler.UserHandler
+	colocationHandler   *handler.ColocationHandler
+	categoryHandler     *handler.CategoryHandler
+	expenseHandler      *handler.ExpenseHandler
+	balanceHandler      *handler.BalanceHandler
+	paymentHandler      *handler.PaymentHandler
+	decisionHandler     *handler.DecisionHandler
+	fundHandler         *handler.FundHandler
+	notificationHandler *handler.NotificationHandler
 }
 
 func main() {
@@ -61,14 +65,23 @@ func main() {
 	categoryRepo := postgres.NewCategoryRepository(pool)
 	expenseRepo := postgres.NewExpenseRepository(pool)
 	balanceRepo := postgres.NewBalanceRepository(pool)
+	paymentRepo := postgres.NewPaymentRepository(pool)
+	decisionRepo := postgres.NewDecisionRepository(pool)
+	fundRepo := postgres.NewFundRepository(pool)
+	notificationRepo := postgres.NewNotificationRepository(pool)
 
 	// Initialize services
-	authService := service.NewAuthService(authRepo, jwtManager)
+	hasher := auth.NewBcryptPasswordHasher()
+	authService := service.NewAuthService(authRepo, jwtManager, hasher)
 	userService := service.NewUserService(authRepo)
 	colocationService := service.NewColocationService(colocationRepo)
 	categoryService := service.NewCategoryService(categoryRepo, colocationRepo)
 	expenseService := service.NewExpenseService(expenseRepo, colocationRepo, categoryRepo)
 	balanceService := service.NewBalanceService(balanceRepo, colocationRepo)
+	paymentService := service.NewPaymentService(paymentRepo, colocationRepo)
+	decisionService := service.NewDecisionService(decisionRepo, colocationRepo)
+	fundService := service.NewFundService(fundRepo, colocationRepo)
+	notificationService := service.NewNotificationService(notificationRepo)
 
 	// Initialize handlers
 	authHandler := handler.NewAuthHandler(authService)
@@ -77,17 +90,25 @@ func main() {
 	categoryHandler := handler.NewCategoryHandler(categoryService)
 	expenseHandler := handler.NewExpenseHandler(expenseService)
 	balanceHandler := handler.NewBalanceHandler(balanceService)
+	paymentHandler := handler.NewPaymentHandler(paymentService)
+	decisionHandler := handler.NewDecisionHandler(decisionService)
+	fundHandler := handler.NewFundHandler(fundService)
+	notificationHandler := handler.NewNotificationHandler(notificationService)
 
 	srv := &server{
-		cfg:               cfg,
-		pool:              pool,
-		jwtManager:        jwtManager,
-		authHandler:       authHandler,
-		userHandler:       userHandler,
-		colocationHandler: colocationHandler,
-		categoryHandler:   categoryHandler,
-		expenseHandler:    expenseHandler,
-		balanceHandler:    balanceHandler,
+		cfg:                 cfg,
+		pool:                pool,
+		jwtManager:          jwtManager,
+		authHandler:         authHandler,
+		userHandler:         userHandler,
+		colocationHandler:   colocationHandler,
+		categoryHandler:     categoryHandler,
+		expenseHandler:      expenseHandler,
+		balanceHandler:      balanceHandler,
+		paymentHandler:      paymentHandler,
+		decisionHandler:     decisionHandler,
+		fundHandler:         fundHandler,
+		notificationHandler: notificationHandler,
 	}
 
 	// Start gRPC server in goroutine
@@ -124,6 +145,10 @@ func (s *server) runGRPCServer() error {
 	pb.RegisterCategoryServiceServer(grpcServer, s.categoryHandler)
 	pb.RegisterExpenseServiceServer(grpcServer, s.expenseHandler)
 	pb.RegisterBalanceServiceServer(grpcServer, s.balanceHandler)
+	pb.RegisterPaymentServiceServer(grpcServer, s.paymentHandler)
+	pb.RegisterDecisionServiceServer(grpcServer, s.decisionHandler)
+	pb.RegisterFundServiceServer(grpcServer, s.fundHandler)
+	pb.RegisterNotificationServiceServer(grpcServer, s.notificationHandler)
 
 	// Enable reflection for grpcurl/grpcui
 	reflection.Register(grpcServer)
@@ -161,6 +186,18 @@ func (s *server) runHTTPGateway() error {
 		return err
 	}
 	if err := pb.RegisterBalanceServiceHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts); err != nil {
+		return err
+	}
+	if err := pb.RegisterPaymentServiceHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts); err != nil {
+		return err
+	}
+	if err := pb.RegisterDecisionServiceHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts); err != nil {
+		return err
+	}
+	if err := pb.RegisterFundServiceHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts); err != nil {
+		return err
+	}
+	if err := pb.RegisterNotificationServiceHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts); err != nil {
 		return err
 	}
 

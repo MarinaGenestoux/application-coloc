@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/vblanchet22/back_coloc/internal/domain/algorithm"
-	"github.com/vblanchet22/back_coloc/internal/infra/auth"
-	"github.com/vblanchet22/back_coloc/internal/domain"
-	"github.com/vblanchet22/back_coloc/internal/infra/repository/postgres"
+	"github.com/MarinaGenestoux/application-coloc/internal/domain/algorithm"
+	"github.com/MarinaGenestoux/application-coloc/internal/infra/auth"
+	"github.com/MarinaGenestoux/application-coloc/internal/domain"
+	"github.com/MarinaGenestoux/application-coloc/internal/infra/repository/postgres"
 )
 
 // BalanceService handles balance business logic

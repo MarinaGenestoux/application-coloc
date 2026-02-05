@@ -5,21 +5,20 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/vblanchet22/back_coloc/internal/infra/auth"
-	"github.com/vblanchet22/back_coloc/internal/application/constants"
-	"github.com/vblanchet22/back_coloc/internal/domain"
-	"github.com/vblanchet22/back_coloc/internal/infra/repository/postgres"
+	"github.com/MarinaGenestoux/application-coloc/internal/infra/auth"
+	"github.com/MarinaGenestoux/application-coloc/internal/application/constants"
+	"github.com/MarinaGenestoux/application-coloc/internal/domain"
 )
 
 // ExpenseService handles expense business logic
 type ExpenseService struct {
-	repo           *postgres.ExpenseRepository
-	colocationRepo *postgres.ColocationRepository
-	categoryRepo   *postgres.CategoryRepository
+	repo           domain.ExpenseRepository
+	colocationRepo domain.ColocationRepository
+	categoryRepo   domain.CategoryRepository
 }
 
 // NewExpenseService creates a new ExpenseService
-func NewExpenseService(repo *postgres.ExpenseRepository, colocationRepo *postgres.ColocationRepository, categoryRepo *postgres.CategoryRepository) *ExpenseService {
+func NewExpenseService(repo domain.ExpenseRepository, colocationRepo domain.ColocationRepository, categoryRepo domain.CategoryRepository) *ExpenseService {
 	return &ExpenseService{
 		repo:           repo,
 		colocationRepo: colocationRepo,

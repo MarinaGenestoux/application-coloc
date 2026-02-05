@@ -10,8 +10,8 @@ import (
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/vblanchet22/back_coloc/internal/infra/config"
-	"github.com/vblanchet22/back_coloc/internal/infra/repository/postgres"
+	"github.com/MarinaGenestoux/application-coloc/internal/infra/config"
+	"github.com/MarinaGenestoux/application-coloc/internal/infra/repository/postgres"
 )
 
 type member struct {

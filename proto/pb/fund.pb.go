@@ -1099,7 +1099,7 @@ const file_fund_proto_rawDesc = "" +
 	"DeleteFund\x12\x18.coloc.DeleteFundRequest\x1a\x19.coloc.DeleteFundResponse\"3\x82\xd3\xe4\x93\x02-*+/api/colocations/{colocation_id}/funds/{id}\x12\x90\x01\n" +
 	"\x0fAddContribution\x12\x1d.coloc.AddContributionRequest\x1a\x13.coloc.Contribution\"I\x82\xd3\xe4\x93\x02C:\x01*\">/api/colocations/{colocation_id}/funds/{fund_id}/contributions\x12\x9e\x01\n" +
 	"\x11ListContributions\x12\x1f.coloc.ListContributionsRequest\x1a .coloc.ListContributionsResponse\"F\x82\xd3\xe4\x93\x02@\x12>/api/colocations/{colocation_id}/funds/{fund_id}/contributions\x12\xa6\x01\n" +
-	"\x12DeleteContribution\x12 .coloc.DeleteContributionRequest\x1a!.coloc.DeleteContributionResponse\"K\x82\xd3\xe4\x93\x02E*C/api/colocations/{colocation_id}/funds/{fund_id}/contributions/{id}B,Z*github.com/vblanchet22/back_coloc/proto/pbb\x06proto3"
+	"\x12DeleteContribution\x12 .coloc.DeleteContributionRequest\x1a!.coloc.DeleteContributionResponse\"K\x82\xd3\xe4\x93\x02E*C/api/colocations/{colocation_id}/funds/{fund_id}/contributions/{id}B,Z*github.com/MarinaGenestoux/application-coloc/proto/pbb\x06proto3"
 
 var (
 	file_fund_proto_rawDescOnce sync.Once

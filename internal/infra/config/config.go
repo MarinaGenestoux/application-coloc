@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/vblanchet22/back_coloc/internal/application/constants"
+	"github.com/MarinaGenestoux/application-coloc/internal/application/constants"
 )
 
 // Default server ports

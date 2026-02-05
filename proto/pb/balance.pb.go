@@ -758,7 +758,7 @@ const file_balance_proto_rawDesc = "" +
 	"\x0eBalanceService\x12w\n" +
 	"\vGetBalances\x12\x19.coloc.GetBalancesRequest\x1a\x1a.coloc.GetBalancesResponse\"1\x82\xd3\xe4\x93\x02+\x12)/api/colocations/{colocation_id}/balances\x12\x97\x01\n" +
 	"\x12GetSimplifiedDebts\x12 .coloc.GetSimplifiedDebtsRequest\x1a!.coloc.GetSimplifiedDebtsResponse\"<\x82\xd3\xe4\x93\x026\x124/api/colocations/{colocation_id}/balances/simplified\x12\x91\x01\n" +
-	"\x11GetBalanceHistory\x12\x1f.coloc.GetBalanceHistoryRequest\x1a .coloc.GetBalanceHistoryResponse\"9\x82\xd3\xe4\x93\x023\x121/api/colocations/{colocation_id}/balances/historyB,Z*github.com/vblanchet22/back_coloc/proto/pbb\x06proto3"
+	"\x11GetBalanceHistory\x12\x1f.coloc.GetBalanceHistoryRequest\x1a .coloc.GetBalanceHistoryResponse\"9\x82\xd3\xe4\x93\x023\x121/api/colocations/{colocation_id}/balances/historyB,Z*github.com/MarinaGenestoux/application-coloc/proto/pbb\x06proto3"
 
 var (
 	file_balance_proto_rawDescOnce sync.Once

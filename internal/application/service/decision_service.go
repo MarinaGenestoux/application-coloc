@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/vblanchet22/back_coloc/internal/infra/auth"
-	"github.com/vblanchet22/back_coloc/internal/domain"
-	"github.com/vblanchet22/back_coloc/internal/infra/repository/postgres"
+	"github.com/MarinaGenestoux/application-coloc/internal/infra/auth"
+	"github.com/MarinaGenestoux/application-coloc/internal/domain"
+	"github.com/MarinaGenestoux/application-coloc/internal/infra/repository/postgres"
 )
 
 // Decision validation constants

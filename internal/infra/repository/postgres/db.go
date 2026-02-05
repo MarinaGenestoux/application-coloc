@@ -6,7 +6,7 @@ import (
 	"log"
 
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/vblanchet22/back_coloc/internal/infra/config"
+	"github.com/MarinaGenestoux/application-coloc/internal/infra/config"
 )
 
 // Connect establishes a connection pool to the PostgreSQL database

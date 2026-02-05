@@ -4,10 +4,10 @@ import (
 	"context"
 	"time"
 
-	"github.com/vblanchet22/back_coloc/internal/domain"
-	"github.com/vblanchet22/back_coloc/internal/application/service"
-	"github.com/vblanchet22/back_coloc/internal/infra/utils"
-	pb "github.com/vblanchet22/back_coloc/proto/pb"
+	"github.com/MarinaGenestoux/application-coloc/internal/domain"
+	"github.com/MarinaGenestoux/application-coloc/internal/application/service"
+	"github.com/MarinaGenestoux/application-coloc/internal/infra/utils"
+	pb "github.com/MarinaGenestoux/application-coloc/proto/pb"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )

@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/vblanchet22/back_coloc/internal/infra/auth"
-	"github.com/vblanchet22/back_coloc/internal/application/constants"
-	"github.com/vblanchet22/back_coloc/internal/domain"
-	"github.com/vblanchet22/back_coloc/internal/infra/repository/postgres"
+	"github.com/MarinaGenestoux/application-coloc/internal/infra/auth"
+	"github.com/MarinaGenestoux/application-coloc/internal/application/constants"
+	"github.com/MarinaGenestoux/application-coloc/internal/domain"
+	"github.com/MarinaGenestoux/application-coloc/internal/infra/repository/postgres"
 )
 
 // NotificationService handles notification business logic and streaming

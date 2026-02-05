@@ -6,7 +6,7 @@ import (
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/vblanchet22/back_coloc/internal/domain"
+	"github.com/MarinaGenestoux/application-coloc/internal/domain"
 )
 
 // FundRepository handles fund database operations

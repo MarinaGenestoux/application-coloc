@@ -5,22 +5,22 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/vblanchet22/back_coloc/internal/infra/auth"
-	"github.com/vblanchet22/back_coloc/internal/domain"
-	"github.com/vblanchet22/back_coloc/internal/infra/repository/postgres"
+	"github.com/MarinaGenestoux/application-coloc/internal/domain"
 )
 
 // AuthService handles authentication business logic
 type AuthService struct {
-	repo       *postgres.AuthRepository
-	jwtManager *auth.JWTManager
+	repo       domain.AuthRepository
+	jwtManager domain.TokenManager
+	hasher     domain.PasswordHasher
 }
 
 // NewAuthService creates a new AuthService
-func NewAuthService(repo *postgres.AuthRepository, jwtManager *auth.JWTManager) *AuthService {
+func NewAuthService(repo domain.AuthRepository, jwtManager domain.TokenManager, hasher domain.PasswordHasher) *AuthService {
 	return &AuthService{
 		repo:       repo,
 		jwtManager: jwtManager,
+		hasher:     hasher,
 	}
 }
 
@@ -44,7 +44,7 @@ func (s *AuthService) Register(ctx context.Context, email, password, nom, prenom
 	}
 
 	// Hash password
-	hash, err := auth.HashPassword(password)
+	hash, err := s.hasher.HashPassword(password)
 	if err != nil {
 		return nil, err
 	}
@@ -79,7 +79,7 @@ func (s *AuthService) Login(ctx context.Context, email, password string) (*AuthR
 	}
 
 	// Check password
-	if user.PasswordHash == nil || !auth.CheckPassword(password, *user.PasswordHash) {
+	if user.PasswordHash == nil || !s.hasher.CheckPassword(password, *user.PasswordHash) {
 		return nil, fmt.Errorf("email ou mot de passe incorrect")
 	}
 

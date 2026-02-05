@@ -2060,7 +2060,7 @@ const file_expense_proto_rawDesc = "" +
 	"\x15ListRecurringExpenses\x12#.coloc.ListRecurringExpensesRequest\x1a$.coloc.ListRecurringExpensesResponse\";\x82\xd3\xe4\x93\x025\x123/api/colocations/{colocation_id}/recurring-expenses\x12\x9c\x01\n" +
 	"\x16UpdateRecurringExpense\x12$.coloc.UpdateRecurringExpenseRequest\x1a\x17.coloc.RecurringExpense\"C\x82\xd3\xe4\x93\x02=:\x01*\x1a8/api/colocations/{colocation_id}/recurring-expenses/{id}\x12\xa7\x01\n" +
 	"\x16DeleteRecurringExpense\x12$.coloc.DeleteRecurringExpenseRequest\x1a%.coloc.DeleteRecurringExpenseResponse\"@\x82\xd3\xe4\x93\x02:*8/api/colocations/{colocation_id}/recurring-expenses/{id}\x12\x80\x01\n" +
-	"\vGetForecast\x12\x19.coloc.GetForecastRequest\x1a\x1a.coloc.GetForecastResponse\":\x82\xd3\xe4\x93\x024\x122/api/colocations/{colocation_id}/expenses/forecastB,Z*github.com/vblanchet22/back_coloc/proto/pbb\x06proto3"
+	"\vGetForecast\x12\x19.coloc.GetForecastRequest\x1a\x1a.coloc.GetForecastResponse\":\x82\xd3\xe4\x93\x024\x122/api/colocations/{colocation_id}/expenses/forecastB,Z*github.com/MarinaGenestoux/application-coloc/proto/pbb\x06proto3"
 
 var (
 	file_expense_proto_rawDescOnce sync.Once

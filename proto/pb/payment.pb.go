@@ -795,7 +795,7 @@ const file_payment_proto_rawDesc = "" +
 	"\fListPayments\x12\x1a.coloc.ListPaymentsRequest\x1a\x1b.coloc.ListPaymentsResponse\"1\x82\xd3\xe4\x93\x02+\x12)/api/colocations/{colocation_id}/payments\x12\x81\x01\n" +
 	"\x0eConfirmPayment\x12\x1c.coloc.ConfirmPaymentRequest\x1a\x0e.coloc.Payment\"A\x82\xd3\xe4\x93\x02;:\x01*\"6/api/colocations/{colocation_id}/payments/{id}/confirm\x12~\n" +
 	"\rRejectPayment\x12\x1b.coloc.RejectPaymentRequest\x1a\x0e.coloc.Payment\"@\x82\xd3\xe4\x93\x02::\x01*\"5/api/colocations/{colocation_id}/payments/{id}/reject\x12\x82\x01\n" +
-	"\rCancelPayment\x12\x1b.coloc.CancelPaymentRequest\x1a\x1c.coloc.CancelPaymentResponse\"6\x82\xd3\xe4\x93\x020*./api/colocations/{colocation_id}/payments/{id}B,Z*github.com/vblanchet22/back_coloc/proto/pbb\x06proto3"
+	"\rCancelPayment\x12\x1b.coloc.CancelPaymentRequest\x1a\x1c.coloc.CancelPaymentResponse\"6\x82\xd3\xe4\x93\x020*./api/colocations/{colocation_id}/payments/{id}B,Z*github.com/MarinaGenestoux/application-coloc/proto/pbb\x06proto3"
 
 var (
 	file_payment_proto_rawDescOnce sync.Once
