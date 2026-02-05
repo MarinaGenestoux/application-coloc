@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/vblanchet22/back_coloc/internal/auth"
-	"github.com/vblanchet22/back_coloc/internal/constants"
+	"github.com/vblanchet22/back_coloc/internal/infra/auth"
+	"github.com/vblanchet22/back_coloc/internal/application/constants"
 	"github.com/vblanchet22/back_coloc/internal/domain"
-	"github.com/vblanchet22/back_coloc/internal/repository/postgres"
+	"github.com/vblanchet22/back_coloc/internal/infra/repository/postgres"
 )
 
 // ExpenseService handles expense business logic

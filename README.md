@@ -44,21 +44,28 @@ Cette commande crée la table `users` dans la base de données.
 make run
 ```
 
-## Structure du projet
+## Structure du projet (Clean Architecture)
 
 ```
 back_coloc/
 ├── cmd/
-│   └── server/
-│       └── main.go              # Point d'entrée de l'application
+│   ├── server/main.go           # Composition root (wire des dépendances)
+│   └── seed/main.go             # Seed de données de démo
 ├── internal/
-│   ├── models/
-│   │   └── user.go              # Modèle User
-│   └── database/
-│       └── database.go          # Connexion à la base de données
+│   ├── domain/                  # Coeur métier (entités + algorithmes métier)
+│   │   ├── *.go
+│   │   └── algorithm/
+│   ├── application/             # Cas d'usage / logique applicative
+│   │   ├── service/
+│   │   └── constants/
+│   └── infra/                   # Adaptateurs techniques
+│       ├── grpc/                # Handlers gRPC (entrée)
+│       ├── repository/postgres/ # Persistance PostgreSQL (sortie)
+│       ├── auth/                # JWT/interceptors/password
+│       ├── config/              # Chargement de configuration
+│       └── utils/
 ├── migrations/
-│   ├── 000001_create_users_table.up.sql    # Migration création table
-│   └── 000001_create_users_table.down.sql  # Migration rollback
+├── proto/
 ├── docker-compose.yml           # Configuration Docker PostgreSQL
 ├── .env                         # Variables d'environnement
 ├── Makefile                     # Commandes utiles
@@ -173,6 +180,9 @@ docker compose down
 
 ## Développement
 
-1. Modifier le code dans `cmd/server/main.go` ou créer de nouveaux handlers
-2. Lancer avec `make run`
-3. Pour ajouter une nouvelle table, créer une migration avec `make migrate-create`
+1. Ajouter les règles métier dans `internal/domain`
+2. Implémenter les cas d'usage dans `internal/application/service`
+3. Brancher les entrées/sorties techniques dans `internal/infra` (gRPC, postgres, auth, config)
+4. Câbler dans `cmd/server/main.go`
+5. Lancer avec `make run`
+6. Pour ajouter une nouvelle table, créer une migration avec `make migrate-create`

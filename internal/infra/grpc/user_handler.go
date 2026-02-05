@@ -3,7 +3,7 @@ package handler
 import (
 	"context"
 
-	"github.com/vblanchet22/back_coloc/internal/service"
+	"github.com/vblanchet22/back_coloc/internal/application/service"
 	pb "github.com/vblanchet22/back_coloc/proto/pb"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
