@@ -34,8 +34,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
               text-sm text-slate-800 placeholder:text-slate-400
               shadow-sm transition-all duration-200 outline-none
               hover:shadow-md hover:border-slate-300
-              ${leftIcon ? 'pl-10 sm:pl-11' : 'pl-3.5 sm:pl-4'}
-              ${rightIcon ? 'pr-10 sm:pr-11' : 'pr-3.5 sm:pr-4'}
+              ${leftIcon ? 'pl-11 sm:pl-12' : 'pl-3.5 sm:pl-4'}
+              ${rightIcon ? 'pr-11 sm:pr-12' : 'pr-3.5 sm:pr-4'}
               ${
                 error
                   ? 'border-red-300 focus:border-red-400 focus:ring-4 focus:ring-red-50 focus:shadow-md'
