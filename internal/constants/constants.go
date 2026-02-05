@@ -34,8 +34,3 @@ const (
 const (
 	DefaultForecastMonths = 3
 )
-
-// Channel buffer sizes
-const (
-	NotificationChannelBuffer = 100
-)
