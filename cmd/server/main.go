@@ -11,12 +11,12 @@ import (
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/joho/godotenv"
-	"github.com/vblanchet22/back_coloc/internal/auth"
-	"github.com/vblanchet22/back_coloc/internal/config"
-	handler "github.com/vblanchet22/back_coloc/internal/grpc"
-	"github.com/vblanchet22/back_coloc/internal/repository/postgres"
-	"github.com/vblanchet22/back_coloc/internal/service"
-	pb "github.com/vblanchet22/back_coloc/proto/pb"
+	"github.com/MarinaGenestoux/application-coloc/internal/infra/auth"
+	"github.com/MarinaGenestoux/application-coloc/internal/infra/config"
+	handler "github.com/MarinaGenestoux/application-coloc/internal/infra/grpc"
+	"github.com/MarinaGenestoux/application-coloc/internal/infra/repository/postgres"
+	"github.com/MarinaGenestoux/application-coloc/internal/application/service"
+	pb "github.com/MarinaGenestoux/application-coloc/proto/pb"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/reflection"
@@ -71,7 +71,8 @@ func main() {
 	notificationRepo := postgres.NewNotificationRepository(pool)
 
 	// Initialize services
-	authService := service.NewAuthService(authRepo, jwtManager)
+	hasher := auth.NewBcryptPasswordHasher()
+	authService := service.NewAuthService(authRepo, jwtManager, hasher)
 	userService := service.NewUserService(authRepo)
 	colocationService := service.NewColocationService(colocationRepo)
 	categoryService := service.NewCategoryService(categoryRepo, colocationRepo)

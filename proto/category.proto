@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package coloc;
 
-option go_package = "github.com/vblanchet22/back_coloc/proto/pb";
+option go_package = "github.com/MarinaGenestoux/application-coloc/proto/pb";
 
 import "google/api/annotations.proto";
 

@@ -878,7 +878,7 @@ const file_notification_proto_rawDesc = "" +
 	"\rMarkAllAsRead\x12\x1b.coloc.MarkAllAsReadRequest\x1a\x1c.coloc.MarkAllAsReadResponse\"&\x82\xd3\xe4\x93\x02 :\x01*\"\x1b/api/notifications/read-all\x12z\n" +
 	"\x12DeleteNotification\x12 .coloc.DeleteNotificationRequest\x1a!.coloc.DeleteNotificationResponse\"\x1f\x82\xd3\xe4\x93\x02\x19*\x17/api/notifications/{id}\x12v\n" +
 	"\x0eGetUnreadCount\x12\x1c.coloc.GetUnreadCountRequest\x1a\x1d.coloc.GetUnreadCountResponse\"'\x82\xd3\xe4\x93\x02!\x12\x1f/api/notifications/unread-count\x12O\n" +
-	"\x13StreamNotifications\x12!.coloc.StreamNotificationsRequest\x1a\x13.coloc.Notification0\x01B,Z*github.com/vblanchet22/back_coloc/proto/pbb\x06proto3"
+	"\x13StreamNotifications\x12!.coloc.StreamNotificationsRequest\x1a\x13.coloc.Notification0\x01B,Z*github.com/MarinaGenestoux/application-coloc/proto/pbb\x06proto3"
 
 var (
 	file_notification_proto_rawDescOnce sync.Once

@@ -1321,7 +1321,7 @@ const file_decision_proto_rawDesc = "" +
 	"\x04Vote\x12\x12.coloc.VoteRequest\x1a\x13.coloc.VoteResponse\"H\x82\xd3\xe4\x93\x02B:\x01*\"=/api/colocations/{colocation_id}/decisions/{decision_id}/vote\x12\x7f\n" +
 	"\rCloseDecision\x12\x1b.coloc.CloseDecisionRequest\x1a\x0f.coloc.Decision\"@\x82\xd3\xe4\x93\x02::\x01*\"5/api/colocations/{colocation_id}/decisions/{id}/close\x12\x82\x01\n" +
 	"\n" +
-	"GetResults\x12\x18.coloc.GetResultsRequest\x1a\x19.coloc.GetResultsResponse\"?\x82\xd3\xe4\x93\x029\x127/api/colocations/{colocation_id}/decisions/{id}/resultsB,Z*github.com/vblanchet22/back_coloc/proto/pbb\x06proto3"
+	"GetResults\x12\x18.coloc.GetResultsRequest\x1a\x19.coloc.GetResultsResponse\"?\x82\xd3\xe4\x93\x029\x127/api/colocations/{colocation_id}/decisions/{id}/resultsB,Z*github.com/MarinaGenestoux/application-coloc/proto/pbb\x06proto3"
 
 var (
 	file_decision_proto_rawDescOnce sync.Once

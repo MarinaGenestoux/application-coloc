@@ -1620,7 +1620,7 @@ const file_colocation_proto_rawDesc = "" +
 	"\x14RegenerateInviteCode\x12\".coloc.RegenerateInviteCodeRequest\x1a#.coloc.RegenerateInviteCodeResponse\"0\x82\xd3\xe4\x93\x02*:\x01*\"%/api/colocations/{id}/regenerate-code\x12z\n" +
 	"\x0eSendInvitation\x12\x1c.coloc.SendInvitationRequest\x1a\x11.coloc.Invitation\"7\x82\xd3\xe4\x93\x021:\x01*\",/api/colocations/{colocation_id}/invitations\x12\x86\x01\n" +
 	"\x0fListInvitations\x12\x1d.coloc.ListInvitationsRequest\x1a\x1e.coloc.ListInvitationsResponse\"4\x82\xd3\xe4\x93\x02.\x12,/api/colocations/{colocation_id}/invitations\x12\x99\x01\n" +
-	"\x10CancelInvitation\x12\x1e.coloc.CancelInvitationRequest\x1a\x1f.coloc.CancelInvitationResponse\"D\x82\xd3\xe4\x93\x02>*</api/colocations/{colocation_id}/invitations/{invitation_id}B,Z*github.com/vblanchet22/back_coloc/proto/pbb\x06proto3"
+	"\x10CancelInvitation\x12\x1e.coloc.CancelInvitationRequest\x1a\x1f.coloc.CancelInvitationResponse\"D\x82\xd3\xe4\x93\x02>*</api/colocations/{colocation_id}/invitations/{invitation_id}B,Z*github.com/MarinaGenestoux/application-coloc/proto/pbb\x06proto3"
 
 var (
 	file_colocation_proto_rawDescOnce sync.Once

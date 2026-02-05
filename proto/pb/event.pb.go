@@ -1264,7 +1264,7 @@ const file_event_proto_rawDesc = "" +
 	"\vUpdateEvent\x12\x19.coloc.UpdateEventRequest\x1a\f.coloc.Event\"7\x82\xd3\xe4\x93\x021:\x01*\x1a,/api/colocations/{colocation_id}/events/{id}\x12z\n" +
 	"\vDeleteEvent\x12\x19.coloc.DeleteEventRequest\x1a\x1a.coloc.DeleteEventResponse\"4\x82\xd3\xe4\x93\x02.*,/api/colocations/{colocation_id}/events/{id}\x12s\n" +
 	"\x04RSVP\x12\x12.coloc.RSVPRequest\x1a\x13.coloc.RSVPResponse\"B\x82\xd3\xe4\x93\x02<:\x01*\"7/api/colocations/{colocation_id}/events/{event_id}/rsvp\x12\x99\x01\n" +
-	"\x0fGetParticipants\x12\x1d.coloc.GetParticipantsRequest\x1a\x1e.coloc.GetParticipantsResponse\"G\x82\xd3\xe4\x93\x02A\x12?/api/colocations/{colocation_id}/events/{event_id}/participantsB,Z*github.com/vblanchet22/back_coloc/proto/pbb\x06proto3"
+	"\x0fGetParticipants\x12\x1d.coloc.GetParticipantsRequest\x1a\x1e.coloc.GetParticipantsResponse\"G\x82\xd3\xe4\x93\x02A\x12?/api/colocations/{colocation_id}/events/{event_id}/participantsB,Z*github.com/MarinaGenestoux/application-coloc/proto/pbb\x06proto3"
 
 var (
 	file_event_proto_rawDescOnce sync.Once

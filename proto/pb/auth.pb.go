@@ -478,7 +478,7 @@ const file_auth_proto_rawDesc = "" +
 	"\bRegister\x12\x16.coloc.RegisterRequest\x1a\x13.coloc.AuthResponse\"\x1d\x82\xd3\xe4\x93\x02\x17:\x01*\"\x12/api/auth/register\x12M\n" +
 	"\x05Login\x12\x13.coloc.LoginRequest\x1a\x13.coloc.AuthResponse\"\x1a\x82\xd3\xe4\x93\x02\x14:\x01*\"\x0f/api/auth/login\x12]\n" +
 	"\fRefreshToken\x12\x1a.coloc.RefreshTokenRequest\x1a\x13.coloc.AuthResponse\"\x1c\x82\xd3\xe4\x93\x02\x16:\x01*\"\x11/api/auth/refresh\x12R\n" +
-	"\x06Logout\x12\x14.coloc.LogoutRequest\x1a\x15.coloc.LogoutResponse\"\x1b\x82\xd3\xe4\x93\x02\x15:\x01*\"\x10/api/auth/logoutB,Z*github.com/vblanchet22/back_coloc/proto/pbb\x06proto3"
+	"\x06Logout\x12\x14.coloc.LogoutRequest\x1a\x15.coloc.LogoutResponse\"\x1b\x82\xd3\xe4\x93\x02\x15:\x01*\"\x10/api/auth/logoutB,Z*github.com/MarinaGenestoux/application-coloc/proto/pbb\x06proto3"
 
 var (
 	file_auth_proto_rawDescOnce sync.Once
