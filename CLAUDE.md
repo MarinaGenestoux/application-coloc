@@ -192,6 +192,10 @@ make migrate-down                   # Rollback d'une migration
 # Protobuf
 make proto                          # Generer le code Go depuis les .proto
 
+# TLS / Certificats
+.\scripts\generate-certs.ps1        # Generer certificats TLS (Windows)
+./scripts/generate-certs.sh         # Generer certificats TLS (Linux/macOS)
+
 # Backend
 make run                            # Lancer gRPC (50051) + REST gateway (8080)
 make build                          # Compiler le binaire
@@ -216,3 +220,54 @@ cd frontend && npm run build        # Build production
 | JWT_SECRET | - | Cle secrete JWT |
 | JWT_EXPIRY | 24h | Duree du token d'acces |
 | REFRESH_TOKEN_EXPIRY | 168h | Duree du refresh token |
+| **TLS_ENABLED** | false | Active le chiffrement TLS/HTTPS |
+| **TLS_CERT_FILE** | ./certs/server-cert.pem | Chemin du certificat TLS |
+| **TLS_KEY_FILE** | ./certs/server-key.pem | Chemin de la cle privee TLS |
+
+## Securite TLS
+
+Le projet supporte le chiffrement TLS pour toutes les connexions (HTTP, gRPC, WebSocket).
+
+### Activation rapide (Developpement)
+
+```bash
+# 1. Generer les certificats auto-signes
+.\scripts\generate-certs.ps1        # Windows
+./scripts/generate-certs.sh         # Linux/macOS
+
+# 2. Activer TLS dans .env
+TLS_ENABLED=true
+TLS_CERT_FILE=./certs/server-cert.pem
+TLS_KEY_FILE=./certs/server-key.pem
+
+# 3. Activer TLS dans le frontend (frontend/.env)
+VITE_TLS_ENABLED=true
+
+# 4. Redemarrer les serveurs
+make run                            # Backend
+cd frontend && npm run dev          # Frontend
+```
+
+### Documentation TLS
+
+- **Guide complet** : [docs/TLS-GUIDE.md](docs/TLS-GUIDE.md)
+- **Demarrage rapide** : [docs/TLS-QUICKSTART.md](docs/TLS-QUICKSTART.md)
+- **Explications techniques** : [docs/TLS-EXPLAINED.md](docs/TLS-EXPLAINED.md)
+
+### Production (Let's Encrypt)
+
+```bash
+# Installer certbot
+sudo apt-get install certbot
+
+# Generer le certificat
+sudo certbot certonly --standalone -d votredomaine.com
+
+# Configurer .env
+TLS_ENABLED=true
+TLS_CERT_FILE=/etc/letsencrypt/live/votredomaine.com/fullchain.pem
+TLS_KEY_FILE=/etc/letsencrypt/live/votredomaine.com/privkey.pem
+
+# Renouvellement automatique
+0 0 * * * certbot renew --quiet
+```

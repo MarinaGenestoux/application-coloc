@@ -20,6 +20,7 @@ type Config struct {
 	Database DatabaseConfig
 	Server   ServerConfig
 	JWT      JWTConfig
+	TLS      TLSConfig
 }
 
 // DatabaseConfig holds database connection settings
@@ -36,6 +37,13 @@ type DatabaseConfig struct {
 type ServerConfig struct {
 	GRPCPort string
 	HTTPPort string
+}
+
+// TLSConfig holds TLS/SSL settings
+type TLSConfig struct {
+	Enabled  bool
+	CertFile string
+	KeyFile  string
 }
 
 // JWTConfig holds JWT settings
@@ -65,6 +73,11 @@ func Load() *Config {
 			AccessTokenExpiry:  getDurationEnv("JWT_EXPIRY", constants.DefaultAccessTokenExpiry),
 			RefreshTokenExpiry: getDurationEnv("REFRESH_TOKEN_EXPIRY", constants.DefaultRefreshTokenExpiry),
 		},
+		TLS: TLSConfig{
+			Enabled:  getBoolEnv("TLS_ENABLED", false),
+			CertFile: getEnv("TLS_CERT_FILE", "./certs/server-cert.pem"),
+			KeyFile:  getEnv("TLS_KEY_FILE", "./certs/server-key.pem"),
+		},
 	}
 }
 
@@ -87,6 +100,15 @@ func getDurationEnv(key string, defaultValue time.Duration) time.Duration {
 		}
 		if d, err := time.ParseDuration(value); err == nil {
 			return d
+		}
+	}
+	return defaultValue
+}
+
+func getBoolEnv(key string, defaultValue bool) bool {
+	if value := os.Getenv(key); value != "" {
+		if b, err := strconv.ParseBool(value); err == nil {
+			return b
 		}
 	}
 	return defaultValue

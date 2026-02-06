@@ -18,7 +18,43 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - coloc_network
+
+  # Backend API (optionnel - pour deploiement Docker complet)
+  # Decommentez si vous souhaitez deployer le backend dans Docker
+  # backend:
+  #   build: .
+  #   container_name: coloc_backend
+  #   restart: unless-stopped
+  #   environment:
+  #     DB_HOST: postgres
+  #     DB_PORT: 5432
+  #     DB_USER: coloc_user
+  #     DB_PASSWORD: coloc_password
+  #     DB_NAME: coloc_db
+  #     DB_SSLMODE: disable
+  #     GRPC_PORT: 50051
+  #     HTTP_PORT: 8080
+  #     JWT_SECRET: ${JWT_SECRET:-change-me-in-production}
+  #     TLS_ENABLED: ${TLS_ENABLED:-false}
+  #     TLS_CERT_FILE: /app/certs/server-cert.pem
+  #     TLS_KEY_FILE: /app/certs/server-key.pem
+  #   ports:
+  #     - "8080:8080"   # HTTP/HTTPS gateway
+  #     - "50051:50051" # gRPC
+  #   volumes:
+  #     - ./certs:/app/certs:ro  # Montage des certificats TLS (lecture seule)
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
+  #   networks:
+  #     - coloc_network
 
 volumes:
   postgres_data:
     driver: local
+
+networks:
+  coloc_network:
+    driver: bridge

@@ -3,3 +3,11 @@ dist/
 .env
 *.log
 .DS_Store
+third_party/
+
+# Certificats TLS (ne JAMAIS versionner les cles privees)
+certs/
+*.pem
+*.key
+*.crt
+*.csr

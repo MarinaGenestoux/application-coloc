@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"crypto/tls"
 	"fmt"
 	"io"
 	"log"
@@ -18,6 +19,7 @@ import (
 	"github.com/MarinaGenestoux/application-coloc/internal/application/service"
 	pb "github.com/MarinaGenestoux/application-coloc/proto/pb"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/reflection"
 )
@@ -138,10 +140,38 @@ func (s *server) runGRPCServer() error {
 	// Create auth interceptor
 	authInterceptor := auth.NewAuthInterceptor(s.jwtManager)
 
-	grpcServer := grpc.NewServer(
+	// Configure TLS if enabled
+	var opts []grpc.ServerOption
+	if s.cfg.TLS.Enabled {
+		// Load server certificate and private key
+		cert, err := tls.LoadX509KeyPair(s.cfg.TLS.CertFile, s.cfg.TLS.KeyFile)
+		if err != nil {
+			log.Fatalf("Erreur chargement certificat TLS: %v", err)
+		}
+
+		// Configure TLS with modern security settings
+		tlsConfig := &tls.Config{
+			Certificates: []tls.Certificate{cert},
+			MinVersion:   tls.VersionTLS12, // Minimum TLS 1.2 for security
+			CipherSuites: []uint16{
+				tls.TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,
+				tls.TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
+			},
+		}
+
+		creds := credentials.NewTLS(tlsConfig)
+		opts = append(opts, grpc.Creds(creds))
+		log.Printf("🔒 TLS active sur le serveur gRPC (certificat: %s)", s.cfg.TLS.CertFile)
+	} else {
+		log.Printf("⚠️  AVERTISSEMENT: TLS desactive - connexions NON chiffrees")
+	}
+
+	opts = append(opts,
 		grpc.UnaryInterceptor(authInterceptor.Unary()),
 		grpc.StreamInterceptor(authInterceptor.Stream()),
 	)
+
+	grpcServer := grpc.NewServer(opts...)
 
 	// Register gRPC services
 	pb.RegisterAuthServiceServer(grpcServer, s.authHandler)
@@ -159,7 +189,11 @@ func (s *server) runGRPCServer() error {
 	// Enable reflection for grpcurl/grpcui
 	reflection.Register(grpcServer)
 
-	log.Printf("Serveur gRPC demarre sur le port %s", s.cfg.Server.GRPCPort)
+	protocol := "gRPC"
+	if s.cfg.TLS.Enabled {
+		protocol = "gRPCs (TLS)"
+	}
+	log.Printf("Serveur %s demarre sur le port %s", protocol, s.cfg.Server.GRPCPort)
 	return grpcServer.Serve(lis)
 }
 
@@ -172,7 +206,18 @@ func (s *server) runHTTPGateway() error {
 		runtime.WithIncomingHeaderMatcher(customHeaderMatcher),
 	)
 
-	opts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
+	// Configure gRPC client connection (gateway -> gRPC server)
+	var opts []grpc.DialOption
+	if s.cfg.TLS.Enabled {
+		// Use TLS for internal gRPC connection
+		creds := credentials.NewTLS(&tls.Config{
+			InsecureSkipVerify: true, // Skip verification for localhost (self-signed cert)
+		})
+		opts = append(opts, grpc.WithTransportCredentials(creds))
+	} else {
+		opts = append(opts, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	}
+
 	grpcEndpoint := "localhost:" + s.cfg.Server.GRPCPort
 
 	// Register HTTP handlers
@@ -226,9 +271,40 @@ func (s *server) runHTTPGateway() error {
 	httpMux.HandleFunc("/swagger/", swaggerUIHandler("/swagger/doc.json"))
 	httpMux.Handle("/", handler)
 
-	log.Printf("Gateway REST demarree sur le port %s", s.cfg.Server.HTTPPort)
-	log.Printf("API v1 disponible sur http://localhost:%s/api/v1/", s.cfg.Server.HTTPPort)
-	log.Printf("Swagger UI disponible sur http://localhost:%s/swagger/", s.cfg.Server.HTTPPort)
+	// Start HTTP or HTTPS server based on TLS configuration
+	protocol := "HTTP"
+	apiURL := fmt.Sprintf("http://localhost:%s/api/v1/", s.cfg.Server.HTTPPort)
+	swaggerURL := fmt.Sprintf("http://localhost:%s/swagger/", s.cfg.Server.HTTPPort)
+
+	if s.cfg.TLS.Enabled {
+		protocol = "HTTPS (TLS)"
+		apiURL = fmt.Sprintf("https://localhost:%s/api/v1/", s.cfg.Server.HTTPPort)
+		swaggerURL = fmt.Sprintf("https://localhost:%s/swagger/", s.cfg.Server.HTTPPort)
+
+		// Configure HTTPS server with modern TLS settings
+		server := &http.Server{
+			Addr:    ":" + s.cfg.Server.HTTPPort,
+			Handler: httpMux,
+			TLSConfig: &tls.Config{
+				MinVersion: tls.VersionTLS12, // Minimum TLS 1.2
+				CipherSuites: []uint16{
+					tls.TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,
+					tls.TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
+				},
+			},
+		}
+
+		log.Printf("🔒 Gateway REST %s demarree sur le port %s", protocol, s.cfg.Server.HTTPPort)
+		log.Printf("API v1 disponible sur %s", apiURL)
+		log.Printf("Swagger UI disponible sur %s", swaggerURL)
+		log.Printf("🔒 Certificat: %s", s.cfg.TLS.CertFile)
+
+		return server.ListenAndServeTLS(s.cfg.TLS.CertFile, s.cfg.TLS.KeyFile)
+	}
+
+	log.Printf("⚠️  Gateway REST %s demarree sur le port %s (NON SECURISE)", protocol, s.cfg.Server.HTTPPort)
+	log.Printf("API v1 disponible sur %s", apiURL)
+	log.Printf("Swagger UI disponible sur %s", swaggerURL)
 
 	return http.ListenAndServe(":"+s.cfg.Server.HTTPPort, httpMux)
 }

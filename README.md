@@ -139,12 +139,70 @@ make migrate-down
 Le fichier `.env` contient :
 
 ```env
+# Base de données
 DB_HOST=localhost
 DB_PORT=5432
-DB_USERNAME=coloc_user
+DB_USER=coloc_user
 DB_PASSWORD=coloc_password
 DB_NAME=coloc_db
+DB_SSLMODE=disable
+
+# Serveur
+GRPC_PORT=50051
+HTTP_PORT=8080
+
+# JWT
+JWT_SECRET=change-me-in-production
+JWT_EXPIRY=24h
+REFRESH_TOKEN_EXPIRY=168h
+
+# TLS/HTTPS (optionnel)
+TLS_ENABLED=false
+TLS_CERT_FILE=./certs/server-cert.pem
+TLS_KEY_FILE=./certs/server-key.pem
 ```
+
+## Sécurité TLS/HTTPS
+
+Le projet supporte le chiffrement TLS pour sécuriser toutes les connexions (HTTP, gRPC, WebSocket).
+
+### Activation en développement
+
+```bash
+# 1. Générer les certificats auto-signés
+.\scripts\generate-certs.ps1        # Windows
+./scripts/generate-certs.sh         # Linux/macOS
+
+# 2. Activer TLS dans .env
+TLS_ENABLED=true
+
+# 3. Activer TLS dans le frontend (frontend/.env)
+VITE_TLS_ENABLED=true
+
+# 4. Démarrer l'application
+go run cmd/server/main.go           # Backend sur https://localhost:8080
+cd frontend && npm run dev          # Frontend sur http://localhost:5173
+```
+
+### Production (Let's Encrypt)
+
+```bash
+# Générer un certificat gratuit
+sudo certbot certonly --standalone -d votredomaine.com
+
+# Configurer .env
+TLS_ENABLED=true
+TLS_CERT_FILE=/etc/letsencrypt/live/votredomaine.com/fullchain.pem
+TLS_KEY_FILE=/etc/letsencrypt/live/votredomaine.com/privkey.pem
+```
+
+### Connexions sécurisées
+
+| Service | Sans TLS | Avec TLS |
+|---------|----------|----------|
+| API REST | `http://localhost:8080` | `https://localhost:8080` |
+| gRPC | `grpc://localhost:50051` | `grpcs://localhost:50051` |
+| WebSocket | `ws://` | `wss://` |
 
 ## Connexion à la base de données
 
