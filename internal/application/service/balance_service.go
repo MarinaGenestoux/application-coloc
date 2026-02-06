@@ -9,19 +9,22 @@ import (
 	"github.com/MarinaGenestoux/application-coloc/internal/infra/auth"
 	"github.com/MarinaGenestoux/application-coloc/internal/domain"
 	"github.com/MarinaGenestoux/application-coloc/internal/infra/repository/postgres"
+	"github.com/MarinaGenestoux/application-coloc/internal/infra/cache"
 )
 
 // BalanceService handles balance business logic
 type BalanceService struct {
 	repo           *postgres.BalanceRepository
 	colocationRepo *postgres.ColocationRepository
+	cache          *cache.BalanceCache
 }
 
 // NewBalanceService creates a new BalanceService
-func NewBalanceService(repo *postgres.BalanceRepository, colocationRepo *postgres.ColocationRepository) *BalanceService {
+func NewBalanceService(repo *postgres.BalanceRepository, colocationRepo *postgres.ColocationRepository, balanceCache *cache.BalanceCache) *BalanceService {
 	return &BalanceService{
 		repo:           repo,
 		colocationRepo: colocationRepo,
+		cache:          balanceCache,
 	}
 }
 
@@ -31,10 +34,24 @@ func (s *BalanceService) GetBalances(ctx context.Context, colocationID string) (
 		return nil, nil, err
 	}
 
+	// Tenter de recuperer depuis le cache
+	if cachedBalances, found := s.cache.Get(colocationID); found {
+		// Cache hit - on evite le calcul SQL lourd
+		debts, err := s.repo.GetRawDebts(ctx, colocationID)
+		if err != nil {
+			return nil, nil, fmt.Errorf("erreur lors du calcul des dettes: %w", err)
+		}
+		return cachedBalances, debts, nil
+	}
+
+	// Cache miss - on calcule et on met en cache
 	balances, err := s.repo.GetUserBalances(ctx, colocationID)
 	if err != nil {
 		return nil, nil, fmt.Errorf("erreur lors du calcul des soldes: %w", err)
 	}
+
+	// Mettre en cache pour 5 minutes
+	s.cache.Set(colocationID, balances)
 
 	debts, err := s.repo.GetRawDebts(ctx, colocationID)
 	if err != nil {

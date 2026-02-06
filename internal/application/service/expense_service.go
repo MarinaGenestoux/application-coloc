@@ -8,6 +8,7 @@ import (
 	"github.com/MarinaGenestoux/application-coloc/internal/application/constants"
 	"github.com/MarinaGenestoux/application-coloc/internal/domain"
 	"github.com/MarinaGenestoux/application-coloc/internal/infra/auth"
+	"github.com/MarinaGenestoux/application-coloc/internal/infra/cache"
 )
 
 // ExpenseService handles expense business logic
@@ -15,14 +16,16 @@ type ExpenseService struct {
 	repo           domain.ExpenseRepository
 	colocationRepo domain.ColocationRepository
 	categoryRepo   domain.CategoryRepository
+	balanceCache   *cache.BalanceCache
 }
 
 // NewExpenseService creates a new ExpenseService
-func NewExpenseService(repo domain.ExpenseRepository, colocationRepo domain.ColocationRepository, categoryRepo domain.CategoryRepository) *ExpenseService {
+func NewExpenseService(repo domain.ExpenseRepository, colocationRepo domain.ColocationRepository, categoryRepo domain.CategoryRepository, balanceCache *cache.BalanceCache) *ExpenseService {
 	return &ExpenseService{
 		repo:           repo,
 		colocationRepo: colocationRepo,
 		categoryRepo:   categoryRepo,
+		balanceCache:   balanceCache,
 	}
 }
 
@@ -68,6 +71,9 @@ func (s *ExpenseService) Create(ctx context.Context, input CreateExpenseInput) (
 	if err := s.repo.Create(ctx, expense, splits); err != nil {
 		return nil, fmt.Errorf("erreur lors de la creation de la depense: %w", err)
 	}
+
+	// Invalider le cache des soldes car une nouvelle depense modifie les soldes
+	s.balanceCache.Invalidate(input.ColocationID)
 
 	return s.repo.GetByID(ctx, expense.ID)
 }
@@ -335,6 +341,9 @@ func (s *ExpenseService) Update(ctx context.Context, input UpdateExpenseInput) (
 		return nil, fmt.Errorf("erreur lors de la mise a jour: %w", err)
 	}
 
+	// Invalider le cache des soldes car la modification modifie les soldes
+	s.balanceCache.Invalidate(input.ColocationID)
+
 	return s.repo.GetByID(ctx, expense.ID)
 }
 
@@ -376,7 +385,14 @@ func (s *ExpenseService) Delete(ctx context.Context, colocationID, expenseID str
 		return fmt.Errorf("seul le payeur peut supprimer cette depense")
 	}
 
-	return s.repo.Delete(ctx, expenseID)
+	if err := s.repo.Delete(ctx, expenseID); err != nil {
+		return err
+	}
+
+	// Invalider le cache des soldes car la suppression modifie les soldes
+	s.balanceCache.Invalidate(colocationID)
+
+	return nil
 }
 
 // CreateRecurringInput contains input for creating a recurring expense

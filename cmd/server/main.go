@@ -8,11 +8,13 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"time"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/joho/godotenv"
 	"github.com/MarinaGenestoux/application-coloc/internal/infra/auth"
+	"github.com/MarinaGenestoux/application-coloc/internal/infra/cache"
 	"github.com/MarinaGenestoux/application-coloc/internal/infra/config"
 	handler "github.com/MarinaGenestoux/application-coloc/internal/infra/grpc"
 	"github.com/MarinaGenestoux/application-coloc/internal/infra/repository/postgres"
@@ -74,14 +76,17 @@ func main() {
 	notificationRepo := postgres.NewNotificationRepository(pool)
 	eventRepo := postgres.NewEventRepository(pool)
 
+	// Initialize cache (TTL de 5 minutes pour les soldes)
+	balanceCache := cache.NewBalanceCache(5 * time.Minute)
+
 	// Initialize services
 	hasher := auth.NewBcryptPasswordHasher()
 	authService := service.NewAuthService(authRepo, jwtManager, hasher)
 	userService := service.NewUserService(authRepo)
 	colocationService := service.NewColocationService(colocationRepo)
 	categoryService := service.NewCategoryService(categoryRepo, colocationRepo)
-	expenseService := service.NewExpenseService(expenseRepo, colocationRepo, categoryRepo)
-	balanceService := service.NewBalanceService(balanceRepo, colocationRepo)
+	expenseService := service.NewExpenseService(expenseRepo, colocationRepo, categoryRepo, balanceCache)
+	balanceService := service.NewBalanceService(balanceRepo, colocationRepo, balanceCache)
 	paymentService := service.NewPaymentService(paymentRepo, colocationRepo)
 	decisionService := service.NewDecisionService(decisionRepo, colocationRepo)
 	fundService := service.NewFundService(fundRepo, colocationRepo)

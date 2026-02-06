@@ -250,6 +250,21 @@ make fmt            # Formate uniquement
 
 Pour plus de détails (installation, configuration, règles), voir [LINTERS.md](LINTERS.md).
 
+## Optimisations de performance
+
+Le projet inclut plusieurs optimisations PostgreSQL pour améliorer les performances :
+- **PgTune** : Configuration PostgreSQL optimisée (shared_buffers, work_mem, etc.)
+- **Index stratégiques** : Index Btree sur colonnes fréquemment utilisées (jointures, filtres)
+- **Cache in-memory** : Cache des soldes (5 min TTL) pour éviter recalculs
+- **Monitoring** : pg_stat_statements pour surveiller les requêtes lentes
+
+```bash
+# Analyser les performances
+docker compose exec postgres psql -U coloc_user -d coloc_db -f analyze_queries.sql
+```
+
+Pour plus de détails (impact, configuration, monitoring), voir [PERFORMANCE.md](PERFORMANCE.md).
+
 ## Développement
 
 1. Ajouter les règles métier dans `internal/domain`
