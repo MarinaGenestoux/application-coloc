@@ -11,7 +11,7 @@ module.exports = {
     'plugin:react/recommended',
     'plugin:react/jsx-runtime',
     'plugin:react-hooks/recommended',
-    'plugin:prettier/recommended', // Doit être en dernier
+    'plugin:prettier/recommended', 
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -46,7 +46,7 @@ module.exports = {
     '@typescript-eslint/explicit-module-boundary-types': 'off',
 
     // Règles React
-    'react/prop-types': 'off', // TypeScript gère les types
+    'react/prop-types': 'off', 
     'react/react-in-jsx-scope': 'off', // React 17+
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': 'warn',
@@ -59,7 +59,7 @@ module.exports = {
     'no-console': ['warn', { allow: ['warn', 'error'] }],
     'no-debugger': 'warn',
     'prefer-const': 'warn',
-    'no-unused-vars': 'off', // Utilise la version TypeScript
+    'no-unused-vars': 'off',
 
     // Prettier (géré par plugin)
     'prettier/prettier': ['error', {}, { usePrettierrc: true }],

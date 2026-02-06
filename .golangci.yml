@@ -1,4 +1,3 @@
-# Configuration golangci-lint pour le projet ColocApp
 # Documentation : https://golangci-lint.run/usage/configuration/
 
 run:
