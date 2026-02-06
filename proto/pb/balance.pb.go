@@ -754,11 +754,11 @@ const file_balance_proto_rawDesc = "" +
 	"event_type\x18\x03 \x01(\tR\teventType\x12\x19\n" +
 	"\bevent_id\x18\x04 \x01(\tR\aeventId\x12 \n" +
 	"\vdescription\x18\x05 \x01(\tR\vdescription\x12\x16\n" +
-	"\x06amount\x18\x06 \x01(\x01R\x06amount2\xb7\x03\n" +
-	"\x0eBalanceService\x12w\n" +
-	"\vGetBalances\x12\x19.coloc.GetBalancesRequest\x1a\x1a.coloc.GetBalancesResponse\"1\x82\xd3\xe4\x93\x02+\x12)/api/colocations/{colocation_id}/balances\x12\x97\x01\n" +
-	"\x12GetSimplifiedDebts\x12 .coloc.GetSimplifiedDebtsRequest\x1a!.coloc.GetSimplifiedDebtsResponse\"<\x82\xd3\xe4\x93\x026\x124/api/colocations/{colocation_id}/balances/simplified\x12\x91\x01\n" +
-	"\x11GetBalanceHistory\x12\x1f.coloc.GetBalanceHistoryRequest\x1a .coloc.GetBalanceHistoryResponse\"9\x82\xd3\xe4\x93\x023\x121/api/colocations/{colocation_id}/balances/historyB,Z*github.com/MarinaGenestoux/application-coloc/proto/pbb\x06proto3"
+	"\x06amount\x18\x06 \x01(\x01R\x06amount2\xc0\x03\n" +
+	"\x0eBalanceService\x12z\n" +
+	"\vGetBalances\x12\x19.coloc.GetBalancesRequest\x1a\x1a.coloc.GetBalancesResponse\"4\x82\xd3\xe4\x93\x02.\x12,/api/v1/colocations/{colocation_id}/balances\x12\x9a\x01\n" +
+	"\x12GetSimplifiedDebts\x12 .coloc.GetSimplifiedDebtsRequest\x1a!.coloc.GetSimplifiedDebtsResponse\"?\x82\xd3\xe4\x93\x029\x127/api/v1/colocations/{colocation_id}/balances/simplified\x12\x94\x01\n" +
+	"\x11GetBalanceHistory\x12\x1f.coloc.GetBalanceHistoryRequest\x1a .coloc.GetBalanceHistoryResponse\"<\x82\xd3\xe4\x93\x026\x124/api/v1/colocations/{colocation_id}/balances/historyB7Z5github.com/MarinaGenestoux/application-coloc/proto/pbb\x06proto3"
 
 var (
 	file_balance_proto_rawDescOnce sync.Once

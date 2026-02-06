@@ -1311,17 +1311,17 @@ const file_decision_proto_rawDesc = "" +
 	"\x0eDecisionStatus\x12\x1f\n" +
 	"\x1bDECISION_STATUS_UNSPECIFIED\x10\x00\x12\x18\n" +
 	"\x14DECISION_STATUS_OPEN\x10\x01\x12\x1a\n" +
-	"\x16DECISION_STATUS_CLOSED\x10\x022\x84\b\n" +
-	"\x0fDecisionService\x12v\n" +
-	"\x0eCreateDecision\x12\x1c.coloc.CreateDecisionRequest\x1a\x0f.coloc.Decision\"5\x82\xd3\xe4\x93\x02/:\x01*\"*/api/colocations/{colocation_id}/decisions\x12r\n" +
-	"\vGetDecision\x12\x19.coloc.GetDecisionRequest\x1a\x0f.coloc.Decision\"7\x82\xd3\xe4\x93\x021\x12//api/colocations/{colocation_id}/decisions/{id}\x12~\n" +
-	"\rListDecisions\x12\x1b.coloc.ListDecisionsRequest\x1a\x1c.coloc.ListDecisionsResponse\"2\x82\xd3\xe4\x93\x02,\x12*/api/colocations/{colocation_id}/decisions\x12{\n" +
-	"\x0eUpdateDecision\x12\x1c.coloc.UpdateDecisionRequest\x1a\x0f.coloc.Decision\":\x82\xd3\xe4\x93\x024:\x01*\x1a//api/colocations/{colocation_id}/decisions/{id}\x12\x86\x01\n" +
-	"\x0eDeleteDecision\x12\x1c.coloc.DeleteDecisionRequest\x1a\x1d.coloc.DeleteDecisionResponse\"7\x82\xd3\xe4\x93\x021*//api/colocations/{colocation_id}/decisions/{id}\x12y\n" +
-	"\x04Vote\x12\x12.coloc.VoteRequest\x1a\x13.coloc.VoteResponse\"H\x82\xd3\xe4\x93\x02B:\x01*\"=/api/colocations/{colocation_id}/decisions/{decision_id}/vote\x12\x7f\n" +
-	"\rCloseDecision\x12\x1b.coloc.CloseDecisionRequest\x1a\x0f.coloc.Decision\"@\x82\xd3\xe4\x93\x02::\x01*\"5/api/colocations/{colocation_id}/decisions/{id}/close\x12\x82\x01\n" +
+	"\x16DECISION_STATUS_CLOSED\x10\x022\x9e\b\n" +
+	"\x0fDecisionService\x12y\n" +
+	"\x0eCreateDecision\x12\x1c.coloc.CreateDecisionRequest\x1a\x0f.coloc.Decision\"8\x82\xd3\xe4\x93\x022:\x01*\"-/api/v1/colocations/{colocation_id}/decisions\x12u\n" +
+	"\vGetDecision\x12\x19.coloc.GetDecisionRequest\x1a\x0f.coloc.Decision\":\x82\xd3\xe4\x93\x024\x122/api/v1/colocations/{colocation_id}/decisions/{id}\x12\x81\x01\n" +
+	"\rListDecisions\x12\x1b.coloc.ListDecisionsRequest\x1a\x1c.coloc.ListDecisionsResponse\"5\x82\xd3\xe4\x93\x02/\x12-/api/v1/colocations/{colocation_id}/decisions\x12~\n" +
+	"\x0eUpdateDecision\x12\x1c.coloc.UpdateDecisionRequest\x1a\x0f.coloc.Decision\"=\x82\xd3\xe4\x93\x027:\x01*\x1a2/api/v1/colocations/{colocation_id}/decisions/{id}\x12\x89\x01\n" +
+	"\x0eDeleteDecision\x12\x1c.coloc.DeleteDecisionRequest\x1a\x1d.coloc.DeleteDecisionResponse\":\x82\xd3\xe4\x93\x024*2/api/v1/colocations/{colocation_id}/decisions/{id}\x12|\n" +
+	"\x04Vote\x12\x12.coloc.VoteRequest\x1a\x13.coloc.VoteResponse\"K\x82\xd3\xe4\x93\x02E:\x01*\"@/api/v1/colocations/{colocation_id}/decisions/{decision_id}/vote\x12\x82\x01\n" +
+	"\rCloseDecision\x12\x1b.coloc.CloseDecisionRequest\x1a\x0f.coloc.Decision\"C\x82\xd3\xe4\x93\x02=:\x01*\"8/api/v1/colocations/{colocation_id}/decisions/{id}/close\x12\x85\x01\n" +
 	"\n" +
-	"GetResults\x12\x18.coloc.GetResultsRequest\x1a\x19.coloc.GetResultsResponse\"?\x82\xd3\xe4\x93\x029\x127/api/colocations/{colocation_id}/decisions/{id}/resultsB,Z*github.com/MarinaGenestoux/application-coloc/proto/pbb\x06proto3"
+	"GetResults\x12\x18.coloc.GetResultsRequest\x1a\x19.coloc.GetResultsResponse\"B\x82\xd3\xe4\x93\x02<\x12:/api/v1/colocations/{colocation_id}/decisions/{id}/resultsB7Z5github.com/MarinaGenestoux/application-coloc/proto/pbb\x06proto3"
 
 var (
 	file_decision_proto_rawDescOnce sync.Once

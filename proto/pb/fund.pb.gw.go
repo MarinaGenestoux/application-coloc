@@ -503,7 +503,7 @@ func RegisterFundServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.FundService/CreateFund", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/funds"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.FundService/CreateFund", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/funds"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -523,7 +523,7 @@ func RegisterFundServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.FundService/GetFund", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/funds/{id}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.FundService/GetFund", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/funds/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -543,7 +543,7 @@ func RegisterFundServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.FundService/ListFunds", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/funds"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.FundService/ListFunds", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/funds"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -563,7 +563,7 @@ func RegisterFundServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.FundService/UpdateFund", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/funds/{id}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.FundService/UpdateFund", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/funds/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -583,7 +583,7 @@ func RegisterFundServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.FundService/DeleteFund", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/funds/{id}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.FundService/DeleteFund", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/funds/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -603,7 +603,7 @@ func RegisterFundServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.FundService/AddContribution", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/funds/{fund_id}/contributions"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.FundService/AddContribution", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/funds/{fund_id}/contributions"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -623,7 +623,7 @@ func RegisterFundServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.FundService/ListContributions", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/funds/{fund_id}/contributions"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.FundService/ListContributions", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/funds/{fund_id}/contributions"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -643,7 +643,7 @@ func RegisterFundServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.FundService/DeleteContribution", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/funds/{fund_id}/contributions/{id}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.FundService/DeleteContribution", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/funds/{fund_id}/contributions/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -701,7 +701,7 @@ func RegisterFundServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.FundService/CreateFund", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/funds"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.FundService/CreateFund", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/funds"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -718,7 +718,7 @@ func RegisterFundServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.FundService/GetFund", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/funds/{id}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.FundService/GetFund", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/funds/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -735,7 +735,7 @@ func RegisterFundServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.FundService/ListFunds", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/funds"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.FundService/ListFunds", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/funds"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -752,7 +752,7 @@ func RegisterFundServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.FundService/UpdateFund", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/funds/{id}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.FundService/UpdateFund", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/funds/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -769,7 +769,7 @@ func RegisterFundServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.FundService/DeleteFund", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/funds/{id}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.FundService/DeleteFund", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/funds/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -786,7 +786,7 @@ func RegisterFundServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.FundService/AddContribution", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/funds/{fund_id}/contributions"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.FundService/AddContribution", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/funds/{fund_id}/contributions"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -803,7 +803,7 @@ func RegisterFundServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.FundService/ListContributions", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/funds/{fund_id}/contributions"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.FundService/ListContributions", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/funds/{fund_id}/contributions"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -820,7 +820,7 @@ func RegisterFundServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.FundService/DeleteContribution", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/funds/{fund_id}/contributions/{id}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.FundService/DeleteContribution", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/funds/{fund_id}/contributions/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -837,14 +837,14 @@ func RegisterFundServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux
 }
 
 var (
-	pattern_FundService_CreateFund_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"api", "colocations", "colocation_id", "funds"}, ""))
-	pattern_FundService_GetFund_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "colocations", "colocation_id", "funds", "id"}, ""))
-	pattern_FundService_ListFunds_0          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"api", "colocations", "colocation_id", "funds"}, ""))
-	pattern_FundService_UpdateFund_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "colocations", "colocation_id", "funds", "id"}, ""))
-	pattern_FundService_DeleteFund_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "colocations", "colocation_id", "funds", "id"}, ""))
-	pattern_FundService_AddContribution_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5}, []string{"api", "colocations", "colocation_id", "funds", "fund_id", "contributions"}, ""))
-	pattern_FundService_ListContributions_0  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5}, []string{"api", "colocations", "colocation_id", "funds", "fund_id", "contributions"}, ""))
-	pattern_FundService_DeleteContribution_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5, 1, 0, 4, 1, 5, 6}, []string{"api", "colocations", "colocation_id", "funds", "fund_id", "contributions", "id"}, ""))
+	pattern_FundService_CreateFund_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4}, []string{"api", "v1", "colocations", "colocation_id", "funds"}, ""))
+	pattern_FundService_GetFund_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "colocations", "colocation_id", "funds", "id"}, ""))
+	pattern_FundService_ListFunds_0          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4}, []string{"api", "v1", "colocations", "colocation_id", "funds"}, ""))
+	pattern_FundService_UpdateFund_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "colocations", "colocation_id", "funds", "id"}, ""))
+	pattern_FundService_DeleteFund_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "colocations", "colocation_id", "funds", "id"}, ""))
+	pattern_FundService_AddContribution_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6}, []string{"api", "v1", "colocations", "colocation_id", "funds", "fund_id", "contributions"}, ""))
+	pattern_FundService_ListContributions_0  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6}, []string{"api", "v1", "colocations", "colocation_id", "funds", "fund_id", "contributions"}, ""))
+	pattern_FundService_DeleteContribution_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6, 1, 0, 4, 1, 5, 7}, []string{"api", "v1", "colocations", "colocation_id", "funds", "fund_id", "contributions", "id"}, ""))
 )
 
 var (

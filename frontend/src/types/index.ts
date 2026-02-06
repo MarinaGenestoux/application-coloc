@@ -84,7 +84,7 @@ export interface CategoryStat {
 }
 
 // Expense types
-export type SplitType = 'equal' | 'percentage' | 'custom';
+export type SplitType = 'equal' | 'percentage' | 'custom' | 'payer_only';
 
 export interface ExpenseSplit {
   id: string;
@@ -128,6 +128,59 @@ export interface SimplifiedDebt {
   to_user_id: string;
   to_user?: UserInfo;
   amount: number;
+}
+
+// Event types
+export type EventStatus = 'upcoming' | 'ongoing' | 'completed' | 'cancelled';
+export type RSVPStatus = 'going' | 'maybe' | 'not_going' | '';
+
+export interface Event {
+  id: string;
+  colocation_id: string;
+  created_by: string;
+  created_by_nom: string;
+  created_by_prenom: string;
+  title: string;
+  description?: string;
+  event_date: string;
+  location?: string;
+  budget?: number;
+  fund_id?: string;
+  fund_name?: string;
+  status: EventStatus;
+  created_at: string;
+  user_rsvp: RSVPStatus;
+  going_count: number;
+  maybe_count: number;
+  not_going_count: number;
+}
+
+export interface EventParticipant {
+  user_id: string;
+  user_nom: string;
+  user_prenom: string;
+  avatar_url?: string;
+  rsvp_status: RSVPStatus;
+  responded_at: string;
+}
+
+export interface CreateEventRequest {
+  title: string;
+  description?: string;
+  event_date: string; // Format: YYYY-MM-DD HH:MM
+  location?: string;
+  budget?: number;
+  fund_id?: string;
+}
+
+export interface UpdateEventRequest {
+  title?: string;
+  description?: string;
+  event_date?: string;
+  location?: string;
+  budget?: number;
+  fund_id?: string;
+  status?: EventStatus;
 }
 
 // API Response types

@@ -473,12 +473,12 @@ const file_auth_proto_rawDesc = "" +
 	"avatar_url\x18\x06 \x01(\tH\x01R\tavatarUrl\x88\x01\x01B\f\n" +
 	"\n" +
 	"_telephoneB\r\n" +
-	"\v_avatar_url2\xe7\x02\n" +
-	"\vAuthService\x12V\n" +
-	"\bRegister\x12\x16.coloc.RegisterRequest\x1a\x13.coloc.AuthResponse\"\x1d\x82\xd3\xe4\x93\x02\x17:\x01*\"\x12/api/auth/register\x12M\n" +
-	"\x05Login\x12\x13.coloc.LoginRequest\x1a\x13.coloc.AuthResponse\"\x1a\x82\xd3\xe4\x93\x02\x14:\x01*\"\x0f/api/auth/login\x12]\n" +
-	"\fRefreshToken\x12\x1a.coloc.RefreshTokenRequest\x1a\x13.coloc.AuthResponse\"\x1c\x82\xd3\xe4\x93\x02\x16:\x01*\"\x11/api/auth/refresh\x12R\n" +
-	"\x06Logout\x12\x14.coloc.LogoutRequest\x1a\x15.coloc.LogoutResponse\"\x1b\x82\xd3\xe4\x93\x02\x15:\x01*\"\x10/api/auth/logoutB,Z*github.com/MarinaGenestoux/application-coloc/proto/pbb\x06proto3"
+	"\v_avatar_url2\xf3\x02\n" +
+	"\vAuthService\x12Y\n" +
+	"\bRegister\x12\x16.coloc.RegisterRequest\x1a\x13.coloc.AuthResponse\" \x82\xd3\xe4\x93\x02\x1a:\x01*\"\x15/api/v1/auth/register\x12P\n" +
+	"\x05Login\x12\x13.coloc.LoginRequest\x1a\x13.coloc.AuthResponse\"\x1d\x82\xd3\xe4\x93\x02\x17:\x01*\"\x12/api/v1/auth/login\x12`\n" +
+	"\fRefreshToken\x12\x1a.coloc.RefreshTokenRequest\x1a\x13.coloc.AuthResponse\"\x1f\x82\xd3\xe4\x93\x02\x19:\x01*\"\x14/api/v1/auth/refresh\x12U\n" +
+	"\x06Logout\x12\x14.coloc.LogoutRequest\x1a\x15.coloc.LogoutResponse\"\x1e\x82\xd3\xe4\x93\x02\x18:\x01*\"\x13/api/v1/auth/logoutB7Z5github.com/MarinaGenestoux/application-coloc/proto/pbb\x06proto3"
 
 var (
 	file_auth_proto_rawDescOnce sync.Once

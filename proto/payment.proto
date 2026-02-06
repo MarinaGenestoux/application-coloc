@@ -11,7 +11,7 @@ service PaymentService {
   // Create a payment (declare reimbursement)
   rpc CreatePayment(CreatePaymentRequest) returns (Payment) {
     option (google.api.http) = {
-      post: "/api/colocations/{colocation_id}/payments"
+      post: "/api/v1/colocations/{colocation_id}/payments"
       body: "*"
     };
   }
@@ -19,21 +19,21 @@ service PaymentService {
   // Get payment by ID
   rpc GetPayment(GetPaymentRequest) returns (Payment) {
     option (google.api.http) = {
-      get: "/api/colocations/{colocation_id}/payments/{id}"
+      get: "/api/v1/colocations/{colocation_id}/payments/{id}"
     };
   }
 
   // List payments for colocation
   rpc ListPayments(ListPaymentsRequest) returns (ListPaymentsResponse) {
     option (google.api.http) = {
-      get: "/api/colocations/{colocation_id}/payments"
+      get: "/api/v1/colocations/{colocation_id}/payments"
     };
   }
 
   // Confirm payment (by recipient)
   rpc ConfirmPayment(ConfirmPaymentRequest) returns (Payment) {
     option (google.api.http) = {
-      post: "/api/colocations/{colocation_id}/payments/{id}/confirm"
+      post: "/api/v1/colocations/{colocation_id}/payments/{id}/confirm"
       body: "*"
     };
   }
@@ -41,7 +41,7 @@ service PaymentService {
   // Reject payment (by recipient)
   rpc RejectPayment(RejectPaymentRequest) returns (Payment) {
     option (google.api.http) = {
-      post: "/api/colocations/{colocation_id}/payments/{id}/reject"
+      post: "/api/v1/colocations/{colocation_id}/payments/{id}/reject"
       body: "*"
     };
   }
@@ -49,7 +49,7 @@ service PaymentService {
   // Cancel payment (by sender, only if pending)
   rpc CancelPayment(CancelPaymentRequest) returns (CancelPaymentResponse) {
     option (google.api.http) = {
-      delete: "/api/colocations/{colocation_id}/payments/{id}"
+      delete: "/api/v1/colocations/{colocation_id}/payments/{id}"
     };
   }
 }

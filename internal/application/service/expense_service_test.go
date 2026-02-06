@@ -73,6 +73,42 @@ func TestCreateExpense(t *testing.T) {
 		assert.Equal(t, testExpenseID, result.ID)
 		assert.Equal(t, 100.0, result.Amount)
 	})
+
+	t.Run("should_create_payer_only_expense_without_splits", func(t *testing.T) {
+		expRepo, colocRepo, catRepo, svc := newExpenseMocks()
+		ctx := testContextWithUserID(testUserID)
+
+		colocRepo.On("IsMember", ctx, testColocationID, testUserID).Return(true, nil)
+		catRepo.On("BelongsToColocation", ctx, testCategoryID, testColocationID).Return(true, nil)
+		colocRepo.On("ListMembers", ctx, testColocationID).Return([]domain.ColocationMember{
+			{UserID: testUserID},
+		}, nil)
+
+		expRepo.On("Create", ctx, mock.AnythingOfType("*domain.Expense"), mock.AnythingOfType("[]domain.ExpenseSplitInput")).
+			Return(nil).
+			Run(func(args mock.Arguments) {
+				splits := args.Get(2).([]domain.ExpenseSplitInput)
+				assert.Len(t, splits, 0)
+				args.Get(1).(*domain.Expense).ID = testExpenseID
+			})
+
+		personalExpense := sampleExpense()
+		personalExpense.ID = testExpenseID
+		personalExpense.SplitType = domain.SplitTypePayerOnly
+		expRepo.On("GetByID", ctx, testExpenseID).Return(personalExpense, nil)
+
+		result, err := svc.Create(ctx, CreateExpenseInput{
+			ColocationID: testColocationID,
+			Title:        "Remboursement",
+			Amount:       90.0,
+			CategoryID:   testCategoryID,
+			SplitType:    domain.SplitTypePayerOnly,
+			ExpenseDate:  time.Now(),
+		})
+
+		require.NoError(t, err)
+		assert.Equal(t, domain.SplitTypePayerOnly, result.SplitType)
+	})
 }
 
 // Modifier une depense

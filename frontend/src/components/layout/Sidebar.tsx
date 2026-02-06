@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { LayoutDashboard, Receipt, Wallet, LogOut, ChevronDown, Home } from 'lucide-react';
+import { LayoutDashboard, Receipt, Wallet, Calendar, LogOut, ChevronDown, Home } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useColocation } from '../../context/ColocationContext';
 
@@ -9,6 +9,7 @@ const navItems = [
   { to: '/dashboard', icon: LayoutDashboard, label: 'Synthèse' },
   { to: '/expenses', icon: Receipt, label: 'Dépenses' },
   { to: '/balances', icon: Wallet, label: 'Soldes' },
+  { to: '/events', icon: Calendar, label: 'Événements' },
 ];
 
 interface SidebarProps {

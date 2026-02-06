@@ -11,7 +11,7 @@ service DecisionService {
   // Create a new decision/poll
   rpc CreateDecision(CreateDecisionRequest) returns (Decision) {
     option (google.api.http) = {
-      post: "/api/colocations/{colocation_id}/decisions"
+      post: "/api/v1/colocations/{colocation_id}/decisions"
       body: "*"
     };
   }
@@ -19,21 +19,21 @@ service DecisionService {
   // Get decision by ID
   rpc GetDecision(GetDecisionRequest) returns (Decision) {
     option (google.api.http) = {
-      get: "/api/colocations/{colocation_id}/decisions/{id}"
+      get: "/api/v1/colocations/{colocation_id}/decisions/{id}"
     };
   }
 
   // List decisions for colocation
   rpc ListDecisions(ListDecisionsRequest) returns (ListDecisionsResponse) {
     option (google.api.http) = {
-      get: "/api/colocations/{colocation_id}/decisions"
+      get: "/api/v1/colocations/{colocation_id}/decisions"
     };
   }
 
   // Update decision (only if no votes yet)
   rpc UpdateDecision(UpdateDecisionRequest) returns (Decision) {
     option (google.api.http) = {
-      put: "/api/colocations/{colocation_id}/decisions/{id}"
+      put: "/api/v1/colocations/{colocation_id}/decisions/{id}"
       body: "*"
     };
   }
@@ -41,14 +41,14 @@ service DecisionService {
   // Delete decision
   rpc DeleteDecision(DeleteDecisionRequest) returns (DeleteDecisionResponse) {
     option (google.api.http) = {
-      delete: "/api/colocations/{colocation_id}/decisions/{id}"
+      delete: "/api/v1/colocations/{colocation_id}/decisions/{id}"
     };
   }
 
   // Vote on a decision
   rpc Vote(VoteRequest) returns (VoteResponse) {
     option (google.api.http) = {
-      post: "/api/colocations/{colocation_id}/decisions/{decision_id}/vote"
+      post: "/api/v1/colocations/{colocation_id}/decisions/{decision_id}/vote"
       body: "*"
     };
   }
@@ -56,7 +56,7 @@ service DecisionService {
   // Close decision (stop accepting votes)
   rpc CloseDecision(CloseDecisionRequest) returns (Decision) {
     option (google.api.http) = {
-      post: "/api/colocations/{colocation_id}/decisions/{id}/close"
+      post: "/api/v1/colocations/{colocation_id}/decisions/{id}/close"
       body: "*"
     };
   }
@@ -64,7 +64,7 @@ service DecisionService {
   // Get decision results
   rpc GetResults(GetResultsRequest) returns (GetResultsResponse) {
     option (google.api.http) = {
-      get: "/api/colocations/{colocation_id}/decisions/{id}/results"
+      get: "/api/v1/colocations/{colocation_id}/decisions/{id}/results"
     };
   }
 }

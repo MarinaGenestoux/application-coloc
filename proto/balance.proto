@@ -11,21 +11,21 @@ service BalanceService {
   // Get all balances for colocation
   rpc GetBalances(GetBalancesRequest) returns (GetBalancesResponse) {
     option (google.api.http) = {
-      get: "/api/colocations/{colocation_id}/balances"
+      get: "/api/v1/colocations/{colocation_id}/balances"
     };
   }
 
   // Get simplified debts (min-cash-flow algorithm)
   rpc GetSimplifiedDebts(GetSimplifiedDebtsRequest) returns (GetSimplifiedDebtsResponse) {
     option (google.api.http) = {
-      get: "/api/colocations/{colocation_id}/balances/simplified"
+      get: "/api/v1/colocations/{colocation_id}/balances/simplified"
     };
   }
 
   // Get balance history for a user
   rpc GetBalanceHistory(GetBalanceHistoryRequest) returns (GetBalanceHistoryResponse) {
     option (google.api.http) = {
-      get: "/api/colocations/{colocation_id}/balances/history"
+      get: "/api/v1/colocations/{colocation_id}/balances/history"
     };
   }
 }

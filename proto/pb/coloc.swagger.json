@@ -18,7 +18,22 @@
       "name": "ColocationService"
     },
     {
+      "name": "DecisionService"
+    },
+    {
+      "name": "EventService"
+    },
+    {
       "name": "ExpenseService"
+    },
+    {
+      "name": "FundService"
+    },
+    {
+      "name": "NotificationService"
+    },
+    {
+      "name": "PaymentService"
     },
     {
       "name": "UserService"
@@ -31,7 +46,7 @@
     "application/json"
   ],
   "paths": {
-    "/api/auth/login": {
+    "/api/v1/auth/login": {
       "post": {
         "summary": "Login with email and password",
         "operationId": "AuthService_Login",
@@ -64,7 +79,7 @@
         ]
       }
     },
-    "/api/auth/logout": {
+    "/api/v1/auth/logout": {
       "post": {
         "summary": "Logout (invalidate refresh token)",
         "operationId": "AuthService_Logout",
@@ -97,7 +112,7 @@
         ]
       }
     },
-    "/api/auth/refresh": {
+    "/api/v1/auth/refresh": {
       "post": {
         "summary": "Refresh access token using refresh token",
         "operationId": "AuthService_RefreshToken",
@@ -130,7 +145,7 @@
         ]
       }
     },
-    "/api/auth/register": {
+    "/api/v1/auth/register": {
       "post": {
         "summary": "Register a new user",
         "operationId": "AuthService_Register",
@@ -163,7 +178,7 @@
         ]
       }
     },
-    "/api/colocations": {
+    "/api/v1/colocations": {
       "get": {
         "summary": "List user's colocations",
         "operationId": "ColocationService_ListColocations",
@@ -217,7 +232,7 @@
         ]
       }
     },
-    "/api/colocations/join": {
+    "/api/v1/colocations/join": {
       "post": {
         "summary": "Join colocation with invite code",
         "operationId": "ColocationService_JoinColocation",
@@ -250,7 +265,7 @@
         ]
       }
     },
-    "/api/colocations/{colocationId}/balances": {
+    "/api/v1/colocations/{colocationId}/balances": {
       "get": {
         "summary": "Get all balances for colocation",
         "operationId": "BalanceService_GetBalances",
@@ -281,7 +296,7 @@
         ]
       }
     },
-    "/api/colocations/{colocationId}/balances/history": {
+    "/api/v1/colocations/{colocationId}/balances/history": {
       "get": {
         "summary": "Get balance history for a user",
         "operationId": "BalanceService_GetBalanceHistory",
@@ -324,7 +339,7 @@
         ]
       }
     },
-    "/api/colocations/{colocationId}/balances/simplified": {
+    "/api/v1/colocations/{colocationId}/balances/simplified": {
       "get": {
         "summary": "Get simplified debts (min-cash-flow algorithm)",
         "operationId": "BalanceService_GetSimplifiedDebts",
@@ -355,7 +370,7 @@
         ]
       }
     },
-    "/api/colocations/{colocationId}/categories": {
+    "/api/v1/colocations/{colocationId}/categories": {
       "get": {
         "summary": "List all categories (global + colocation custom)",
         "operationId": "CategoryService_ListCategories",
@@ -423,7 +438,7 @@
         ]
       }
     },
-    "/api/colocations/{colocationId}/categories/stats": {
+    "/api/v1/colocations/{colocationId}/categories/stats": {
       "get": {
         "summary": "Get category statistics",
         "operationId": "CategoryService_GetCategoryStats",
@@ -468,7 +483,7 @@
         ]
       }
     },
-    "/api/colocations/{colocationId}/categories/{id}": {
+    "/api/v1/colocations/{colocationId}/categories/{id}": {
       "delete": {
         "summary": "Delete custom category",
         "operationId": "CategoryService_DeleteCategory",
@@ -548,7 +563,648 @@
         ]
       }
     },
-    "/api/colocations/{colocationId}/expenses": {
+    "/api/v1/colocations/{colocationId}/decisions": {
+      "get": {
+        "summary": "List decisions for colocation",
+        "operationId": "DecisionService_ListDecisions",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/colocListDecisionsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "colocationId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "DECISION_STATUS_UNSPECIFIED",
+              "DECISION_STATUS_OPEN",
+              "DECISION_STATUS_CLOSED"
+            ],
+            "default": "DECISION_STATUS_UNSPECIFIED"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "DecisionService"
+        ]
+      },
+      "post": {
+        "summary": "Create a new decision/poll",
+        "operationId": "DecisionService_CreateDecision",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/colocDecision"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "colocationId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DecisionServiceCreateDecisionBody"
+            }
+          }
+        ],
+        "tags": [
+          "DecisionService"
+        ]
+      }
+    },
+    "/api/v1/colocations/{colocationId}/decisions/{decisionId}/vote": {
+      "post": {
+        "summary": "Vote on a decision",
+        "operationId": "DecisionService_Vote",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/colocVoteResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "colocationId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "decisionId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DecisionServiceVoteBody"
+            }
+          }
+        ],
+        "tags": [
+          "DecisionService"
+        ]
+      }
+    },
+    "/api/v1/colocations/{colocationId}/decisions/{id}": {
+      "get": {
+        "summary": "Get decision by ID",
+        "operationId": "DecisionService_GetDecision",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/colocDecision"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "colocationId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "DecisionService"
+        ]
+      },
+      "delete": {
+        "summary": "Delete decision",
+        "operationId": "DecisionService_DeleteDecision",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/colocDeleteDecisionResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "colocationId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "DecisionService"
+        ]
+      },
+      "put": {
+        "summary": "Update decision (only if no votes yet)",
+        "operationId": "DecisionService_UpdateDecision",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/colocDecision"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "colocationId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DecisionServiceUpdateDecisionBody"
+            }
+          }
+        ],
+        "tags": [
+          "DecisionService"
+        ]
+      }
+    },
+    "/api/v1/colocations/{colocationId}/decisions/{id}/close": {
+      "post": {
+        "summary": "Close decision (stop accepting votes)",
+        "operationId": "DecisionService_CloseDecision",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/colocDecision"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "colocationId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DecisionServiceCloseDecisionBody"
+            }
+          }
+        ],
+        "tags": [
+          "DecisionService"
+        ]
+      }
+    },
+    "/api/v1/colocations/{colocationId}/decisions/{id}/results": {
+      "get": {
+        "summary": "Get decision results",
+        "operationId": "DecisionService_GetResults",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/colocGetResultsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "colocationId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "DecisionService"
+        ]
+      }
+    },
+    "/api/v1/colocations/{colocationId}/events": {
+      "get": {
+        "summary": "List events for colocation",
+        "operationId": "EventService_ListEvents",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/colocListEventsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "colocationId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "EVENT_STATUS_UNSPECIFIED",
+              "EVENT_STATUS_UPCOMING",
+              "EVENT_STATUS_ONGOING",
+              "EVENT_STATUS_COMPLETED",
+              "EVENT_STATUS_CANCELLED"
+            ],
+            "default": "EVENT_STATUS_UNSPECIFIED"
+          },
+          {
+            "name": "startDate",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "EventService"
+        ]
+      },
+      "post": {
+        "summary": "Create a new event",
+        "operationId": "EventService_CreateEvent",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/colocEvent"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "colocationId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/EventServiceCreateEventBody"
+            }
+          }
+        ],
+        "tags": [
+          "EventService"
+        ]
+      }
+    },
+    "/api/v1/colocations/{colocationId}/events/{eventId}/participants": {
+      "get": {
+        "summary": "Get event participants",
+        "operationId": "EventService_GetParticipants",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/colocGetParticipantsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "colocationId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "eventId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "EventService"
+        ]
+      }
+    },
+    "/api/v1/colocations/{colocationId}/events/{eventId}/rsvp": {
+      "post": {
+        "summary": "RSVP to event",
+        "operationId": "EventService_RSVP",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/colocRSVPResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "colocationId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "eventId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/EventServiceRSVPBody"
+            }
+          }
+        ],
+        "tags": [
+          "EventService"
+        ]
+      }
+    },
+    "/api/v1/colocations/{colocationId}/events/{id}": {
+      "get": {
+        "summary": "Get event by ID",
+        "operationId": "EventService_GetEvent",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/colocEvent"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "colocationId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "EventService"
+        ]
+      },
+      "delete": {
+        "summary": "Delete event",
+        "operationId": "EventService_DeleteEvent",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/colocDeleteEventResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "colocationId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "EventService"
+        ]
+      },
+      "put": {
+        "summary": "Update event",
+        "operationId": "EventService_UpdateEvent",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/colocEvent"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "colocationId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/EventServiceUpdateEventBody"
+            }
+          }
+        ],
+        "tags": [
+          "EventService"
+        ]
+      }
+    },
+    "/api/v1/colocations/{colocationId}/expenses": {
       "get": {
         "summary": "List expenses for colocation",
         "operationId": "ExpenseService_ListExpenses",
@@ -654,7 +1310,7 @@
         ]
       }
     },
-    "/api/colocations/{colocationId}/expenses/forecast": {
+    "/api/v1/colocations/{colocationId}/expenses/forecast": {
       "get": {
         "summary": "Get expense forecast",
         "operationId": "ExpenseService_GetForecast",
@@ -693,7 +1349,7 @@
         ]
       }
     },
-    "/api/colocations/{colocationId}/expenses/{id}": {
+    "/api/v1/colocations/{colocationId}/expenses/{id}": {
       "get": {
         "summary": "Get expense by ID",
         "operationId": "ExpenseService_GetExpense",
@@ -808,7 +1464,319 @@
         ]
       }
     },
-    "/api/colocations/{colocationId}/invitations": {
+    "/api/v1/colocations/{colocationId}/funds": {
+      "get": {
+        "summary": "List funds for colocation",
+        "operationId": "FundService_ListFunds",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/colocListFundsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "colocationId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "isActive",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "tags": [
+          "FundService"
+        ]
+      },
+      "post": {
+        "summary": "Create a new common fund",
+        "operationId": "FundService_CreateFund",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/colocFund"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "colocationId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/FundServiceCreateFundBody"
+            }
+          }
+        ],
+        "tags": [
+          "FundService"
+        ]
+      }
+    },
+    "/api/v1/colocations/{colocationId}/funds/{fundId}/contributions": {
+      "get": {
+        "summary": "List contributions for fund",
+        "operationId": "FundService_ListContributions",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/colocListContributionsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "colocationId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "fundId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "FundService"
+        ]
+      },
+      "post": {
+        "summary": "Add contribution to fund",
+        "operationId": "FundService_AddContribution",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/colocContribution"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "colocationId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "fundId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/FundServiceAddContributionBody"
+            }
+          }
+        ],
+        "tags": [
+          "FundService"
+        ]
+      }
+    },
+    "/api/v1/colocations/{colocationId}/funds/{fundId}/contributions/{id}": {
+      "delete": {
+        "summary": "Delete contribution",
+        "operationId": "FundService_DeleteContribution",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/colocDeleteContributionResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "colocationId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "fundId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "FundService"
+        ]
+      }
+    },
+    "/api/v1/colocations/{colocationId}/funds/{id}": {
+      "get": {
+        "summary": "Get fund by ID",
+        "operationId": "FundService_GetFund",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/colocFund"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "colocationId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "FundService"
+        ]
+      },
+      "delete": {
+        "summary": "Delete fund",
+        "operationId": "FundService_DeleteFund",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/colocDeleteFundResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "colocationId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "FundService"
+        ]
+      },
+      "put": {
+        "summary": "Update fund",
+        "operationId": "FundService_UpdateFund",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/colocFund"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "colocationId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/FundServiceUpdateFundBody"
+            }
+          }
+        ],
+        "tags": [
+          "FundService"
+        ]
+      }
+    },
+    "/api/v1/colocations/{colocationId}/invitations": {
       "get": {
         "summary": "List pending invitations for colocation",
         "operationId": "ColocationService_ListInvitations",
@@ -876,7 +1844,7 @@
         ]
       }
     },
-    "/api/colocations/{colocationId}/invitations/{invitationId}": {
+    "/api/v1/colocations/{colocationId}/invitations/{invitationId}": {
       "delete": {
         "summary": "Cancel invitation",
         "operationId": "ColocationService_CancelInvitation",
@@ -913,7 +1881,7 @@
         ]
       }
     },
-    "/api/colocations/{colocationId}/members": {
+    "/api/v1/colocations/{colocationId}/members": {
       "get": {
         "summary": "Get colocation members",
         "operationId": "ColocationService_GetMembers",
@@ -944,7 +1912,7 @@
         ]
       }
     },
-    "/api/colocations/{colocationId}/members/{userId}": {
+    "/api/v1/colocations/{colocationId}/members/{userId}": {
       "delete": {
         "summary": "Remove member from colocation (admin only)",
         "operationId": "ColocationService_RemoveMember",
@@ -981,7 +1949,7 @@
         ]
       }
     },
-    "/api/colocations/{colocationId}/members/{userId}/role": {
+    "/api/v1/colocations/{colocationId}/members/{userId}/role": {
       "put": {
         "summary": "Update member role (admin only)",
         "operationId": "ColocationService_UpdateMemberRole",
@@ -1026,7 +1994,276 @@
         ]
       }
     },
-    "/api/colocations/{colocationId}/recurring-expenses": {
+    "/api/v1/colocations/{colocationId}/payments": {
+      "get": {
+        "summary": "List payments for colocation",
+        "operationId": "PaymentService_ListPayments",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/colocListPaymentsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "colocationId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "PAYMENT_STATUS_UNSPECIFIED",
+              "PAYMENT_STATUS_PENDING",
+              "PAYMENT_STATUS_CONFIRMED",
+              "PAYMENT_STATUS_REJECTED"
+            ],
+            "default": "PAYMENT_STATUS_UNSPECIFIED"
+          },
+          {
+            "name": "fromUserId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "toUserId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "PaymentService"
+        ]
+      },
+      "post": {
+        "summary": "Create a payment (declare reimbursement)",
+        "operationId": "PaymentService_CreatePayment",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/colocPayment"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "colocationId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PaymentServiceCreatePaymentBody"
+            }
+          }
+        ],
+        "tags": [
+          "PaymentService"
+        ]
+      }
+    },
+    "/api/v1/colocations/{colocationId}/payments/{id}": {
+      "get": {
+        "summary": "Get payment by ID",
+        "operationId": "PaymentService_GetPayment",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/colocPayment"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "colocationId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "PaymentService"
+        ]
+      },
+      "delete": {
+        "summary": "Cancel payment (by sender, only if pending)",
+        "operationId": "PaymentService_CancelPayment",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/colocCancelPaymentResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "colocationId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "PaymentService"
+        ]
+      }
+    },
+    "/api/v1/colocations/{colocationId}/payments/{id}/confirm": {
+      "post": {
+        "summary": "Confirm payment (by recipient)",
+        "operationId": "PaymentService_ConfirmPayment",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/colocPayment"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "colocationId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PaymentServiceConfirmPaymentBody"
+            }
+          }
+        ],
+        "tags": [
+          "PaymentService"
+        ]
+      }
+    },
+    "/api/v1/colocations/{colocationId}/payments/{id}/reject": {
+      "post": {
+        "summary": "Reject payment (by recipient)",
+        "operationId": "PaymentService_RejectPayment",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/colocPayment"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "colocationId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PaymentServiceRejectPaymentBody"
+            }
+          }
+        ],
+        "tags": [
+          "PaymentService"
+        ]
+      }
+    },
+    "/api/v1/colocations/{colocationId}/recurring-expenses": {
       "get": {
         "summary": "List recurring expenses",
         "operationId": "ExpenseService_ListRecurringExpenses",
@@ -1094,7 +2331,7 @@
         ]
       }
     },
-    "/api/colocations/{colocationId}/recurring-expenses/{id}": {
+    "/api/v1/colocations/{colocationId}/recurring-expenses/{id}": {
       "delete": {
         "summary": "Delete recurring expense",
         "operationId": "ExpenseService_DeleteRecurringExpense",
@@ -1174,7 +2411,7 @@
         ]
       }
     },
-    "/api/colocations/{id}": {
+    "/api/v1/colocations/{id}": {
       "get": {
         "summary": "Get colocation by ID",
         "operationId": "ColocationService_GetColocation",
@@ -1271,7 +2508,7 @@
         ]
       }
     },
-    "/api/colocations/{id}/leave": {
+    "/api/v1/colocations/{id}/leave": {
       "post": {
         "summary": "Leave colocation",
         "operationId": "ColocationService_LeaveColocation",
@@ -1310,7 +2547,7 @@
         ]
       }
     },
-    "/api/colocations/{id}/regenerate-code": {
+    "/api/v1/colocations/{id}/regenerate-code": {
       "post": {
         "summary": "Regenerate invite code (admin only)",
         "operationId": "ColocationService_RegenerateInviteCode",
@@ -1349,7 +2586,7 @@
         ]
       }
     },
-    "/api/me": {
+    "/api/v1/me": {
       "get": {
         "summary": "Get current user profile",
         "operationId": "UserService_GetCurrentUser",
@@ -1424,7 +2661,192 @@
         ]
       }
     },
-    "/api/users/{id}": {
+    "/api/v1/notifications": {
+      "get": {
+        "summary": "List notifications for current user",
+        "operationId": "NotificationService_ListNotifications",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/colocListNotificationsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "colocationId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "unreadOnly",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "NotificationService"
+        ]
+      }
+    },
+    "/api/v1/notifications/read-all": {
+      "post": {
+        "summary": "Mark all notifications as read",
+        "operationId": "NotificationService_MarkAllAsRead",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/colocMarkAllAsReadResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/colocMarkAllAsReadRequest"
+            }
+          }
+        ],
+        "tags": [
+          "NotificationService"
+        ]
+      }
+    },
+    "/api/v1/notifications/unread-count": {
+      "get": {
+        "summary": "Get unread count",
+        "operationId": "NotificationService_GetUnreadCount",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/colocGetUnreadCountResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "colocationId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "NotificationService"
+        ]
+      }
+    },
+    "/api/v1/notifications/{id}": {
+      "delete": {
+        "summary": "Delete notification",
+        "operationId": "NotificationService_DeleteNotification",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/colocDeleteNotificationResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "NotificationService"
+        ]
+      }
+    },
+    "/api/v1/notifications/{id}/read": {
+      "post": {
+        "summary": "Mark notification as read",
+        "operationId": "NotificationService_MarkAsRead",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/colocMarkAsReadResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/NotificationServiceMarkAsReadBody"
+            }
+          }
+        ],
+        "tags": [
+          "NotificationService"
+        ]
+      }
+    },
+    "/api/v1/users/{id}": {
       "get": {
         "summary": "Get user by ID (for viewing other users in colocation)",
         "operationId": "UserService_GetUser",
@@ -1518,6 +2940,139 @@
       "properties": {
         "role": {
           "$ref": "#/definitions/colocMemberRole"
+        }
+      }
+    },
+    "DecisionServiceCloseDecisionBody": {
+      "type": "object"
+    },
+    "DecisionServiceCreateDecisionBody": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "List of option texts"
+        },
+        "deadline": {
+          "type": "string",
+          "title": "Format: YYYY-MM-DD HH:MM"
+        },
+        "allowMultiple": {
+          "type": "boolean",
+          "title": "Allow multiple votes per user"
+        },
+        "isAnonymous": {
+          "type": "boolean",
+          "title": "Hide who voted for what"
+        }
+      }
+    },
+    "DecisionServiceUpdateDecisionBody": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "deadline": {
+          "type": "string"
+        },
+        "allowMultiple": {
+          "type": "boolean"
+        },
+        "isAnonymous": {
+          "type": "boolean"
+        }
+      }
+    },
+    "DecisionServiceVoteBody": {
+      "type": "object",
+      "properties": {
+        "optionIndices": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "title": "Can vote for multiple if allow_multiple"
+        }
+      }
+    },
+    "EventServiceCreateEventBody": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "eventDate": {
+          "type": "string",
+          "title": "Format: YYYY-MM-DD HH:MM"
+        },
+        "location": {
+          "type": "string"
+        },
+        "budget": {
+          "type": "number",
+          "format": "double"
+        },
+        "fundId": {
+          "type": "string",
+          "title": "Link to common fund"
+        }
+      }
+    },
+    "EventServiceRSVPBody": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "$ref": "#/definitions/colocRSVPStatus"
+        }
+      }
+    },
+    "EventServiceUpdateEventBody": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "eventDate": {
+          "type": "string"
+        },
+        "location": {
+          "type": "string"
+        },
+        "budget": {
+          "type": "number",
+          "format": "double"
+        },
+        "fundId": {
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/definitions/colocEventStatus"
         }
       }
     },
@@ -1659,6 +3214,80 @@
         }
       }
     },
+    "FundServiceAddContributionBody": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "number",
+          "format": "double"
+        },
+        "note": {
+          "type": "string"
+        }
+      }
+    },
+    "FundServiceCreateFundBody": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "targetAmount": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "FundServiceUpdateFundBody": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "targetAmount": {
+          "type": "number",
+          "format": "double"
+        },
+        "isActive": {
+          "type": "boolean"
+        }
+      }
+    },
+    "NotificationServiceMarkAsReadBody": {
+      "type": "object"
+    },
+    "PaymentServiceConfirmPaymentBody": {
+      "type": "object"
+    },
+    "PaymentServiceCreatePaymentBody": {
+      "type": "object",
+      "properties": {
+        "toUserId": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "number",
+          "format": "double"
+        },
+        "note": {
+          "type": "string"
+        }
+      }
+    },
+    "PaymentServiceRejectPaymentBody": {
+      "type": "object",
+      "properties": {
+        "reason": {
+          "type": "string"
+        }
+      }
+    },
     "colocAuthResponse": {
       "type": "object",
       "properties": {
@@ -1704,6 +3333,14 @@
       }
     },
     "colocCancelInvitationResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        }
+      }
+    },
+    "colocCancelPaymentResponse": {
       "type": "object",
       "properties": {
         "success": {
@@ -1848,6 +3485,54 @@
         }
       }
     },
+    "colocContribution": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "fundId": {
+          "type": "string"
+        },
+        "userId": {
+          "type": "string"
+        },
+        "userNom": {
+          "type": "string"
+        },
+        "userPrenom": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "number",
+          "format": "double"
+        },
+        "note": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string"
+        }
+      }
+    },
+    "colocContributorSummary": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string"
+        },
+        "userNom": {
+          "type": "string"
+        },
+        "userPrenom": {
+          "type": "string"
+        },
+        "totalContributed": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
     "colocCreateColocationRequest": {
       "type": "object",
       "properties": {
@@ -1889,6 +3574,91 @@
         }
       }
     },
+    "colocDecision": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "colocationId": {
+          "type": "string"
+        },
+        "createdBy": {
+          "type": "string"
+        },
+        "createdByNom": {
+          "type": "string"
+        },
+        "createdByPrenom": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/colocDecisionOption"
+          }
+        },
+        "status": {
+          "$ref": "#/definitions/colocDecisionStatus"
+        },
+        "deadline": {
+          "type": "string"
+        },
+        "allowMultiple": {
+          "type": "boolean"
+        },
+        "isAnonymous": {
+          "type": "boolean"
+        },
+        "voteCount": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "hasVoted": {
+          "type": "boolean",
+          "title": "Whether current user has voted"
+        },
+        "userVotes": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "title": "Current user's votes (option indices)"
+        },
+        "createdAt": {
+          "type": "string"
+        }
+      }
+    },
+    "colocDecisionOption": {
+      "type": "object",
+      "properties": {
+        "index": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "text": {
+          "type": "string"
+        }
+      }
+    },
+    "colocDecisionStatus": {
+      "type": "string",
+      "enum": [
+        "DECISION_STATUS_UNSPECIFIED",
+        "DECISION_STATUS_OPEN",
+        "DECISION_STATUS_CLOSED"
+      ],
+      "default": "DECISION_STATUS_UNSPECIFIED"
+    },
     "colocDeleteCategoryResponse": {
       "type": "object",
       "properties": {
@@ -1905,7 +3675,47 @@
         }
       }
     },
+    "colocDeleteContributionResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        }
+      }
+    },
+    "colocDeleteDecisionResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        }
+      }
+    },
+    "colocDeleteEventResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        }
+      }
+    },
     "colocDeleteExpenseResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        }
+      }
+    },
+    "colocDeleteFundResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        }
+      }
+    },
+    "colocDeleteNotificationResponse": {
       "type": "object",
       "properties": {
         "success": {
@@ -1928,6 +3738,105 @@
           "type": "boolean"
         }
       }
+    },
+    "colocEvent": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "colocationId": {
+          "type": "string"
+        },
+        "createdBy": {
+          "type": "string"
+        },
+        "createdByNom": {
+          "type": "string"
+        },
+        "createdByPrenom": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "eventDate": {
+          "type": "string"
+        },
+        "location": {
+          "type": "string"
+        },
+        "budget": {
+          "type": "number",
+          "format": "double"
+        },
+        "fundId": {
+          "type": "string"
+        },
+        "fundName": {
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/definitions/colocEventStatus"
+        },
+        "createdAt": {
+          "type": "string"
+        },
+        "userRsvp": {
+          "$ref": "#/definitions/colocRSVPStatus",
+          "title": "Current user's RSVP"
+        },
+        "goingCount": {
+          "type": "integer",
+          "format": "int32",
+          "title": "Participant counts"
+        },
+        "maybeCount": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "notGoingCount": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "colocEventParticipant": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string"
+        },
+        "userNom": {
+          "type": "string"
+        },
+        "userPrenom": {
+          "type": "string"
+        },
+        "avatarUrl": {
+          "type": "string"
+        },
+        "rsvpStatus": {
+          "$ref": "#/definitions/colocRSVPStatus"
+        },
+        "respondedAt": {
+          "type": "string"
+        }
+      }
+    },
+    "colocEventStatus": {
+      "type": "string",
+      "enum": [
+        "EVENT_STATUS_UNSPECIFIED",
+        "EVENT_STATUS_UPCOMING",
+        "EVENT_STATUS_ONGOING",
+        "EVENT_STATUS_COMPLETED",
+        "EVENT_STATUS_CANCELLED"
+      ],
+      "default": "EVENT_STATUS_UNSPECIFIED"
     },
     "colocExpense": {
       "type": "object",
@@ -2031,6 +3940,58 @@
         }
       }
     },
+    "colocFund": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "colocationId": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "targetAmount": {
+          "type": "number",
+          "format": "double"
+        },
+        "currentAmount": {
+          "type": "number",
+          "format": "double"
+        },
+        "isActive": {
+          "type": "boolean"
+        },
+        "createdBy": {
+          "type": "string"
+        },
+        "createdByNom": {
+          "type": "string"
+        },
+        "createdByPrenom": {
+          "type": "string"
+        },
+        "progressPercentage": {
+          "type": "number",
+          "format": "double",
+          "title": "current_amount / target_amount * 100"
+        },
+        "createdAt": {
+          "type": "string"
+        },
+        "contributors": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/colocContributorSummary"
+          }
+        }
+      }
+    },
     "colocGetBalanceHistoryResponse": {
       "type": "object",
       "properties": {
@@ -2102,6 +4063,60 @@
         }
       }
     },
+    "colocGetParticipantsResponse": {
+      "type": "object",
+      "properties": {
+        "participants": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/colocEventParticipant"
+          }
+        },
+        "goingCount": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "maybeCount": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "notGoingCount": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "colocGetResultsResponse": {
+      "type": "object",
+      "properties": {
+        "decisionId": {
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/definitions/colocDecisionStatus"
+        },
+        "results": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/colocOptionResult"
+          }
+        },
+        "totalVotes": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "totalVoters": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "winningOptionIndex": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
     "colocGetSimplifiedDebtsResponse": {
       "type": "object",
       "properties": {
@@ -2111,6 +4126,15 @@
             "type": "object",
             "$ref": "#/definitions/colocSimplifiedDebt"
           }
+        }
+      }
+    },
+    "colocGetUnreadCountResponse": {
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
@@ -2191,6 +4215,66 @@
         }
       }
     },
+    "colocListContributionsResponse": {
+      "type": "object",
+      "properties": {
+        "contributions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/colocContribution"
+          }
+        }
+      }
+    },
+    "colocListDecisionsResponse": {
+      "type": "object",
+      "properties": {
+        "decisions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/colocDecision"
+          }
+        },
+        "totalCount": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "page": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "pageSize": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "colocListEventsResponse": {
+      "type": "object",
+      "properties": {
+        "events": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/colocEvent"
+          }
+        },
+        "totalCount": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "page": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "pageSize": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
     "colocListExpensesResponse": {
       "type": "object",
       "properties": {
@@ -2215,6 +4299,18 @@
         }
       }
     },
+    "colocListFundsResponse": {
+      "type": "object",
+      "properties": {
+        "funds": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/colocFund"
+          }
+        }
+      }
+    },
     "colocListInvitationsResponse": {
       "type": "object",
       "properties": {
@@ -2224,6 +4320,58 @@
             "type": "object",
             "$ref": "#/definitions/colocInvitation"
           }
+        }
+      }
+    },
+    "colocListNotificationsResponse": {
+      "type": "object",
+      "properties": {
+        "notifications": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/colocNotification"
+          }
+        },
+        "totalCount": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "unreadCount": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "page": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "pageSize": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "colocListPaymentsResponse": {
+      "type": "object",
+      "properties": {
+        "payments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/colocPayment"
+          }
+        },
+        "totalCount": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "page": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "pageSize": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
@@ -2266,6 +4414,31 @@
         }
       }
     },
+    "colocMarkAllAsReadRequest": {
+      "type": "object",
+      "properties": {
+        "colocationId": {
+          "type": "string"
+        }
+      }
+    },
+    "colocMarkAllAsReadResponse": {
+      "type": "object",
+      "properties": {
+        "markedCount": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "colocMarkAsReadResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        }
+      }
+    },
     "colocMemberRole": {
       "type": "string",
       "enum": [
@@ -2294,6 +4467,182 @@
           }
         }
       }
+    },
+    "colocNotification": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "userId": {
+          "type": "string"
+        },
+        "colocationId": {
+          "type": "string"
+        },
+        "colocationName": {
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/definitions/colocNotificationType"
+        },
+        "title": {
+          "type": "string"
+        },
+        "body": {
+          "type": "string"
+        },
+        "data": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Additional data (expense_id, payment_id, etc.)"
+        },
+        "isRead": {
+          "type": "boolean"
+        },
+        "createdAt": {
+          "type": "string"
+        }
+      }
+    },
+    "colocNotificationType": {
+      "type": "string",
+      "enum": [
+        "NOTIFICATION_TYPE_UNSPECIFIED",
+        "NOTIFICATION_TYPE_EXPENSE_CREATED",
+        "NOTIFICATION_TYPE_EXPENSE_UPDATED",
+        "NOTIFICATION_TYPE_EXPENSE_DELETED",
+        "NOTIFICATION_TYPE_PAYMENT_RECEIVED",
+        "NOTIFICATION_TYPE_PAYMENT_CONFIRMED",
+        "NOTIFICATION_TYPE_PAYMENT_REJECTED",
+        "NOTIFICATION_TYPE_MEMBER_JOINED",
+        "NOTIFICATION_TYPE_MEMBER_LEFT",
+        "NOTIFICATION_TYPE_MEMBER_REMOVED",
+        "NOTIFICATION_TYPE_INVITATION_RECEIVED",
+        "NOTIFICATION_TYPE_ROLE_CHANGED",
+        "NOTIFICATION_TYPE_DECISION_CREATED",
+        "NOTIFICATION_TYPE_DECISION_CLOSED",
+        "NOTIFICATION_TYPE_DECISION_DEADLINE",
+        "NOTIFICATION_TYPE_FUND_CREATED",
+        "NOTIFICATION_TYPE_FUND_CONTRIBUTION",
+        "NOTIFICATION_TYPE_FUND_GOAL_REACHED",
+        "NOTIFICATION_TYPE_EVENT_CREATED",
+        "NOTIFICATION_TYPE_EVENT_UPDATED",
+        "NOTIFICATION_TYPE_EVENT_REMINDER",
+        "NOTIFICATION_TYPE_EVENT_CANCELLED",
+        "NOTIFICATION_TYPE_RECURRING_DUE"
+      ],
+      "default": "NOTIFICATION_TYPE_UNSPECIFIED",
+      "title": "- NOTIFICATION_TYPE_EXPENSE_CREATED: Expense notifications\n - NOTIFICATION_TYPE_PAYMENT_RECEIVED: Payment notifications\n - NOTIFICATION_TYPE_MEMBER_JOINED: Colocation notifications\n - NOTIFICATION_TYPE_DECISION_CREATED: Decision notifications\n - NOTIFICATION_TYPE_FUND_CREATED: Fund notifications\n - NOTIFICATION_TYPE_EVENT_CREATED: Event notifications\n - NOTIFICATION_TYPE_RECURRING_DUE: Recurring expense notifications"
+    },
+    "colocOptionResult": {
+      "type": "object",
+      "properties": {
+        "optionIndex": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "optionText": {
+          "type": "string"
+        },
+        "voteCount": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "percentage": {
+          "type": "number",
+          "format": "double"
+        },
+        "voters": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/colocVoter"
+          },
+          "title": "Empty if is_anonymous"
+        }
+      }
+    },
+    "colocPayment": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "colocationId": {
+          "type": "string"
+        },
+        "fromUserId": {
+          "type": "string"
+        },
+        "fromUserNom": {
+          "type": "string"
+        },
+        "fromUserPrenom": {
+          "type": "string"
+        },
+        "fromAvatarUrl": {
+          "type": "string"
+        },
+        "toUserId": {
+          "type": "string"
+        },
+        "toUserNom": {
+          "type": "string"
+        },
+        "toUserPrenom": {
+          "type": "string"
+        },
+        "toAvatarUrl": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "number",
+          "format": "double"
+        },
+        "status": {
+          "$ref": "#/definitions/colocPaymentStatus"
+        },
+        "note": {
+          "type": "string"
+        },
+        "confirmedAt": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string"
+        }
+      }
+    },
+    "colocPaymentStatus": {
+      "type": "string",
+      "enum": [
+        "PAYMENT_STATUS_UNSPECIFIED",
+        "PAYMENT_STATUS_PENDING",
+        "PAYMENT_STATUS_CONFIRMED",
+        "PAYMENT_STATUS_REJECTED"
+      ],
+      "default": "PAYMENT_STATUS_UNSPECIFIED"
+    },
+    "colocRSVPResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        }
+      }
+    },
+    "colocRSVPStatus": {
+      "type": "string",
+      "enum": [
+        "RSVP_STATUS_UNSPECIFIED",
+        "RSVP_STATUS_GOING",
+        "RSVP_STATUS_MAYBE",
+        "RSVP_STATUS_NOT_GOING"
+      ],
+      "default": "RSVP_STATUS_UNSPECIFIED"
     },
     "colocRecurrence": {
       "type": "string",
@@ -2468,10 +4817,11 @@
         "SPLIT_TYPE_UNSPECIFIED",
         "SPLIT_TYPE_EQUAL",
         "SPLIT_TYPE_PERCENTAGE",
-        "SPLIT_TYPE_CUSTOM"
+        "SPLIT_TYPE_CUSTOM",
+        "SPLIT_TYPE_PAYER_ONLY"
       ],
       "default": "SPLIT_TYPE_UNSPECIFIED",
-      "title": "- SPLIT_TYPE_EQUAL: Equal split among all members\n - SPLIT_TYPE_PERCENTAGE: Custom percentage per member\n - SPLIT_TYPE_CUSTOM: Fixed amount per member"
+      "title": "- SPLIT_TYPE_EQUAL: Equal split among all members\n - SPLIT_TYPE_PERCENTAGE: Custom percentage per member\n - SPLIT_TYPE_CUSTOM: Fixed amount per member\n - SPLIT_TYPE_PAYER_ONLY: Entire amount stays with payer (no split)"
     },
     "colocUpdateUserRequest": {
       "type": "object",
@@ -2581,6 +4931,28 @@
           "type": "string"
         },
         "avatarUrl": {
+          "type": "string"
+        }
+      }
+    },
+    "colocVoteResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        }
+      }
+    },
+    "colocVoter": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string"
+        },
+        "userNom": {
+          "type": "string"
+        },
+        "userPrenom": {
           "type": "string"
         }
       }

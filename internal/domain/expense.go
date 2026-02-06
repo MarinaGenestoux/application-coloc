@@ -9,6 +9,7 @@ const (
 	SplitTypeEqual      SplitType = "equal"
 	SplitTypePercentage SplitType = "percentage"
 	SplitTypeCustom     SplitType = "custom"
+	SplitTypePayerOnly  SplitType = "payer_only"
 )
 
 // Recurrence defines how often a recurring expense repeats
@@ -23,33 +24,33 @@ const (
 
 // Expense represents an expense in a colocation
 type Expense struct {
-	ID           string     `json:"id" db:"id"`
-	ColocationID string     `json:"colocation_id" db:"colocation_id"`
-	PaidBy       string     `json:"paid_by" db:"paid_by"`
-	CategoryID   string     `json:"category_id" db:"category_id"`
-	Title        string     `json:"title" db:"title"`
-	Description  *string    `json:"description,omitempty" db:"description"`
-	Amount       float64    `json:"amount" db:"amount"`
-	SplitType    SplitType  `json:"split_type" db:"split_type"`
-	ExpenseDate  time.Time  `json:"expense_date" db:"expense_date"`
-	RecurringID  *string    `json:"recurring_id,omitempty" db:"recurring_id"`
-	CreatedAt    time.Time  `json:"created_at" db:"created_at"`
+	ID           string    `json:"id" db:"id"`
+	ColocationID string    `json:"colocation_id" db:"colocation_id"`
+	PaidBy       string    `json:"paid_by" db:"paid_by"`
+	CategoryID   string    `json:"category_id" db:"category_id"`
+	Title        string    `json:"title" db:"title"`
+	Description  *string   `json:"description,omitempty" db:"description"`
+	Amount       float64   `json:"amount" db:"amount"`
+	SplitType    SplitType `json:"split_type" db:"split_type"`
+	ExpenseDate  time.Time `json:"expense_date" db:"expense_date"`
+	RecurringID  *string   `json:"recurring_id,omitempty" db:"recurring_id"`
+	CreatedAt    time.Time `json:"created_at" db:"created_at"`
 
 	// Joined fields
-	PaidByNom     string `json:"paid_by_nom,omitempty"`
-	PaidByPrenom  string `json:"paid_by_prenom,omitempty"`
-	CategoryName  string `json:"category_name,omitempty"`
-	Splits        []ExpenseSplit `json:"splits,omitempty"`
+	PaidByNom    string         `json:"paid_by_nom,omitempty"`
+	PaidByPrenom string         `json:"paid_by_prenom,omitempty"`
+	CategoryName string         `json:"category_name,omitempty"`
+	Splits       []ExpenseSplit `json:"splits,omitempty"`
 }
 
 // ExpenseSplit represents how an expense is split for a specific user
 type ExpenseSplit struct {
-	ID        string  `json:"id" db:"id"`
-	ExpenseID string  `json:"expense_id" db:"expense_id"`
-	UserID    string  `json:"user_id" db:"user_id"`
-	Amount    float64 `json:"amount" db:"amount"`
+	ID         string  `json:"id" db:"id"`
+	ExpenseID  string  `json:"expense_id" db:"expense_id"`
+	UserID     string  `json:"user_id" db:"user_id"`
+	Amount     float64 `json:"amount" db:"amount"`
 	Percentage float64 `json:"percentage" db:"percentage"`
-	IsSettled bool    `json:"is_settled" db:"is_settled"`
+	IsSettled  bool    `json:"is_settled" db:"is_settled"`
 
 	// Joined fields
 	UserNom    string `json:"user_nom,omitempty"`
@@ -73,9 +74,9 @@ type RecurringExpense struct {
 	CreatedAt    time.Time  `json:"created_at" db:"created_at"`
 
 	// Joined fields
-	PaidByNom    string                 `json:"paid_by_nom,omitempty"`
-	PaidByPrenom string                 `json:"paid_by_prenom,omitempty"`
-	CategoryName string                 `json:"category_name,omitempty"`
+	PaidByNom    string                  `json:"paid_by_nom,omitempty"`
+	PaidByPrenom string                  `json:"paid_by_prenom,omitempty"`
+	CategoryName string                  `json:"category_name,omitempty"`
 	Splits       []RecurringExpenseSplit `json:"splits,omitempty"`
 }
 
@@ -100,8 +101,8 @@ type ExpenseSplitInput struct {
 
 // MonthlyForecast represents a forecast for a specific month
 type MonthlyForecast struct {
-	Month       string            `json:"month"` // Format: YYYY-MM
-	TotalAmount float64           `json:"total_amount"`
+	Month       string             `json:"month"` // Format: YYYY-MM
+	TotalAmount float64            `json:"total_amount"`
 	Categories  []CategoryForecast `json:"categories"`
 }
 

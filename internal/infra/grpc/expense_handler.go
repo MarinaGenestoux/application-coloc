@@ -4,8 +4,8 @@ import (
 	"context"
 	"time"
 
-	"github.com/MarinaGenestoux/application-coloc/internal/domain"
 	"github.com/MarinaGenestoux/application-coloc/internal/application/service"
+	"github.com/MarinaGenestoux/application-coloc/internal/domain"
 	"github.com/MarinaGenestoux/application-coloc/internal/infra/utils"
 	pb "github.com/MarinaGenestoux/application-coloc/proto/pb"
 	"google.golang.org/grpc/codes"
@@ -442,6 +442,8 @@ func domainSplitTypeToProto(st domain.SplitType) pb.SplitType {
 		return pb.SplitType_SPLIT_TYPE_PERCENTAGE
 	case domain.SplitTypeCustom:
 		return pb.SplitType_SPLIT_TYPE_CUSTOM
+	case domain.SplitTypePayerOnly:
+		return pb.SplitType_SPLIT_TYPE_PAYER_ONLY
 	default:
 		return pb.SplitType_SPLIT_TYPE_UNSPECIFIED
 	}
@@ -455,6 +457,8 @@ func protoSplitTypeToDomain(st pb.SplitType) domain.SplitType {
 		return domain.SplitTypePercentage
 	case pb.SplitType_SPLIT_TYPE_CUSTOM:
 		return domain.SplitTypeCustom
+	case pb.SplitType_SPLIT_TYPE_PAYER_ONLY:
+		return domain.SplitTypePayerOnly
 	default:
 		return domain.SplitTypeEqual
 	}

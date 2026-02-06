@@ -569,7 +569,7 @@ func RegisterExpenseServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.ExpenseService/CreateExpense", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/expenses"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.ExpenseService/CreateExpense", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/expenses"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -589,7 +589,7 @@ func RegisterExpenseServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.ExpenseService/GetExpense", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/expenses/{id}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.ExpenseService/GetExpense", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/expenses/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -609,7 +609,7 @@ func RegisterExpenseServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.ExpenseService/ListExpenses", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/expenses"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.ExpenseService/ListExpenses", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/expenses"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -629,7 +629,7 @@ func RegisterExpenseServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.ExpenseService/UpdateExpense", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/expenses/{id}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.ExpenseService/UpdateExpense", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/expenses/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -649,7 +649,7 @@ func RegisterExpenseServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.ExpenseService/DeleteExpense", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/expenses/{id}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.ExpenseService/DeleteExpense", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/expenses/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -669,7 +669,7 @@ func RegisterExpenseServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.ExpenseService/CreateRecurringExpense", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/recurring-expenses"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.ExpenseService/CreateRecurringExpense", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/recurring-expenses"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -689,7 +689,7 @@ func RegisterExpenseServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.ExpenseService/ListRecurringExpenses", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/recurring-expenses"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.ExpenseService/ListRecurringExpenses", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/recurring-expenses"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -709,7 +709,7 @@ func RegisterExpenseServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.ExpenseService/UpdateRecurringExpense", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/recurring-expenses/{id}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.ExpenseService/UpdateRecurringExpense", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/recurring-expenses/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -729,7 +729,7 @@ func RegisterExpenseServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.ExpenseService/DeleteRecurringExpense", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/recurring-expenses/{id}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.ExpenseService/DeleteRecurringExpense", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/recurring-expenses/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -749,7 +749,7 @@ func RegisterExpenseServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.ExpenseService/GetForecast", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/expenses/forecast"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.ExpenseService/GetForecast", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/expenses/forecast"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -807,7 +807,7 @@ func RegisterExpenseServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.ExpenseService/CreateExpense", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/expenses"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.ExpenseService/CreateExpense", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/expenses"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -824,7 +824,7 @@ func RegisterExpenseServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.ExpenseService/GetExpense", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/expenses/{id}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.ExpenseService/GetExpense", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/expenses/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -841,7 +841,7 @@ func RegisterExpenseServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.ExpenseService/ListExpenses", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/expenses"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.ExpenseService/ListExpenses", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/expenses"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -858,7 +858,7 @@ func RegisterExpenseServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.ExpenseService/UpdateExpense", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/expenses/{id}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.ExpenseService/UpdateExpense", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/expenses/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -875,7 +875,7 @@ func RegisterExpenseServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.ExpenseService/DeleteExpense", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/expenses/{id}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.ExpenseService/DeleteExpense", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/expenses/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -892,7 +892,7 @@ func RegisterExpenseServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.ExpenseService/CreateRecurringExpense", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/recurring-expenses"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.ExpenseService/CreateRecurringExpense", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/recurring-expenses"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -909,7 +909,7 @@ func RegisterExpenseServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.ExpenseService/ListRecurringExpenses", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/recurring-expenses"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.ExpenseService/ListRecurringExpenses", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/recurring-expenses"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -926,7 +926,7 @@ func RegisterExpenseServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.ExpenseService/UpdateRecurringExpense", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/recurring-expenses/{id}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.ExpenseService/UpdateRecurringExpense", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/recurring-expenses/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -943,7 +943,7 @@ func RegisterExpenseServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.ExpenseService/DeleteRecurringExpense", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/recurring-expenses/{id}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.ExpenseService/DeleteRecurringExpense", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/recurring-expenses/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -960,7 +960,7 @@ func RegisterExpenseServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.ExpenseService/GetForecast", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/expenses/forecast"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.ExpenseService/GetForecast", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/expenses/forecast"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -977,16 +977,16 @@ func RegisterExpenseServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 }
 
 var (
-	pattern_ExpenseService_CreateExpense_0          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"api", "colocations", "colocation_id", "expenses"}, ""))
-	pattern_ExpenseService_GetExpense_0             = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "colocations", "colocation_id", "expenses", "id"}, ""))
-	pattern_ExpenseService_ListExpenses_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"api", "colocations", "colocation_id", "expenses"}, ""))
-	pattern_ExpenseService_UpdateExpense_0          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "colocations", "colocation_id", "expenses", "id"}, ""))
-	pattern_ExpenseService_DeleteExpense_0          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "colocations", "colocation_id", "expenses", "id"}, ""))
-	pattern_ExpenseService_CreateRecurringExpense_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"api", "colocations", "colocation_id", "recurring-expenses"}, ""))
-	pattern_ExpenseService_ListRecurringExpenses_0  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"api", "colocations", "colocation_id", "recurring-expenses"}, ""))
-	pattern_ExpenseService_UpdateRecurringExpense_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "colocations", "colocation_id", "recurring-expenses", "id"}, ""))
-	pattern_ExpenseService_DeleteRecurringExpense_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "colocations", "colocation_id", "recurring-expenses", "id"}, ""))
-	pattern_ExpenseService_GetForecast_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 2, 4}, []string{"api", "colocations", "colocation_id", "expenses", "forecast"}, ""))
+	pattern_ExpenseService_CreateExpense_0          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4}, []string{"api", "v1", "colocations", "colocation_id", "expenses"}, ""))
+	pattern_ExpenseService_GetExpense_0             = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "colocations", "colocation_id", "expenses", "id"}, ""))
+	pattern_ExpenseService_ListExpenses_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4}, []string{"api", "v1", "colocations", "colocation_id", "expenses"}, ""))
+	pattern_ExpenseService_UpdateExpense_0          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "colocations", "colocation_id", "expenses", "id"}, ""))
+	pattern_ExpenseService_DeleteExpense_0          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "colocations", "colocation_id", "expenses", "id"}, ""))
+	pattern_ExpenseService_CreateRecurringExpense_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4}, []string{"api", "v1", "colocations", "colocation_id", "recurring-expenses"}, ""))
+	pattern_ExpenseService_ListRecurringExpenses_0  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4}, []string{"api", "v1", "colocations", "colocation_id", "recurring-expenses"}, ""))
+	pattern_ExpenseService_UpdateRecurringExpense_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "colocations", "colocation_id", "recurring-expenses", "id"}, ""))
+	pattern_ExpenseService_DeleteRecurringExpense_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "colocations", "colocation_id", "recurring-expenses", "id"}, ""))
+	pattern_ExpenseService_GetForecast_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 2, 5}, []string{"api", "v1", "colocations", "colocation_id", "expenses", "forecast"}, ""))
 )
 
 var (

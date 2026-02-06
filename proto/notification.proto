@@ -11,14 +11,14 @@ service NotificationService {
   // List notifications for current user
   rpc ListNotifications(ListNotificationsRequest) returns (ListNotificationsResponse) {
     option (google.api.http) = {
-      get: "/api/notifications"
+      get: "/api/v1/notifications"
     };
   }
 
   // Mark notification as read
   rpc MarkAsRead(MarkAsReadRequest) returns (MarkAsReadResponse) {
     option (google.api.http) = {
-      post: "/api/notifications/{id}/read"
+      post: "/api/v1/notifications/{id}/read"
       body: "*"
     };
   }
@@ -26,7 +26,7 @@ service NotificationService {
   // Mark all notifications as read
   rpc MarkAllAsRead(MarkAllAsReadRequest) returns (MarkAllAsReadResponse) {
     option (google.api.http) = {
-      post: "/api/notifications/read-all"
+      post: "/api/v1/notifications/read-all"
       body: "*"
     };
   }
@@ -34,14 +34,14 @@ service NotificationService {
   // Delete notification
   rpc DeleteNotification(DeleteNotificationRequest) returns (DeleteNotificationResponse) {
     option (google.api.http) = {
-      delete: "/api/notifications/{id}"
+      delete: "/api/v1/notifications/{id}"
     };
   }
 
   // Get unread count
   rpc GetUnreadCount(GetUnreadCountRequest) returns (GetUnreadCountResponse) {
     option (google.api.http) = {
-      get: "/api/notifications/unread-count"
+      get: "/api/v1/notifications/unread-count"
     };
   }
 

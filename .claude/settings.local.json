@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(\"/d/protoc/protoc-29.3/bin/protoc.exe\" --version)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

@@ -12,14 +12,14 @@ service UserService {
   // Get current user profile
   rpc GetCurrentUser(GetCurrentUserRequest) returns (User) {
     option (google.api.http) = {
-      get: "/api/me"
+      get: "/api/v1/me"
     };
   }
 
   // Update current user profile
   rpc UpdateCurrentUser(UpdateUserRequest) returns (User) {
     option (google.api.http) = {
-      put: "/api/me"
+      put: "/api/v1/me"
       body: "*"
     };
   }
@@ -27,14 +27,14 @@ service UserService {
   // Delete current user account
   rpc DeleteCurrentUser(DeleteCurrentUserRequest) returns (DeleteUserResponse) {
     option (google.api.http) = {
-      delete: "/api/me"
+      delete: "/api/v1/me"
     };
   }
 
   // Get user by ID (for viewing other users in colocation)
   rpc GetUser(GetUserRequest) returns (User) {
     option (google.api.http) = {
-      get: "/api/users/{id}"
+      get: "/api/v1/users/{id}"
     };
   }
 }

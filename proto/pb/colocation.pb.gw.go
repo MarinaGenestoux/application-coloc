@@ -629,7 +629,7 @@ func RegisterColocationServiceHandlerServer(ctx context.Context, mux *runtime.Se
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.ColocationService/CreateColocation", runtime.WithHTTPPathPattern("/api/colocations"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.ColocationService/CreateColocation", runtime.WithHTTPPathPattern("/api/v1/colocations"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -649,7 +649,7 @@ func RegisterColocationServiceHandlerServer(ctx context.Context, mux *runtime.Se
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.ColocationService/GetColocation", runtime.WithHTTPPathPattern("/api/colocations/{id}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.ColocationService/GetColocation", runtime.WithHTTPPathPattern("/api/v1/colocations/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -669,7 +669,7 @@ func RegisterColocationServiceHandlerServer(ctx context.Context, mux *runtime.Se
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.ColocationService/ListColocations", runtime.WithHTTPPathPattern("/api/colocations"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.ColocationService/ListColocations", runtime.WithHTTPPathPattern("/api/v1/colocations"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -689,7 +689,7 @@ func RegisterColocationServiceHandlerServer(ctx context.Context, mux *runtime.Se
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.ColocationService/UpdateColocation", runtime.WithHTTPPathPattern("/api/colocations/{id}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.ColocationService/UpdateColocation", runtime.WithHTTPPathPattern("/api/v1/colocations/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -709,7 +709,7 @@ func RegisterColocationServiceHandlerServer(ctx context.Context, mux *runtime.Se
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.ColocationService/DeleteColocation", runtime.WithHTTPPathPattern("/api/colocations/{id}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.ColocationService/DeleteColocation", runtime.WithHTTPPathPattern("/api/v1/colocations/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -729,7 +729,7 @@ func RegisterColocationServiceHandlerServer(ctx context.Context, mux *runtime.Se
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.ColocationService/JoinColocation", runtime.WithHTTPPathPattern("/api/colocations/join"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.ColocationService/JoinColocation", runtime.WithHTTPPathPattern("/api/v1/colocations/join"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -749,7 +749,7 @@ func RegisterColocationServiceHandlerServer(ctx context.Context, mux *runtime.Se
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.ColocationService/LeaveColocation", runtime.WithHTTPPathPattern("/api/colocations/{id}/leave"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.ColocationService/LeaveColocation", runtime.WithHTTPPathPattern("/api/v1/colocations/{id}/leave"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -769,7 +769,7 @@ func RegisterColocationServiceHandlerServer(ctx context.Context, mux *runtime.Se
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.ColocationService/GetMembers", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/members"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.ColocationService/GetMembers", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/members"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -789,7 +789,7 @@ func RegisterColocationServiceHandlerServer(ctx context.Context, mux *runtime.Se
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.ColocationService/RemoveMember", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/members/{user_id}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.ColocationService/RemoveMember", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/members/{user_id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -809,7 +809,7 @@ func RegisterColocationServiceHandlerServer(ctx context.Context, mux *runtime.Se
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.ColocationService/UpdateMemberRole", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/members/{user_id}/role"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.ColocationService/UpdateMemberRole", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/members/{user_id}/role"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -829,7 +829,7 @@ func RegisterColocationServiceHandlerServer(ctx context.Context, mux *runtime.Se
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.ColocationService/RegenerateInviteCode", runtime.WithHTTPPathPattern("/api/colocations/{id}/regenerate-code"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.ColocationService/RegenerateInviteCode", runtime.WithHTTPPathPattern("/api/v1/colocations/{id}/regenerate-code"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -849,7 +849,7 @@ func RegisterColocationServiceHandlerServer(ctx context.Context, mux *runtime.Se
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.ColocationService/SendInvitation", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/invitations"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.ColocationService/SendInvitation", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/invitations"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -869,7 +869,7 @@ func RegisterColocationServiceHandlerServer(ctx context.Context, mux *runtime.Se
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.ColocationService/ListInvitations", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/invitations"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.ColocationService/ListInvitations", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/invitations"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -889,7 +889,7 @@ func RegisterColocationServiceHandlerServer(ctx context.Context, mux *runtime.Se
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.ColocationService/CancelInvitation", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/invitations/{invitation_id}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.ColocationService/CancelInvitation", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/invitations/{invitation_id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -947,7 +947,7 @@ func RegisterColocationServiceHandlerClient(ctx context.Context, mux *runtime.Se
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.ColocationService/CreateColocation", runtime.WithHTTPPathPattern("/api/colocations"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.ColocationService/CreateColocation", runtime.WithHTTPPathPattern("/api/v1/colocations"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -964,7 +964,7 @@ func RegisterColocationServiceHandlerClient(ctx context.Context, mux *runtime.Se
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.ColocationService/GetColocation", runtime.WithHTTPPathPattern("/api/colocations/{id}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.ColocationService/GetColocation", runtime.WithHTTPPathPattern("/api/v1/colocations/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -981,7 +981,7 @@ func RegisterColocationServiceHandlerClient(ctx context.Context, mux *runtime.Se
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.ColocationService/ListColocations", runtime.WithHTTPPathPattern("/api/colocations"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.ColocationService/ListColocations", runtime.WithHTTPPathPattern("/api/v1/colocations"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -998,7 +998,7 @@ func RegisterColocationServiceHandlerClient(ctx context.Context, mux *runtime.Se
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.ColocationService/UpdateColocation", runtime.WithHTTPPathPattern("/api/colocations/{id}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.ColocationService/UpdateColocation", runtime.WithHTTPPathPattern("/api/v1/colocations/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1015,7 +1015,7 @@ func RegisterColocationServiceHandlerClient(ctx context.Context, mux *runtime.Se
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.ColocationService/DeleteColocation", runtime.WithHTTPPathPattern("/api/colocations/{id}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.ColocationService/DeleteColocation", runtime.WithHTTPPathPattern("/api/v1/colocations/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1032,7 +1032,7 @@ func RegisterColocationServiceHandlerClient(ctx context.Context, mux *runtime.Se
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.ColocationService/JoinColocation", runtime.WithHTTPPathPattern("/api/colocations/join"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.ColocationService/JoinColocation", runtime.WithHTTPPathPattern("/api/v1/colocations/join"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1049,7 +1049,7 @@ func RegisterColocationServiceHandlerClient(ctx context.Context, mux *runtime.Se
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.ColocationService/LeaveColocation", runtime.WithHTTPPathPattern("/api/colocations/{id}/leave"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.ColocationService/LeaveColocation", runtime.WithHTTPPathPattern("/api/v1/colocations/{id}/leave"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1066,7 +1066,7 @@ func RegisterColocationServiceHandlerClient(ctx context.Context, mux *runtime.Se
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.ColocationService/GetMembers", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/members"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.ColocationService/GetMembers", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/members"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1083,7 +1083,7 @@ func RegisterColocationServiceHandlerClient(ctx context.Context, mux *runtime.Se
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.ColocationService/RemoveMember", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/members/{user_id}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.ColocationService/RemoveMember", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/members/{user_id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1100,7 +1100,7 @@ func RegisterColocationServiceHandlerClient(ctx context.Context, mux *runtime.Se
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.ColocationService/UpdateMemberRole", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/members/{user_id}/role"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.ColocationService/UpdateMemberRole", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/members/{user_id}/role"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1117,7 +1117,7 @@ func RegisterColocationServiceHandlerClient(ctx context.Context, mux *runtime.Se
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.ColocationService/RegenerateInviteCode", runtime.WithHTTPPathPattern("/api/colocations/{id}/regenerate-code"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.ColocationService/RegenerateInviteCode", runtime.WithHTTPPathPattern("/api/v1/colocations/{id}/regenerate-code"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1134,7 +1134,7 @@ func RegisterColocationServiceHandlerClient(ctx context.Context, mux *runtime.Se
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.ColocationService/SendInvitation", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/invitations"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.ColocationService/SendInvitation", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/invitations"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1151,7 +1151,7 @@ func RegisterColocationServiceHandlerClient(ctx context.Context, mux *runtime.Se
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.ColocationService/ListInvitations", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/invitations"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.ColocationService/ListInvitations", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/invitations"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1168,7 +1168,7 @@ func RegisterColocationServiceHandlerClient(ctx context.Context, mux *runtime.Se
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.ColocationService/CancelInvitation", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/invitations/{invitation_id}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.ColocationService/CancelInvitation", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/invitations/{invitation_id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -1185,20 +1185,20 @@ func RegisterColocationServiceHandlerClient(ctx context.Context, mux *runtime.Se
 }
 
 var (
-	pattern_ColocationService_CreateColocation_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"api", "colocations"}, ""))
-	pattern_ColocationService_GetColocation_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"api", "colocations", "id"}, ""))
-	pattern_ColocationService_ListColocations_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"api", "colocations"}, ""))
-	pattern_ColocationService_UpdateColocation_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"api", "colocations", "id"}, ""))
-	pattern_ColocationService_DeleteColocation_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"api", "colocations", "id"}, ""))
-	pattern_ColocationService_JoinColocation_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "colocations", "join"}, ""))
-	pattern_ColocationService_LeaveColocation_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"api", "colocations", "id", "leave"}, ""))
-	pattern_ColocationService_GetMembers_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"api", "colocations", "colocation_id", "members"}, ""))
-	pattern_ColocationService_RemoveMember_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "colocations", "colocation_id", "members", "user_id"}, ""))
-	pattern_ColocationService_UpdateMemberRole_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5}, []string{"api", "colocations", "colocation_id", "members", "user_id", "role"}, ""))
-	pattern_ColocationService_RegenerateInviteCode_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"api", "colocations", "id", "regenerate-code"}, ""))
-	pattern_ColocationService_SendInvitation_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"api", "colocations", "colocation_id", "invitations"}, ""))
-	pattern_ColocationService_ListInvitations_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"api", "colocations", "colocation_id", "invitations"}, ""))
-	pattern_ColocationService_CancelInvitation_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "colocations", "colocation_id", "invitations", "invitation_id"}, ""))
+	pattern_ColocationService_CreateColocation_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "colocations"}, ""))
+	pattern_ColocationService_GetColocation_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"api", "v1", "colocations", "id"}, ""))
+	pattern_ColocationService_ListColocations_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "colocations"}, ""))
+	pattern_ColocationService_UpdateColocation_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"api", "v1", "colocations", "id"}, ""))
+	pattern_ColocationService_DeleteColocation_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"api", "v1", "colocations", "id"}, ""))
+	pattern_ColocationService_JoinColocation_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "colocations", "join"}, ""))
+	pattern_ColocationService_LeaveColocation_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4}, []string{"api", "v1", "colocations", "id", "leave"}, ""))
+	pattern_ColocationService_GetMembers_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4}, []string{"api", "v1", "colocations", "colocation_id", "members"}, ""))
+	pattern_ColocationService_RemoveMember_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "colocations", "colocation_id", "members", "user_id"}, ""))
+	pattern_ColocationService_UpdateMemberRole_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6}, []string{"api", "v1", "colocations", "colocation_id", "members", "user_id", "role"}, ""))
+	pattern_ColocationService_RegenerateInviteCode_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4}, []string{"api", "v1", "colocations", "id", "regenerate-code"}, ""))
+	pattern_ColocationService_SendInvitation_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4}, []string{"api", "v1", "colocations", "colocation_id", "invitations"}, ""))
+	pattern_ColocationService_ListInvitations_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4}, []string{"api", "v1", "colocations", "colocation_id", "invitations"}, ""))
+	pattern_ColocationService_CancelInvitation_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "colocations", "colocation_id", "invitations", "invitation_id"}, ""))
 )
 
 var (

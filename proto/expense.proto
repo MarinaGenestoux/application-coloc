@@ -11,7 +11,7 @@ service ExpenseService {
   // Create a new expense
   rpc CreateExpense(CreateExpenseRequest) returns (Expense) {
     option (google.api.http) = {
-      post: "/api/colocations/{colocation_id}/expenses"
+      post: "/api/v1/colocations/{colocation_id}/expenses"
       body: "*"
     };
   }
@@ -19,21 +19,21 @@ service ExpenseService {
   // Get expense by ID
   rpc GetExpense(GetExpenseRequest) returns (Expense) {
     option (google.api.http) = {
-      get: "/api/colocations/{colocation_id}/expenses/{id}"
+      get: "/api/v1/colocations/{colocation_id}/expenses/{id}"
     };
   }
 
   // List expenses for colocation
   rpc ListExpenses(ListExpensesRequest) returns (ListExpensesResponse) {
     option (google.api.http) = {
-      get: "/api/colocations/{colocation_id}/expenses"
+      get: "/api/v1/colocations/{colocation_id}/expenses"
     };
   }
 
   // Update expense
   rpc UpdateExpense(UpdateExpenseRequest) returns (Expense) {
     option (google.api.http) = {
-      put: "/api/colocations/{colocation_id}/expenses/{id}"
+      put: "/api/v1/colocations/{colocation_id}/expenses/{id}"
       body: "*"
     };
   }
@@ -41,14 +41,14 @@ service ExpenseService {
   // Delete expense
   rpc DeleteExpense(DeleteExpenseRequest) returns (DeleteExpenseResponse) {
     option (google.api.http) = {
-      delete: "/api/colocations/{colocation_id}/expenses/{id}"
+      delete: "/api/v1/colocations/{colocation_id}/expenses/{id}"
     };
   }
 
   // Create recurring expense template
   rpc CreateRecurringExpense(CreateRecurringExpenseRequest) returns (RecurringExpense) {
     option (google.api.http) = {
-      post: "/api/colocations/{colocation_id}/recurring-expenses"
+      post: "/api/v1/colocations/{colocation_id}/recurring-expenses"
       body: "*"
     };
   }
@@ -56,14 +56,14 @@ service ExpenseService {
   // List recurring expenses
   rpc ListRecurringExpenses(ListRecurringExpensesRequest) returns (ListRecurringExpensesResponse) {
     option (google.api.http) = {
-      get: "/api/colocations/{colocation_id}/recurring-expenses"
+      get: "/api/v1/colocations/{colocation_id}/recurring-expenses"
     };
   }
 
   // Update recurring expense
   rpc UpdateRecurringExpense(UpdateRecurringExpenseRequest) returns (RecurringExpense) {
     option (google.api.http) = {
-      put: "/api/colocations/{colocation_id}/recurring-expenses/{id}"
+      put: "/api/v1/colocations/{colocation_id}/recurring-expenses/{id}"
       body: "*"
     };
   }
@@ -71,14 +71,14 @@ service ExpenseService {
   // Delete recurring expense
   rpc DeleteRecurringExpense(DeleteRecurringExpenseRequest) returns (DeleteRecurringExpenseResponse) {
     option (google.api.http) = {
-      delete: "/api/colocations/{colocation_id}/recurring-expenses/{id}"
+      delete: "/api/v1/colocations/{colocation_id}/recurring-expenses/{id}"
     };
   }
 
   // Get expense forecast
   rpc GetForecast(GetForecastRequest) returns (GetForecastResponse) {
     option (google.api.http) = {
-      get: "/api/colocations/{colocation_id}/expenses/forecast"
+      get: "/api/v1/colocations/{colocation_id}/expenses/forecast"
     };
   }
 }
@@ -88,6 +88,7 @@ enum SplitType {
   SPLIT_TYPE_EQUAL = 1;       // Equal split among all members
   SPLIT_TYPE_PERCENTAGE = 2;  // Custom percentage per member
   SPLIT_TYPE_CUSTOM = 3;      // Fixed amount per member
+  SPLIT_TYPE_PAYER_ONLY = 4;  // Entire amount stays with payer (no split)
 }
 
 enum Recurrence {

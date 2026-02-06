@@ -377,7 +377,7 @@ func RegisterPaymentServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.PaymentService/CreatePayment", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/payments"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.PaymentService/CreatePayment", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/payments"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -397,7 +397,7 @@ func RegisterPaymentServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.PaymentService/GetPayment", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/payments/{id}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.PaymentService/GetPayment", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/payments/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -417,7 +417,7 @@ func RegisterPaymentServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.PaymentService/ListPayments", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/payments"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.PaymentService/ListPayments", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/payments"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -437,7 +437,7 @@ func RegisterPaymentServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.PaymentService/ConfirmPayment", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/payments/{id}/confirm"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.PaymentService/ConfirmPayment", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/payments/{id}/confirm"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -457,7 +457,7 @@ func RegisterPaymentServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.PaymentService/RejectPayment", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/payments/{id}/reject"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.PaymentService/RejectPayment", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/payments/{id}/reject"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -477,7 +477,7 @@ func RegisterPaymentServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.PaymentService/CancelPayment", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/payments/{id}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.PaymentService/CancelPayment", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/payments/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -535,7 +535,7 @@ func RegisterPaymentServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.PaymentService/CreatePayment", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/payments"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.PaymentService/CreatePayment", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/payments"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -552,7 +552,7 @@ func RegisterPaymentServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.PaymentService/GetPayment", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/payments/{id}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.PaymentService/GetPayment", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/payments/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -569,7 +569,7 @@ func RegisterPaymentServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.PaymentService/ListPayments", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/payments"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.PaymentService/ListPayments", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/payments"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -586,7 +586,7 @@ func RegisterPaymentServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.PaymentService/ConfirmPayment", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/payments/{id}/confirm"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.PaymentService/ConfirmPayment", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/payments/{id}/confirm"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -603,7 +603,7 @@ func RegisterPaymentServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.PaymentService/RejectPayment", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/payments/{id}/reject"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.PaymentService/RejectPayment", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/payments/{id}/reject"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -620,7 +620,7 @@ func RegisterPaymentServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.PaymentService/CancelPayment", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/payments/{id}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.PaymentService/CancelPayment", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/payments/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -637,12 +637,12 @@ func RegisterPaymentServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 }
 
 var (
-	pattern_PaymentService_CreatePayment_0  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"api", "colocations", "colocation_id", "payments"}, ""))
-	pattern_PaymentService_GetPayment_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "colocations", "colocation_id", "payments", "id"}, ""))
-	pattern_PaymentService_ListPayments_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"api", "colocations", "colocation_id", "payments"}, ""))
-	pattern_PaymentService_ConfirmPayment_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5}, []string{"api", "colocations", "colocation_id", "payments", "id", "confirm"}, ""))
-	pattern_PaymentService_RejectPayment_0  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5}, []string{"api", "colocations", "colocation_id", "payments", "id", "reject"}, ""))
-	pattern_PaymentService_CancelPayment_0  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "colocations", "colocation_id", "payments", "id"}, ""))
+	pattern_PaymentService_CreatePayment_0  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4}, []string{"api", "v1", "colocations", "colocation_id", "payments"}, ""))
+	pattern_PaymentService_GetPayment_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "colocations", "colocation_id", "payments", "id"}, ""))
+	pattern_PaymentService_ListPayments_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4}, []string{"api", "v1", "colocations", "colocation_id", "payments"}, ""))
+	pattern_PaymentService_ConfirmPayment_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6}, []string{"api", "v1", "colocations", "colocation_id", "payments", "id", "confirm"}, ""))
+	pattern_PaymentService_RejectPayment_0  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6}, []string{"api", "v1", "colocations", "colocation_id", "payments", "id", "reject"}, ""))
+	pattern_PaymentService_CancelPayment_0  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "colocations", "colocation_id", "payments", "id"}, ""))
 )
 
 var (

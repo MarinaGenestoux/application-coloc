@@ -1087,19 +1087,19 @@ const file_fund_proto_rawDesc = "" +
 	"\x04note\x18\a \x01(\tH\x00R\x04note\x88\x01\x01\x12\x1d\n" +
 	"\n" +
 	"created_at\x18\b \x01(\tR\tcreatedAtB\a\n" +
-	"\x05_note2\x8b\b\n" +
-	"\vFundService\x12f\n" +
+	"\x05_note2\xa3\b\n" +
+	"\vFundService\x12i\n" +
 	"\n" +
-	"CreateFund\x12\x18.coloc.CreateFundRequest\x1a\v.coloc.Fund\"1\x82\xd3\xe4\x93\x02+:\x01*\"&/api/colocations/{colocation_id}/funds\x12b\n" +
-	"\aGetFund\x12\x15.coloc.GetFundRequest\x1a\v.coloc.Fund\"3\x82\xd3\xe4\x93\x02-\x12+/api/colocations/{colocation_id}/funds/{id}\x12n\n" +
-	"\tListFunds\x12\x17.coloc.ListFundsRequest\x1a\x18.coloc.ListFundsResponse\".\x82\xd3\xe4\x93\x02(\x12&/api/colocations/{colocation_id}/funds\x12k\n" +
+	"CreateFund\x12\x18.coloc.CreateFundRequest\x1a\v.coloc.Fund\"4\x82\xd3\xe4\x93\x02.:\x01*\")/api/v1/colocations/{colocation_id}/funds\x12e\n" +
+	"\aGetFund\x12\x15.coloc.GetFundRequest\x1a\v.coloc.Fund\"6\x82\xd3\xe4\x93\x020\x12./api/v1/colocations/{colocation_id}/funds/{id}\x12q\n" +
+	"\tListFunds\x12\x17.coloc.ListFundsRequest\x1a\x18.coloc.ListFundsResponse\"1\x82\xd3\xe4\x93\x02+\x12)/api/v1/colocations/{colocation_id}/funds\x12n\n" +
 	"\n" +
-	"UpdateFund\x12\x18.coloc.UpdateFundRequest\x1a\v.coloc.Fund\"6\x82\xd3\xe4\x93\x020:\x01*\x1a+/api/colocations/{colocation_id}/funds/{id}\x12v\n" +
+	"UpdateFund\x12\x18.coloc.UpdateFundRequest\x1a\v.coloc.Fund\"9\x82\xd3\xe4\x93\x023:\x01*\x1a./api/v1/colocations/{colocation_id}/funds/{id}\x12y\n" +
 	"\n" +
-	"DeleteFund\x12\x18.coloc.DeleteFundRequest\x1a\x19.coloc.DeleteFundResponse\"3\x82\xd3\xe4\x93\x02-*+/api/colocations/{colocation_id}/funds/{id}\x12\x90\x01\n" +
-	"\x0fAddContribution\x12\x1d.coloc.AddContributionRequest\x1a\x13.coloc.Contribution\"I\x82\xd3\xe4\x93\x02C:\x01*\">/api/colocations/{colocation_id}/funds/{fund_id}/contributions\x12\x9e\x01\n" +
-	"\x11ListContributions\x12\x1f.coloc.ListContributionsRequest\x1a .coloc.ListContributionsResponse\"F\x82\xd3\xe4\x93\x02@\x12>/api/colocations/{colocation_id}/funds/{fund_id}/contributions\x12\xa6\x01\n" +
-	"\x12DeleteContribution\x12 .coloc.DeleteContributionRequest\x1a!.coloc.DeleteContributionResponse\"K\x82\xd3\xe4\x93\x02E*C/api/colocations/{colocation_id}/funds/{fund_id}/contributions/{id}B,Z*github.com/MarinaGenestoux/application-coloc/proto/pbb\x06proto3"
+	"DeleteFund\x12\x18.coloc.DeleteFundRequest\x1a\x19.coloc.DeleteFundResponse\"6\x82\xd3\xe4\x93\x020*./api/v1/colocations/{colocation_id}/funds/{id}\x12\x93\x01\n" +
+	"\x0fAddContribution\x12\x1d.coloc.AddContributionRequest\x1a\x13.coloc.Contribution\"L\x82\xd3\xe4\x93\x02F:\x01*\"A/api/v1/colocations/{colocation_id}/funds/{fund_id}/contributions\x12\xa1\x01\n" +
+	"\x11ListContributions\x12\x1f.coloc.ListContributionsRequest\x1a .coloc.ListContributionsResponse\"I\x82\xd3\xe4\x93\x02C\x12A/api/v1/colocations/{colocation_id}/funds/{fund_id}/contributions\x12\xa9\x01\n" +
+	"\x12DeleteContribution\x12 .coloc.DeleteContributionRequest\x1a!.coloc.DeleteContributionResponse\"N\x82\xd3\xe4\x93\x02H*F/api/v1/colocations/{colocation_id}/funds/{fund_id}/contributions/{id}B7Z5github.com/MarinaGenestoux/application-coloc/proto/pbb\x06proto3"
 
 var (
 	file_fund_proto_rawDescOnce sync.Once

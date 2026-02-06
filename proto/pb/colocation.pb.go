@@ -1604,23 +1604,23 @@ const file_colocation_proto_rawDesc = "" +
 	"\x19INVITATION_STATUS_PENDING\x10\x01\x12\x1e\n" +
 	"\x1aINVITATION_STATUS_ACCEPTED\x10\x02\x12\x1e\n" +
 	"\x1aINVITATION_STATUS_REJECTED\x10\x03\x12\x1d\n" +
-	"\x19INVITATION_STATUS_EXPIRED\x10\x042\xc1\r\n" +
-	"\x11ColocationService\x12b\n" +
-	"\x10CreateColocation\x12\x1e.coloc.CreateColocationRequest\x1a\x11.coloc.Colocation\"\x1b\x82\xd3\xe4\x93\x02\x15:\x01*\"\x10/api/colocations\x12^\n" +
-	"\rGetColocation\x12\x1b.coloc.GetColocationRequest\x1a\x11.coloc.Colocation\"\x1d\x82\xd3\xe4\x93\x02\x17\x12\x15/api/colocations/{id}\x12j\n" +
-	"\x0fListColocations\x12\x1d.coloc.ListColocationsRequest\x1a\x1e.coloc.ListColocationsResponse\"\x18\x82\xd3\xe4\x93\x02\x12\x12\x10/api/colocations\x12g\n" +
-	"\x10UpdateColocation\x12\x1e.coloc.UpdateColocationRequest\x1a\x11.coloc.Colocation\" \x82\xd3\xe4\x93\x02\x1a:\x01*\x1a\x15/api/colocations/{id}\x12r\n" +
-	"\x10DeleteColocation\x12\x1e.coloc.DeleteColocationRequest\x1a\x1f.coloc.DeleteColocationResponse\"\x1d\x82\xd3\xe4\x93\x02\x17*\x15/api/colocations/{id}\x12c\n" +
-	"\x0eJoinColocation\x12\x1c.coloc.JoinColocationRequest\x1a\x11.coloc.Colocation\" \x82\xd3\xe4\x93\x02\x1a:\x01*\"\x15/api/colocations/join\x12x\n" +
-	"\x0fLeaveColocation\x12\x1d.coloc.LeaveColocationRequest\x1a\x1e.coloc.LeaveColocationResponse\"&\x82\xd3\xe4\x93\x02 :\x01*\"\x1b/api/colocations/{id}/leave\x12s\n" +
+	"\x19INVITATION_STATUS_EXPIRED\x10\x042\xeb\r\n" +
+	"\x11ColocationService\x12e\n" +
+	"\x10CreateColocation\x12\x1e.coloc.CreateColocationRequest\x1a\x11.coloc.Colocation\"\x1e\x82\xd3\xe4\x93\x02\x18:\x01*\"\x13/api/v1/colocations\x12a\n" +
+	"\rGetColocation\x12\x1b.coloc.GetColocationRequest\x1a\x11.coloc.Colocation\" \x82\xd3\xe4\x93\x02\x1a\x12\x18/api/v1/colocations/{id}\x12m\n" +
+	"\x0fListColocations\x12\x1d.coloc.ListColocationsRequest\x1a\x1e.coloc.ListColocationsResponse\"\x1b\x82\xd3\xe4\x93\x02\x15\x12\x13/api/v1/colocations\x12j\n" +
+	"\x10UpdateColocation\x12\x1e.coloc.UpdateColocationRequest\x1a\x11.coloc.Colocation\"#\x82\xd3\xe4\x93\x02\x1d:\x01*\x1a\x18/api/v1/colocations/{id}\x12u\n" +
+	"\x10DeleteColocation\x12\x1e.coloc.DeleteColocationRequest\x1a\x1f.coloc.DeleteColocationResponse\" \x82\xd3\xe4\x93\x02\x1a*\x18/api/v1/colocations/{id}\x12f\n" +
+	"\x0eJoinColocation\x12\x1c.coloc.JoinColocationRequest\x1a\x11.coloc.Colocation\"#\x82\xd3\xe4\x93\x02\x1d:\x01*\"\x18/api/v1/colocations/join\x12{\n" +
+	"\x0fLeaveColocation\x12\x1d.coloc.LeaveColocationRequest\x1a\x1e.coloc.LeaveColocationResponse\")\x82\xd3\xe4\x93\x02#:\x01*\"\x1e/api/v1/colocations/{id}/leave\x12v\n" +
 	"\n" +
-	"GetMembers\x12\x18.coloc.GetMembersRequest\x1a\x19.coloc.GetMembersResponse\"0\x82\xd3\xe4\x93\x02*\x12(/api/colocations/{colocation_id}/members\x12\x83\x01\n" +
-	"\fRemoveMember\x12\x1a.coloc.RemoveMemberRequest\x1a\x1b.coloc.RemoveMemberResponse\":\x82\xd3\xe4\x93\x024*2/api/colocations/{colocation_id}/members/{user_id}\x12\x8f\x01\n" +
-	"\x10UpdateMemberRole\x12\x1e.coloc.UpdateMemberRoleRequest\x1a\x17.coloc.ColocationMember\"B\x82\xd3\xe4\x93\x02<:\x01*\x1a7/api/colocations/{colocation_id}/members/{user_id}/role\x12\x91\x01\n" +
-	"\x14RegenerateInviteCode\x12\".coloc.RegenerateInviteCodeRequest\x1a#.coloc.RegenerateInviteCodeResponse\"0\x82\xd3\xe4\x93\x02*:\x01*\"%/api/colocations/{id}/regenerate-code\x12z\n" +
-	"\x0eSendInvitation\x12\x1c.coloc.SendInvitationRequest\x1a\x11.coloc.Invitation\"7\x82\xd3\xe4\x93\x021:\x01*\",/api/colocations/{colocation_id}/invitations\x12\x86\x01\n" +
-	"\x0fListInvitations\x12\x1d.coloc.ListInvitationsRequest\x1a\x1e.coloc.ListInvitationsResponse\"4\x82\xd3\xe4\x93\x02.\x12,/api/colocations/{colocation_id}/invitations\x12\x99\x01\n" +
-	"\x10CancelInvitation\x12\x1e.coloc.CancelInvitationRequest\x1a\x1f.coloc.CancelInvitationResponse\"D\x82\xd3\xe4\x93\x02>*</api/colocations/{colocation_id}/invitations/{invitation_id}B,Z*github.com/MarinaGenestoux/application-coloc/proto/pbb\x06proto3"
+	"GetMembers\x12\x18.coloc.GetMembersRequest\x1a\x19.coloc.GetMembersResponse\"3\x82\xd3\xe4\x93\x02-\x12+/api/v1/colocations/{colocation_id}/members\x12\x86\x01\n" +
+	"\fRemoveMember\x12\x1a.coloc.RemoveMemberRequest\x1a\x1b.coloc.RemoveMemberResponse\"=\x82\xd3\xe4\x93\x027*5/api/v1/colocations/{colocation_id}/members/{user_id}\x12\x92\x01\n" +
+	"\x10UpdateMemberRole\x12\x1e.coloc.UpdateMemberRoleRequest\x1a\x17.coloc.ColocationMember\"E\x82\xd3\xe4\x93\x02?:\x01*\x1a:/api/v1/colocations/{colocation_id}/members/{user_id}/role\x12\x94\x01\n" +
+	"\x14RegenerateInviteCode\x12\".coloc.RegenerateInviteCodeRequest\x1a#.coloc.RegenerateInviteCodeResponse\"3\x82\xd3\xe4\x93\x02-:\x01*\"(/api/v1/colocations/{id}/regenerate-code\x12}\n" +
+	"\x0eSendInvitation\x12\x1c.coloc.SendInvitationRequest\x1a\x11.coloc.Invitation\":\x82\xd3\xe4\x93\x024:\x01*\"//api/v1/colocations/{colocation_id}/invitations\x12\x89\x01\n" +
+	"\x0fListInvitations\x12\x1d.coloc.ListInvitationsRequest\x1a\x1e.coloc.ListInvitationsResponse\"7\x82\xd3\xe4\x93\x021\x12//api/v1/colocations/{colocation_id}/invitations\x12\x9c\x01\n" +
+	"\x10CancelInvitation\x12\x1e.coloc.CancelInvitationRequest\x1a\x1f.coloc.CancelInvitationResponse\"G\x82\xd3\xe4\x93\x02A*?/api/v1/colocations/{colocation_id}/invitations/{invitation_id}B7Z5github.com/MarinaGenestoux/application-coloc/proto/pbb\x06proto3"
 
 var (
 	file_colocation_proto_rawDescOnce sync.Once

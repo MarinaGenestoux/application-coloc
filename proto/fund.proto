@@ -11,7 +11,7 @@ service FundService {
   // Create a new common fund
   rpc CreateFund(CreateFundRequest) returns (Fund) {
     option (google.api.http) = {
-      post: "/api/colocations/{colocation_id}/funds"
+      post: "/api/v1/colocations/{colocation_id}/funds"
       body: "*"
     };
   }
@@ -19,21 +19,21 @@ service FundService {
   // Get fund by ID
   rpc GetFund(GetFundRequest) returns (Fund) {
     option (google.api.http) = {
-      get: "/api/colocations/{colocation_id}/funds/{id}"
+      get: "/api/v1/colocations/{colocation_id}/funds/{id}"
     };
   }
 
   // List funds for colocation
   rpc ListFunds(ListFundsRequest) returns (ListFundsResponse) {
     option (google.api.http) = {
-      get: "/api/colocations/{colocation_id}/funds"
+      get: "/api/v1/colocations/{colocation_id}/funds"
     };
   }
 
   // Update fund
   rpc UpdateFund(UpdateFundRequest) returns (Fund) {
     option (google.api.http) = {
-      put: "/api/colocations/{colocation_id}/funds/{id}"
+      put: "/api/v1/colocations/{colocation_id}/funds/{id}"
       body: "*"
     };
   }
@@ -41,14 +41,14 @@ service FundService {
   // Delete fund
   rpc DeleteFund(DeleteFundRequest) returns (DeleteFundResponse) {
     option (google.api.http) = {
-      delete: "/api/colocations/{colocation_id}/funds/{id}"
+      delete: "/api/v1/colocations/{colocation_id}/funds/{id}"
     };
   }
 
   // Add contribution to fund
   rpc AddContribution(AddContributionRequest) returns (Contribution) {
     option (google.api.http) = {
-      post: "/api/colocations/{colocation_id}/funds/{fund_id}/contributions"
+      post: "/api/v1/colocations/{colocation_id}/funds/{fund_id}/contributions"
       body: "*"
     };
   }
@@ -56,14 +56,14 @@ service FundService {
   // List contributions for fund
   rpc ListContributions(ListContributionsRequest) returns (ListContributionsResponse) {
     option (google.api.http) = {
-      get: "/api/colocations/{colocation_id}/funds/{fund_id}/contributions"
+      get: "/api/v1/colocations/{colocation_id}/funds/{fund_id}/contributions"
     };
   }
 
   // Delete contribution
   rpc DeleteContribution(DeleteContributionRequest) returns (DeleteContributionResponse) {
     option (google.api.http) = {
-      delete: "/api/colocations/{colocation_id}/funds/{fund_id}/contributions/{id}"
+      delete: "/api/v1/colocations/{colocation_id}/funds/{fund_id}/contributions/{id}"
     };
   }
 }

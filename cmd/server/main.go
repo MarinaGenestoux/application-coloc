@@ -36,6 +36,7 @@ type server struct {
 	decisionHandler     *handler.DecisionHandler
 	fundHandler         *handler.FundHandler
 	notificationHandler *handler.NotificationHandler
+	eventHandler        *handler.EventHandler
 }
 
 func main() {
@@ -69,6 +70,7 @@ func main() {
 	decisionRepo := postgres.NewDecisionRepository(pool)
 	fundRepo := postgres.NewFundRepository(pool)
 	notificationRepo := postgres.NewNotificationRepository(pool)
+	eventRepo := postgres.NewEventRepository(pool)
 
 	// Initialize services
 	hasher := auth.NewBcryptPasswordHasher()
@@ -82,6 +84,7 @@ func main() {
 	decisionService := service.NewDecisionService(decisionRepo, colocationRepo)
 	fundService := service.NewFundService(fundRepo, colocationRepo)
 	notificationService := service.NewNotificationService(notificationRepo)
+	eventService := service.NewEventService(eventRepo, colocationRepo)
 
 	// Initialize handlers
 	authHandler := handler.NewAuthHandler(authService)
@@ -94,6 +97,7 @@ func main() {
 	decisionHandler := handler.NewDecisionHandler(decisionService)
 	fundHandler := handler.NewFundHandler(fundService)
 	notificationHandler := handler.NewNotificationHandler(notificationService)
+	eventHandler := handler.NewEventHandler(eventService)
 
 	srv := &server{
 		cfg:                 cfg,
@@ -109,6 +113,7 @@ func main() {
 		decisionHandler:     decisionHandler,
 		fundHandler:         fundHandler,
 		notificationHandler: notificationHandler,
+		eventHandler:        eventHandler,
 	}
 
 	// Start gRPC server in goroutine
@@ -149,6 +154,7 @@ func (s *server) runGRPCServer() error {
 	pb.RegisterDecisionServiceServer(grpcServer, s.decisionHandler)
 	pb.RegisterFundServiceServer(grpcServer, s.fundHandler)
 	pb.RegisterNotificationServiceServer(grpcServer, s.notificationHandler)
+	pb.RegisterEventServiceServer(grpcServer, s.eventHandler)
 
 	// Enable reflection for grpcurl/grpcui
 	reflection.Register(grpcServer)
@@ -200,6 +206,9 @@ func (s *server) runHTTPGateway() error {
 	if err := pb.RegisterNotificationServiceHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts); err != nil {
 		return err
 	}
+	if err := pb.RegisterEventServiceHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts); err != nil {
+		return err
+	}
 
 	// Wrap with CORS
 	handler := corsMiddleware(mux)
@@ -218,7 +227,7 @@ func (s *server) runHTTPGateway() error {
 	httpMux.Handle("/", handler)
 
 	log.Printf("Gateway REST demarree sur le port %s", s.cfg.Server.HTTPPort)
-	log.Printf("API disponible sur http://localhost:%s/api/", s.cfg.Server.HTTPPort)
+	log.Printf("API v1 disponible sur http://localhost:%s/api/v1/", s.cfg.Server.HTTPPort)
 	log.Printf("Swagger UI disponible sur http://localhost:%s/swagger/", s.cfg.Server.HTTPPort)
 
 	return http.ListenAndServe(":"+s.cfg.Server.HTTPPort, httpMux)

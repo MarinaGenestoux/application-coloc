@@ -155,7 +155,7 @@ func RegisterUserServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.UserService/GetCurrentUser", runtime.WithHTTPPathPattern("/api/me"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.UserService/GetCurrentUser", runtime.WithHTTPPathPattern("/api/v1/me"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -175,7 +175,7 @@ func RegisterUserServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.UserService/UpdateCurrentUser", runtime.WithHTTPPathPattern("/api/me"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.UserService/UpdateCurrentUser", runtime.WithHTTPPathPattern("/api/v1/me"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -195,7 +195,7 @@ func RegisterUserServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.UserService/DeleteCurrentUser", runtime.WithHTTPPathPattern("/api/me"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.UserService/DeleteCurrentUser", runtime.WithHTTPPathPattern("/api/v1/me"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -215,7 +215,7 @@ func RegisterUserServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.UserService/GetUser", runtime.WithHTTPPathPattern("/api/users/{id}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.UserService/GetUser", runtime.WithHTTPPathPattern("/api/v1/users/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -273,7 +273,7 @@ func RegisterUserServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.UserService/GetCurrentUser", runtime.WithHTTPPathPattern("/api/me"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.UserService/GetCurrentUser", runtime.WithHTTPPathPattern("/api/v1/me"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -290,7 +290,7 @@ func RegisterUserServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.UserService/UpdateCurrentUser", runtime.WithHTTPPathPattern("/api/me"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.UserService/UpdateCurrentUser", runtime.WithHTTPPathPattern("/api/v1/me"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -307,7 +307,7 @@ func RegisterUserServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.UserService/DeleteCurrentUser", runtime.WithHTTPPathPattern("/api/me"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.UserService/DeleteCurrentUser", runtime.WithHTTPPathPattern("/api/v1/me"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -324,7 +324,7 @@ func RegisterUserServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.UserService/GetUser", runtime.WithHTTPPathPattern("/api/users/{id}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.UserService/GetUser", runtime.WithHTTPPathPattern("/api/v1/users/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -341,10 +341,10 @@ func RegisterUserServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux
 }
 
 var (
-	pattern_UserService_GetCurrentUser_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"api", "me"}, ""))
-	pattern_UserService_UpdateCurrentUser_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"api", "me"}, ""))
-	pattern_UserService_DeleteCurrentUser_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"api", "me"}, ""))
-	pattern_UserService_GetUser_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"api", "users", "id"}, ""))
+	pattern_UserService_GetCurrentUser_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "me"}, ""))
+	pattern_UserService_UpdateCurrentUser_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "me"}, ""))
+	pattern_UserService_DeleteCurrentUser_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "me"}, ""))
+	pattern_UserService_GetUser_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"api", "v1", "users", "id"}, ""))
 )
 
 var (

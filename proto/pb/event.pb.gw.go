@@ -432,7 +432,7 @@ func RegisterEventServiceHandlerServer(ctx context.Context, mux *runtime.ServeMu
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.EventService/CreateEvent", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/events"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.EventService/CreateEvent", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/events"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -452,7 +452,7 @@ func RegisterEventServiceHandlerServer(ctx context.Context, mux *runtime.ServeMu
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.EventService/GetEvent", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/events/{id}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.EventService/GetEvent", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/events/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -472,7 +472,7 @@ func RegisterEventServiceHandlerServer(ctx context.Context, mux *runtime.ServeMu
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.EventService/ListEvents", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/events"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.EventService/ListEvents", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/events"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -492,7 +492,7 @@ func RegisterEventServiceHandlerServer(ctx context.Context, mux *runtime.ServeMu
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.EventService/UpdateEvent", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/events/{id}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.EventService/UpdateEvent", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/events/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -512,7 +512,7 @@ func RegisterEventServiceHandlerServer(ctx context.Context, mux *runtime.ServeMu
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.EventService/DeleteEvent", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/events/{id}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.EventService/DeleteEvent", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/events/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -532,7 +532,7 @@ func RegisterEventServiceHandlerServer(ctx context.Context, mux *runtime.ServeMu
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.EventService/RSVP", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/events/{event_id}/rsvp"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.EventService/RSVP", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/events/{event_id}/rsvp"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -552,7 +552,7 @@ func RegisterEventServiceHandlerServer(ctx context.Context, mux *runtime.ServeMu
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.EventService/GetParticipants", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/events/{event_id}/participants"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.EventService/GetParticipants", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/events/{event_id}/participants"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -610,7 +610,7 @@ func RegisterEventServiceHandlerClient(ctx context.Context, mux *runtime.ServeMu
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.EventService/CreateEvent", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/events"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.EventService/CreateEvent", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/events"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -627,7 +627,7 @@ func RegisterEventServiceHandlerClient(ctx context.Context, mux *runtime.ServeMu
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.EventService/GetEvent", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/events/{id}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.EventService/GetEvent", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/events/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -644,7 +644,7 @@ func RegisterEventServiceHandlerClient(ctx context.Context, mux *runtime.ServeMu
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.EventService/ListEvents", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/events"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.EventService/ListEvents", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/events"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -661,7 +661,7 @@ func RegisterEventServiceHandlerClient(ctx context.Context, mux *runtime.ServeMu
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.EventService/UpdateEvent", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/events/{id}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.EventService/UpdateEvent", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/events/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -678,7 +678,7 @@ func RegisterEventServiceHandlerClient(ctx context.Context, mux *runtime.ServeMu
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.EventService/DeleteEvent", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/events/{id}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.EventService/DeleteEvent", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/events/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -695,7 +695,7 @@ func RegisterEventServiceHandlerClient(ctx context.Context, mux *runtime.ServeMu
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.EventService/RSVP", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/events/{event_id}/rsvp"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.EventService/RSVP", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/events/{event_id}/rsvp"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -712,7 +712,7 @@ func RegisterEventServiceHandlerClient(ctx context.Context, mux *runtime.ServeMu
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.EventService/GetParticipants", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/events/{event_id}/participants"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.EventService/GetParticipants", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/events/{event_id}/participants"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -729,13 +729,13 @@ func RegisterEventServiceHandlerClient(ctx context.Context, mux *runtime.ServeMu
 }
 
 var (
-	pattern_EventService_CreateEvent_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"api", "colocations", "colocation_id", "events"}, ""))
-	pattern_EventService_GetEvent_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "colocations", "colocation_id", "events", "id"}, ""))
-	pattern_EventService_ListEvents_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"api", "colocations", "colocation_id", "events"}, ""))
-	pattern_EventService_UpdateEvent_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "colocations", "colocation_id", "events", "id"}, ""))
-	pattern_EventService_DeleteEvent_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "colocations", "colocation_id", "events", "id"}, ""))
-	pattern_EventService_RSVP_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5}, []string{"api", "colocations", "colocation_id", "events", "event_id", "rsvp"}, ""))
-	pattern_EventService_GetParticipants_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5}, []string{"api", "colocations", "colocation_id", "events", "event_id", "participants"}, ""))
+	pattern_EventService_CreateEvent_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4}, []string{"api", "v1", "colocations", "colocation_id", "events"}, ""))
+	pattern_EventService_GetEvent_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "colocations", "colocation_id", "events", "id"}, ""))
+	pattern_EventService_ListEvents_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4}, []string{"api", "v1", "colocations", "colocation_id", "events"}, ""))
+	pattern_EventService_UpdateEvent_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "colocations", "colocation_id", "events", "id"}, ""))
+	pattern_EventService_DeleteEvent_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "colocations", "colocation_id", "events", "id"}, ""))
+	pattern_EventService_RSVP_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6}, []string{"api", "v1", "colocations", "colocation_id", "events", "event_id", "rsvp"}, ""))
+	pattern_EventService_GetParticipants_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6}, []string{"api", "v1", "colocations", "colocation_id", "events", "event_id", "participants"}, ""))
 )
 
 var (

@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/MarinaGenestoux/application-coloc/internal/infra/auth"
 	"github.com/MarinaGenestoux/application-coloc/internal/application/constants"
 	"github.com/MarinaGenestoux/application-coloc/internal/domain"
+	"github.com/MarinaGenestoux/application-coloc/internal/infra/auth"
 )
 
 // ExpenseService handles expense business logic
@@ -131,6 +131,10 @@ func (s *ExpenseService) calculateSplits(ctx context.Context, colocationID strin
 		if err != nil {
 			return nil, err
 		}
+
+	case domain.SplitTypePayerOnly:
+		// Pas de partage : aucune dette n'est créée pour les autres membres
+		splits = []domain.ExpenseSplitInput{}
 
 	default:
 		return nil, fmt.Errorf("type de partage invalide")

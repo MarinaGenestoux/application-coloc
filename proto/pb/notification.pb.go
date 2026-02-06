@@ -870,15 +870,15 @@ const file_notification_proto_rawDesc = "" +
 	"\x1fNOTIFICATION_TYPE_EVENT_UPDATED\x103\x12$\n" +
 	" NOTIFICATION_TYPE_EVENT_REMINDER\x104\x12%\n" +
 	"!NOTIFICATION_TYPE_EVENT_CANCELLED\x105\x12#\n" +
-	"\x1fNOTIFICATION_TYPE_RECURRING_DUE\x10<2\xae\x05\n" +
-	"\x13NotificationService\x12r\n" +
-	"\x11ListNotifications\x12\x1f.coloc.ListNotificationsRequest\x1a .coloc.ListNotificationsResponse\"\x1a\x82\xd3\xe4\x93\x02\x14\x12\x12/api/notifications\x12j\n" +
+	"\x1fNOTIFICATION_TYPE_RECURRING_DUE\x10<2\xbd\x05\n" +
+	"\x13NotificationService\x12u\n" +
+	"\x11ListNotifications\x12\x1f.coloc.ListNotificationsRequest\x1a .coloc.ListNotificationsResponse\"\x1d\x82\xd3\xe4\x93\x02\x17\x12\x15/api/v1/notifications\x12m\n" +
 	"\n" +
-	"MarkAsRead\x12\x18.coloc.MarkAsReadRequest\x1a\x19.coloc.MarkAsReadResponse\"'\x82\xd3\xe4\x93\x02!:\x01*\"\x1c/api/notifications/{id}/read\x12r\n" +
-	"\rMarkAllAsRead\x12\x1b.coloc.MarkAllAsReadRequest\x1a\x1c.coloc.MarkAllAsReadResponse\"&\x82\xd3\xe4\x93\x02 :\x01*\"\x1b/api/notifications/read-all\x12z\n" +
-	"\x12DeleteNotification\x12 .coloc.DeleteNotificationRequest\x1a!.coloc.DeleteNotificationResponse\"\x1f\x82\xd3\xe4\x93\x02\x19*\x17/api/notifications/{id}\x12v\n" +
-	"\x0eGetUnreadCount\x12\x1c.coloc.GetUnreadCountRequest\x1a\x1d.coloc.GetUnreadCountResponse\"'\x82\xd3\xe4\x93\x02!\x12\x1f/api/notifications/unread-count\x12O\n" +
-	"\x13StreamNotifications\x12!.coloc.StreamNotificationsRequest\x1a\x13.coloc.Notification0\x01B,Z*github.com/MarinaGenestoux/application-coloc/proto/pbb\x06proto3"
+	"MarkAsRead\x12\x18.coloc.MarkAsReadRequest\x1a\x19.coloc.MarkAsReadResponse\"*\x82\xd3\xe4\x93\x02$:\x01*\"\x1f/api/v1/notifications/{id}/read\x12u\n" +
+	"\rMarkAllAsRead\x12\x1b.coloc.MarkAllAsReadRequest\x1a\x1c.coloc.MarkAllAsReadResponse\")\x82\xd3\xe4\x93\x02#:\x01*\"\x1e/api/v1/notifications/read-all\x12}\n" +
+	"\x12DeleteNotification\x12 .coloc.DeleteNotificationRequest\x1a!.coloc.DeleteNotificationResponse\"\"\x82\xd3\xe4\x93\x02\x1c*\x1a/api/v1/notifications/{id}\x12y\n" +
+	"\x0eGetUnreadCount\x12\x1c.coloc.GetUnreadCountRequest\x1a\x1d.coloc.GetUnreadCountResponse\"*\x82\xd3\xe4\x93\x02$\x12\"/api/v1/notifications/unread-count\x12O\n" +
+	"\x13StreamNotifications\x12!.coloc.StreamNotificationsRequest\x1a\x13.coloc.Notification0\x01B7Z5github.com/MarinaGenestoux/application-coloc/proto/pbb\x06proto3"
 
 var (
 	file_notification_proto_rawDescOnce sync.Once

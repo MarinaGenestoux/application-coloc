@@ -702,13 +702,13 @@ const file_category_proto_rawDesc = "" +
 	"percentage\x18\a \x01(\x01R\n" +
 	"percentageB\a\n" +
 	"\x05_iconB\b\n" +
-	"\x06_color2\xa8\x05\n" +
-	"\x0fCategoryService\x12\x82\x01\n" +
-	"\x0eListCategories\x12\x1c.coloc.ListCategoriesRequest\x1a\x1d.coloc.ListCategoriesResponse\"3\x82\xd3\xe4\x93\x02-\x12+/api/colocations/{colocation_id}/categories\x12w\n" +
-	"\x0eCreateCategory\x12\x1c.coloc.CreateCategoryRequest\x1a\x0f.coloc.Category\"6\x82\xd3\xe4\x93\x020:\x01*\"+/api/colocations/{colocation_id}/categories\x12|\n" +
-	"\x0eUpdateCategory\x12\x1c.coloc.UpdateCategoryRequest\x1a\x0f.coloc.Category\";\x82\xd3\xe4\x93\x025:\x01*\x1a0/api/colocations/{colocation_id}/categories/{id}\x12\x87\x01\n" +
-	"\x0eDeleteCategory\x12\x1c.coloc.DeleteCategoryRequest\x1a\x1d.coloc.DeleteCategoryResponse\"8\x82\xd3\xe4\x93\x022*0/api/colocations/{colocation_id}/categories/{id}\x12\x8e\x01\n" +
-	"\x10GetCategoryStats\x12\x1e.coloc.GetCategoryStatsRequest\x1a\x1f.coloc.GetCategoryStatsResponse\"9\x82\xd3\xe4\x93\x023\x121/api/colocations/{colocation_id}/categories/statsB,Z*github.com/MarinaGenestoux/application-coloc/proto/pbb\x06proto3"
+	"\x06_color2\xb7\x05\n" +
+	"\x0fCategoryService\x12\x85\x01\n" +
+	"\x0eListCategories\x12\x1c.coloc.ListCategoriesRequest\x1a\x1d.coloc.ListCategoriesResponse\"6\x82\xd3\xe4\x93\x020\x12./api/v1/colocations/{colocation_id}/categories\x12z\n" +
+	"\x0eCreateCategory\x12\x1c.coloc.CreateCategoryRequest\x1a\x0f.coloc.Category\"9\x82\xd3\xe4\x93\x023:\x01*\"./api/v1/colocations/{colocation_id}/categories\x12\x7f\n" +
+	"\x0eUpdateCategory\x12\x1c.coloc.UpdateCategoryRequest\x1a\x0f.coloc.Category\">\x82\xd3\xe4\x93\x028:\x01*\x1a3/api/v1/colocations/{colocation_id}/categories/{id}\x12\x8a\x01\n" +
+	"\x0eDeleteCategory\x12\x1c.coloc.DeleteCategoryRequest\x1a\x1d.coloc.DeleteCategoryResponse\";\x82\xd3\xe4\x93\x025*3/api/v1/colocations/{colocation_id}/categories/{id}\x12\x91\x01\n" +
+	"\x10GetCategoryStats\x12\x1e.coloc.GetCategoryStatsRequest\x1a\x1f.coloc.GetCategoryStatsResponse\"<\x82\xd3\xe4\x93\x026\x124/api/v1/colocations/{colocation_id}/categories/statsB7Z5github.com/MarinaGenestoux/application-coloc/proto/pbb\x06proto3"
 
 var (
 	file_category_proto_rawDescOnce sync.Once

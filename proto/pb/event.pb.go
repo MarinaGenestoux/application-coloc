@@ -1255,16 +1255,16 @@ const file_event_proto_rawDesc = "" +
 	"\x17RSVP_STATUS_UNSPECIFIED\x10\x00\x12\x15\n" +
 	"\x11RSVP_STATUS_GOING\x10\x01\x12\x15\n" +
 	"\x11RSVP_STATUS_MAYBE\x10\x02\x12\x19\n" +
-	"\x15RSVP_STATUS_NOT_GOING\x10\x032\xd4\x06\n" +
-	"\fEventService\x12j\n" +
-	"\vCreateEvent\x12\x19.coloc.CreateEventRequest\x1a\f.coloc.Event\"2\x82\xd3\xe4\x93\x02,:\x01*\"'/api/colocations/{colocation_id}/events\x12f\n" +
-	"\bGetEvent\x12\x16.coloc.GetEventRequest\x1a\f.coloc.Event\"4\x82\xd3\xe4\x93\x02.\x12,/api/colocations/{colocation_id}/events/{id}\x12r\n" +
+	"\x15RSVP_STATUS_NOT_GOING\x10\x032\xe9\x06\n" +
+	"\fEventService\x12m\n" +
+	"\vCreateEvent\x12\x19.coloc.CreateEventRequest\x1a\f.coloc.Event\"5\x82\xd3\xe4\x93\x02/:\x01*\"*/api/v1/colocations/{colocation_id}/events\x12i\n" +
+	"\bGetEvent\x12\x16.coloc.GetEventRequest\x1a\f.coloc.Event\"7\x82\xd3\xe4\x93\x021\x12//api/v1/colocations/{colocation_id}/events/{id}\x12u\n" +
 	"\n" +
-	"ListEvents\x12\x18.coloc.ListEventsRequest\x1a\x19.coloc.ListEventsResponse\"/\x82\xd3\xe4\x93\x02)\x12'/api/colocations/{colocation_id}/events\x12o\n" +
-	"\vUpdateEvent\x12\x19.coloc.UpdateEventRequest\x1a\f.coloc.Event\"7\x82\xd3\xe4\x93\x021:\x01*\x1a,/api/colocations/{colocation_id}/events/{id}\x12z\n" +
-	"\vDeleteEvent\x12\x19.coloc.DeleteEventRequest\x1a\x1a.coloc.DeleteEventResponse\"4\x82\xd3\xe4\x93\x02.*,/api/colocations/{colocation_id}/events/{id}\x12s\n" +
-	"\x04RSVP\x12\x12.coloc.RSVPRequest\x1a\x13.coloc.RSVPResponse\"B\x82\xd3\xe4\x93\x02<:\x01*\"7/api/colocations/{colocation_id}/events/{event_id}/rsvp\x12\x99\x01\n" +
-	"\x0fGetParticipants\x12\x1d.coloc.GetParticipantsRequest\x1a\x1e.coloc.GetParticipantsResponse\"G\x82\xd3\xe4\x93\x02A\x12?/api/colocations/{colocation_id}/events/{event_id}/participantsB,Z*github.com/MarinaGenestoux/application-coloc/proto/pbb\x06proto3"
+	"ListEvents\x12\x18.coloc.ListEventsRequest\x1a\x19.coloc.ListEventsResponse\"2\x82\xd3\xe4\x93\x02,\x12*/api/v1/colocations/{colocation_id}/events\x12r\n" +
+	"\vUpdateEvent\x12\x19.coloc.UpdateEventRequest\x1a\f.coloc.Event\":\x82\xd3\xe4\x93\x024:\x01*\x1a//api/v1/colocations/{colocation_id}/events/{id}\x12}\n" +
+	"\vDeleteEvent\x12\x19.coloc.DeleteEventRequest\x1a\x1a.coloc.DeleteEventResponse\"7\x82\xd3\xe4\x93\x021*//api/v1/colocations/{colocation_id}/events/{id}\x12v\n" +
+	"\x04RSVP\x12\x12.coloc.RSVPRequest\x1a\x13.coloc.RSVPResponse\"E\x82\xd3\xe4\x93\x02?:\x01*\":/api/v1/colocations/{colocation_id}/events/{event_id}/rsvp\x12\x9c\x01\n" +
+	"\x0fGetParticipants\x12\x1d.coloc.GetParticipantsRequest\x1a\x1e.coloc.GetParticipantsResponse\"J\x82\xd3\xe4\x93\x02D\x12B/api/v1/colocations/{colocation_id}/events/{event_id}/participantsB7Z5github.com/MarinaGenestoux/application-coloc/proto/pbb\x06proto3"
 
 var (
 	file_event_proto_rawDescOnce sync.Once

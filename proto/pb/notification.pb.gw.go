@@ -251,7 +251,7 @@ func RegisterNotificationServiceHandlerServer(ctx context.Context, mux *runtime.
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.NotificationService/ListNotifications", runtime.WithHTTPPathPattern("/api/notifications"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.NotificationService/ListNotifications", runtime.WithHTTPPathPattern("/api/v1/notifications"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -271,7 +271,7 @@ func RegisterNotificationServiceHandlerServer(ctx context.Context, mux *runtime.
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.NotificationService/MarkAsRead", runtime.WithHTTPPathPattern("/api/notifications/{id}/read"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.NotificationService/MarkAsRead", runtime.WithHTTPPathPattern("/api/v1/notifications/{id}/read"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -291,7 +291,7 @@ func RegisterNotificationServiceHandlerServer(ctx context.Context, mux *runtime.
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.NotificationService/MarkAllAsRead", runtime.WithHTTPPathPattern("/api/notifications/read-all"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.NotificationService/MarkAllAsRead", runtime.WithHTTPPathPattern("/api/v1/notifications/read-all"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -311,7 +311,7 @@ func RegisterNotificationServiceHandlerServer(ctx context.Context, mux *runtime.
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.NotificationService/DeleteNotification", runtime.WithHTTPPathPattern("/api/notifications/{id}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.NotificationService/DeleteNotification", runtime.WithHTTPPathPattern("/api/v1/notifications/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -331,7 +331,7 @@ func RegisterNotificationServiceHandlerServer(ctx context.Context, mux *runtime.
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.NotificationService/GetUnreadCount", runtime.WithHTTPPathPattern("/api/notifications/unread-count"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.NotificationService/GetUnreadCount", runtime.WithHTTPPathPattern("/api/v1/notifications/unread-count"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -396,7 +396,7 @@ func RegisterNotificationServiceHandlerClient(ctx context.Context, mux *runtime.
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.NotificationService/ListNotifications", runtime.WithHTTPPathPattern("/api/notifications"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.NotificationService/ListNotifications", runtime.WithHTTPPathPattern("/api/v1/notifications"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -413,7 +413,7 @@ func RegisterNotificationServiceHandlerClient(ctx context.Context, mux *runtime.
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.NotificationService/MarkAsRead", runtime.WithHTTPPathPattern("/api/notifications/{id}/read"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.NotificationService/MarkAsRead", runtime.WithHTTPPathPattern("/api/v1/notifications/{id}/read"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -430,7 +430,7 @@ func RegisterNotificationServiceHandlerClient(ctx context.Context, mux *runtime.
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.NotificationService/MarkAllAsRead", runtime.WithHTTPPathPattern("/api/notifications/read-all"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.NotificationService/MarkAllAsRead", runtime.WithHTTPPathPattern("/api/v1/notifications/read-all"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -447,7 +447,7 @@ func RegisterNotificationServiceHandlerClient(ctx context.Context, mux *runtime.
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.NotificationService/DeleteNotification", runtime.WithHTTPPathPattern("/api/notifications/{id}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.NotificationService/DeleteNotification", runtime.WithHTTPPathPattern("/api/v1/notifications/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -464,7 +464,7 @@ func RegisterNotificationServiceHandlerClient(ctx context.Context, mux *runtime.
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.NotificationService/GetUnreadCount", runtime.WithHTTPPathPattern("/api/notifications/unread-count"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.NotificationService/GetUnreadCount", runtime.WithHTTPPathPattern("/api/v1/notifications/unread-count"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -498,11 +498,11 @@ func RegisterNotificationServiceHandlerClient(ctx context.Context, mux *runtime.
 }
 
 var (
-	pattern_NotificationService_ListNotifications_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"api", "notifications"}, ""))
-	pattern_NotificationService_MarkAsRead_0          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"api", "notifications", "id", "read"}, ""))
-	pattern_NotificationService_MarkAllAsRead_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "notifications", "read-all"}, ""))
-	pattern_NotificationService_DeleteNotification_0  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"api", "notifications", "id"}, ""))
-	pattern_NotificationService_GetUnreadCount_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "notifications", "unread-count"}, ""))
+	pattern_NotificationService_ListNotifications_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "notifications"}, ""))
+	pattern_NotificationService_MarkAsRead_0          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4}, []string{"api", "v1", "notifications", "id", "read"}, ""))
+	pattern_NotificationService_MarkAllAsRead_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "notifications", "read-all"}, ""))
+	pattern_NotificationService_DeleteNotification_0  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"api", "v1", "notifications", "id"}, ""))
+	pattern_NotificationService_GetUnreadCount_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "notifications", "unread-count"}, ""))
 	pattern_NotificationService_StreamNotifications_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"coloc.NotificationService", "StreamNotifications"}, ""))
 )
 

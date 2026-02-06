@@ -29,6 +29,7 @@ const (
 	SplitType_SPLIT_TYPE_EQUAL       SplitType = 1 // Equal split among all members
 	SplitType_SPLIT_TYPE_PERCENTAGE  SplitType = 2 // Custom percentage per member
 	SplitType_SPLIT_TYPE_CUSTOM      SplitType = 3 // Fixed amount per member
+	SplitType_SPLIT_TYPE_PAYER_ONLY  SplitType = 4 // Entire amount stays with payer (no split)
 )
 
 // Enum value maps for SplitType.
@@ -38,12 +39,14 @@ var (
 		1: "SPLIT_TYPE_EQUAL",
 		2: "SPLIT_TYPE_PERCENTAGE",
 		3: "SPLIT_TYPE_CUSTOM",
+		4: "SPLIT_TYPE_PAYER_ONLY",
 	}
 	SplitType_value = map[string]int32{
 		"SPLIT_TYPE_UNSPECIFIED": 0,
 		"SPLIT_TYPE_EQUAL":       1,
 		"SPLIT_TYPE_PERCENTAGE":  2,
 		"SPLIT_TYPE_CUSTOM":      3,
+		"SPLIT_TYPE_PAYER_ONLY":  4,
 	}
 )
 
@@ -2035,32 +2038,32 @@ const file_expense_proto_rawDesc = "" +
 	"\vcategory_id\x18\x01 \x01(\tR\n" +
 	"categoryId\x12#\n" +
 	"\rcategory_name\x18\x02 \x01(\tR\fcategoryName\x12\x16\n" +
-	"\x06amount\x18\x03 \x01(\x01R\x06amount*o\n" +
+	"\x06amount\x18\x03 \x01(\x01R\x06amount*\x8a\x01\n" +
 	"\tSplitType\x12\x1a\n" +
 	"\x16SPLIT_TYPE_UNSPECIFIED\x10\x00\x12\x14\n" +
 	"\x10SPLIT_TYPE_EQUAL\x10\x01\x12\x19\n" +
 	"\x15SPLIT_TYPE_PERCENTAGE\x10\x02\x12\x15\n" +
-	"\x11SPLIT_TYPE_CUSTOM\x10\x03*\x84\x01\n" +
+	"\x11SPLIT_TYPE_CUSTOM\x10\x03\x12\x19\n" +
+	"\x15SPLIT_TYPE_PAYER_ONLY\x10\x04*\x84\x01\n" +
 	"\n" +
 	"Recurrence\x12\x1a\n" +
 	"\x16RECURRENCE_UNSPECIFIED\x10\x00\x12\x14\n" +
 	"\x10RECURRENCE_DAILY\x10\x01\x12\x15\n" +
 	"\x11RECURRENCE_WEEKLY\x10\x02\x12\x16\n" +
 	"\x12RECURRENCE_MONTHLY\x10\x03\x12\x15\n" +
-	"\x11RECURRENCE_YEARLY\x10\x042\xf6\n" +
+	"\x11RECURRENCE_YEARLY\x10\x042\x94\v\n" +
+	"\x0eExpenseService\x12u\n" +
+	"\rCreateExpense\x12\x1b.coloc.CreateExpenseRequest\x1a\x0e.coloc.Expense\"7\x82\xd3\xe4\x93\x021:\x01*\",/api/v1/colocations/{colocation_id}/expenses\x12q\n" +
 	"\n" +
-	"\x0eExpenseService\x12r\n" +
-	"\rCreateExpense\x12\x1b.coloc.CreateExpenseRequest\x1a\x0e.coloc.Expense\"4\x82\xd3\xe4\x93\x02.:\x01*\")/api/colocations/{colocation_id}/expenses\x12n\n" +
-	"\n" +
-	"GetExpense\x12\x18.coloc.GetExpenseRequest\x1a\x0e.coloc.Expense\"6\x82\xd3\xe4\x93\x020\x12./api/colocations/{colocation_id}/expenses/{id}\x12z\n" +
-	"\fListExpenses\x12\x1a.coloc.ListExpensesRequest\x1a\x1b.coloc.ListExpensesResponse\"1\x82\xd3\xe4\x93\x02+\x12)/api/colocations/{colocation_id}/expenses\x12w\n" +
-	"\rUpdateExpense\x12\x1b.coloc.UpdateExpenseRequest\x1a\x0e.coloc.Expense\"9\x82\xd3\xe4\x93\x023:\x01*\x1a./api/colocations/{colocation_id}/expenses/{id}\x12\x82\x01\n" +
-	"\rDeleteExpense\x12\x1b.coloc.DeleteExpenseRequest\x1a\x1c.coloc.DeleteExpenseResponse\"6\x82\xd3\xe4\x93\x020*./api/colocations/{colocation_id}/expenses/{id}\x12\x97\x01\n" +
-	"\x16CreateRecurringExpense\x12$.coloc.CreateRecurringExpenseRequest\x1a\x17.coloc.RecurringExpense\">\x82\xd3\xe4\x93\x028:\x01*\"3/api/colocations/{colocation_id}/recurring-expenses\x12\x9f\x01\n" +
-	"\x15ListRecurringExpenses\x12#.coloc.ListRecurringExpensesRequest\x1a$.coloc.ListRecurringExpensesResponse\";\x82\xd3\xe4\x93\x025\x123/api/colocations/{colocation_id}/recurring-expenses\x12\x9c\x01\n" +
-	"\x16UpdateRecurringExpense\x12$.coloc.UpdateRecurringExpenseRequest\x1a\x17.coloc.RecurringExpense\"C\x82\xd3\xe4\x93\x02=:\x01*\x1a8/api/colocations/{colocation_id}/recurring-expenses/{id}\x12\xa7\x01\n" +
-	"\x16DeleteRecurringExpense\x12$.coloc.DeleteRecurringExpenseRequest\x1a%.coloc.DeleteRecurringExpenseResponse\"@\x82\xd3\xe4\x93\x02:*8/api/colocations/{colocation_id}/recurring-expenses/{id}\x12\x80\x01\n" +
-	"\vGetForecast\x12\x19.coloc.GetForecastRequest\x1a\x1a.coloc.GetForecastResponse\":\x82\xd3\xe4\x93\x024\x122/api/colocations/{colocation_id}/expenses/forecastB,Z*github.com/MarinaGenestoux/application-coloc/proto/pbb\x06proto3"
+	"GetExpense\x12\x18.coloc.GetExpenseRequest\x1a\x0e.coloc.Expense\"9\x82\xd3\xe4\x93\x023\x121/api/v1/colocations/{colocation_id}/expenses/{id}\x12}\n" +
+	"\fListExpenses\x12\x1a.coloc.ListExpensesRequest\x1a\x1b.coloc.ListExpensesResponse\"4\x82\xd3\xe4\x93\x02.\x12,/api/v1/colocations/{colocation_id}/expenses\x12z\n" +
+	"\rUpdateExpense\x12\x1b.coloc.UpdateExpenseRequest\x1a\x0e.coloc.Expense\"<\x82\xd3\xe4\x93\x026:\x01*\x1a1/api/v1/colocations/{colocation_id}/expenses/{id}\x12\x85\x01\n" +
+	"\rDeleteExpense\x12\x1b.coloc.DeleteExpenseRequest\x1a\x1c.coloc.DeleteExpenseResponse\"9\x82\xd3\xe4\x93\x023*1/api/v1/colocations/{colocation_id}/expenses/{id}\x12\x9a\x01\n" +
+	"\x16CreateRecurringExpense\x12$.coloc.CreateRecurringExpenseRequest\x1a\x17.coloc.RecurringExpense\"A\x82\xd3\xe4\x93\x02;:\x01*\"6/api/v1/colocations/{colocation_id}/recurring-expenses\x12\xa2\x01\n" +
+	"\x15ListRecurringExpenses\x12#.coloc.ListRecurringExpensesRequest\x1a$.coloc.ListRecurringExpensesResponse\">\x82\xd3\xe4\x93\x028\x126/api/v1/colocations/{colocation_id}/recurring-expenses\x12\x9f\x01\n" +
+	"\x16UpdateRecurringExpense\x12$.coloc.UpdateRecurringExpenseRequest\x1a\x17.coloc.RecurringExpense\"F\x82\xd3\xe4\x93\x02@:\x01*\x1a;/api/v1/colocations/{colocation_id}/recurring-expenses/{id}\x12\xaa\x01\n" +
+	"\x16DeleteRecurringExpense\x12$.coloc.DeleteRecurringExpenseRequest\x1a%.coloc.DeleteRecurringExpenseResponse\"C\x82\xd3\xe4\x93\x02=*;/api/v1/colocations/{colocation_id}/recurring-expenses/{id}\x12\x83\x01\n" +
+	"\vGetForecast\x12\x19.coloc.GetForecastRequest\x1a\x1a.coloc.GetForecastResponse\"=\x82\xd3\xe4\x93\x027\x125/api/v1/colocations/{colocation_id}/expenses/forecastB7Z5github.com/MarinaGenestoux/application-coloc/proto/pbb\x06proto3"
 
 var (
 	file_expense_proto_rawDescOnce sync.Once

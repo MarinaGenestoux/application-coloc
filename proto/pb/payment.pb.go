@@ -787,15 +787,15 @@ const file_payment_proto_rawDesc = "" +
 	"\x1aPAYMENT_STATUS_UNSPECIFIED\x10\x00\x12\x1a\n" +
 	"\x16PAYMENT_STATUS_PENDING\x10\x01\x12\x1c\n" +
 	"\x18PAYMENT_STATUS_CONFIRMED\x10\x02\x12\x1b\n" +
-	"\x17PAYMENT_STATUS_REJECTED\x10\x032\xf9\x05\n" +
-	"\x0ePaymentService\x12r\n" +
-	"\rCreatePayment\x12\x1b.coloc.CreatePaymentRequest\x1a\x0e.coloc.Payment\"4\x82\xd3\xe4\x93\x02.:\x01*\")/api/colocations/{colocation_id}/payments\x12n\n" +
+	"\x17PAYMENT_STATUS_REJECTED\x10\x032\x8c\x06\n" +
+	"\x0ePaymentService\x12u\n" +
+	"\rCreatePayment\x12\x1b.coloc.CreatePaymentRequest\x1a\x0e.coloc.Payment\"7\x82\xd3\xe4\x93\x021:\x01*\",/api/v1/colocations/{colocation_id}/payments\x12q\n" +
 	"\n" +
-	"GetPayment\x12\x18.coloc.GetPaymentRequest\x1a\x0e.coloc.Payment\"6\x82\xd3\xe4\x93\x020\x12./api/colocations/{colocation_id}/payments/{id}\x12z\n" +
-	"\fListPayments\x12\x1a.coloc.ListPaymentsRequest\x1a\x1b.coloc.ListPaymentsResponse\"1\x82\xd3\xe4\x93\x02+\x12)/api/colocations/{colocation_id}/payments\x12\x81\x01\n" +
-	"\x0eConfirmPayment\x12\x1c.coloc.ConfirmPaymentRequest\x1a\x0e.coloc.Payment\"A\x82\xd3\xe4\x93\x02;:\x01*\"6/api/colocations/{colocation_id}/payments/{id}/confirm\x12~\n" +
-	"\rRejectPayment\x12\x1b.coloc.RejectPaymentRequest\x1a\x0e.coloc.Payment\"@\x82\xd3\xe4\x93\x02::\x01*\"5/api/colocations/{colocation_id}/payments/{id}/reject\x12\x82\x01\n" +
-	"\rCancelPayment\x12\x1b.coloc.CancelPaymentRequest\x1a\x1c.coloc.CancelPaymentResponse\"6\x82\xd3\xe4\x93\x020*./api/colocations/{colocation_id}/payments/{id}B,Z*github.com/MarinaGenestoux/application-coloc/proto/pbb\x06proto3"
+	"GetPayment\x12\x18.coloc.GetPaymentRequest\x1a\x0e.coloc.Payment\"9\x82\xd3\xe4\x93\x023\x121/api/v1/colocations/{colocation_id}/payments/{id}\x12}\n" +
+	"\fListPayments\x12\x1a.coloc.ListPaymentsRequest\x1a\x1b.coloc.ListPaymentsResponse\"4\x82\xd3\xe4\x93\x02.\x12,/api/v1/colocations/{colocation_id}/payments\x12\x84\x01\n" +
+	"\x0eConfirmPayment\x12\x1c.coloc.ConfirmPaymentRequest\x1a\x0e.coloc.Payment\"D\x82\xd3\xe4\x93\x02>:\x01*\"9/api/v1/colocations/{colocation_id}/payments/{id}/confirm\x12\x81\x01\n" +
+	"\rRejectPayment\x12\x1b.coloc.RejectPaymentRequest\x1a\x0e.coloc.Payment\"C\x82\xd3\xe4\x93\x02=:\x01*\"8/api/v1/colocations/{colocation_id}/payments/{id}/reject\x12\x85\x01\n" +
+	"\rCancelPayment\x12\x1b.coloc.CancelPaymentRequest\x1a\x1c.coloc.CancelPaymentResponse\"9\x82\xd3\xe4\x93\x023*1/api/v1/colocations/{colocation_id}/payments/{id}B7Z5github.com/MarinaGenestoux/application-coloc/proto/pbb\x06proto3"
 
 var (
 	file_payment_proto_rawDescOnce sync.Once

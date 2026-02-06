@@ -44,7 +44,7 @@ export const authApi = {
 
   async logout(refreshToken: string): Promise<void> {
     try {
-      await api.post('/auth/logout', { refresh_token: refreshToken });
+      await api.post('/auth/logout', { refreshToken });
     } finally {
       clearTokens();
     }
@@ -52,7 +52,7 @@ export const authApi = {
 
   async refreshToken(token: string): Promise<AuthResponse> {
     const response = await api.post<RawAuthResponse>('/auth/refresh', {
-      refresh_token: token,
+      refreshToken: token,
     });
     return normalizeAuthResponse(response.data);
   },

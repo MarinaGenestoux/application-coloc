@@ -1,6 +1,40 @@
 import api from './client';
 import type { Expense, SplitType } from '../types';
 
+const protoToClientSplitType = (value?: string): SplitType => {
+  if (!value) return 'equal';
+  const normalized = value.toUpperCase();
+  switch (normalized) {
+    case 'SPLIT_TYPE_PERCENTAGE':
+    case 'PERCENTAGE':
+      return 'percentage';
+    case 'SPLIT_TYPE_CUSTOM':
+    case 'CUSTOM':
+      return 'custom';
+    case 'SPLIT_TYPE_PAYER_ONLY':
+    case 'PAYER_ONLY':
+      return 'payer_only';
+    case 'SPLIT_TYPE_EQUAL':
+    case 'EQUAL':
+    default:
+      return 'equal';
+  }
+};
+
+const clientToProtoSplitType = (value: SplitType | undefined): string => {
+  switch (value) {
+    case 'percentage':
+      return 'SPLIT_TYPE_PERCENTAGE';
+    case 'custom':
+      return 'SPLIT_TYPE_CUSTOM';
+    case 'payer_only':
+      return 'SPLIT_TYPE_PAYER_ONLY';
+    case 'equal':
+    default:
+      return 'SPLIT_TYPE_EQUAL';
+  }
+};
+
 interface SplitInput {
   user_id: string;
   amount?: number;
@@ -51,7 +85,8 @@ function mapExpense(data: Record<string, unknown>): Expense {
   const colocationId = getField(data, 'colocation_id', 'colocationId') as string;
   const paidBy = getField(data, 'paid_by', 'paidBy') as string;
   const categoryId = getField(data, 'category_id', 'categoryId') as string;
-  const splitType = getField(data, 'split_type', 'splitType') as SplitType;
+  const splitTypeRaw = getField(data, 'split_type', 'splitType') as string | undefined;
+  const splitType = protoToClientSplitType(splitTypeRaw);
   const expenseDate = getField(data, 'expense_date', 'expenseDate') as string;
   const recurringId = getField(data, 'recurring_id', 'recurringId') as string | undefined;
   const createdAt = getField(data, 'created_at', 'createdAt') as string;
@@ -122,13 +157,22 @@ export const expenseApi = {
   },
 
   async create(data: CreateExpenseRequest): Promise<Expense> {
-    const { colocation_id, ...body } = data;
-    const response = await api.post<Record<string, unknown>>(`/colocations/${colocation_id}/expenses`, body);
+    const { colocation_id, split_type, ...body } = data;
+    const payload = {
+      ...body,
+      splitType: clientToProtoSplitType(split_type),
+    };
+    const response = await api.post<Record<string, unknown>>(`/colocations/${colocation_id}/expenses`, payload);
     return mapExpense(response.data);
   },
 
   async update(colocationId: string, id: string, data: UpdateExpenseRequest): Promise<Expense> {
-    const response = await api.put<Record<string, unknown>>(`/colocations/${colocationId}/expenses/${id}`, data);
+    const { split_type, ...body } = data;
+    const payload = {
+      ...body,
+      ...(split_type ? { splitType: clientToProtoSplitType(split_type) } : {}),
+    };
+    const response = await api.put<Record<string, unknown>>(`/colocations/${colocationId}/expenses/${id}`, payload);
     return mapExpense(response.data);
   },
 

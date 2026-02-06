@@ -178,7 +178,7 @@ func RegisterBalanceServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.BalanceService/GetBalances", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/balances"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.BalanceService/GetBalances", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/balances"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -198,7 +198,7 @@ func RegisterBalanceServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.BalanceService/GetSimplifiedDebts", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/balances/simplified"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.BalanceService/GetSimplifiedDebts", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/balances/simplified"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -218,7 +218,7 @@ func RegisterBalanceServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.BalanceService/GetBalanceHistory", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/balances/history"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.BalanceService/GetBalanceHistory", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/balances/history"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -276,7 +276,7 @@ func RegisterBalanceServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.BalanceService/GetBalances", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/balances"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.BalanceService/GetBalances", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/balances"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -293,7 +293,7 @@ func RegisterBalanceServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.BalanceService/GetSimplifiedDebts", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/balances/simplified"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.BalanceService/GetSimplifiedDebts", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/balances/simplified"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -310,7 +310,7 @@ func RegisterBalanceServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.BalanceService/GetBalanceHistory", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/balances/history"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.BalanceService/GetBalanceHistory", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/balances/history"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -327,9 +327,9 @@ func RegisterBalanceServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 }
 
 var (
-	pattern_BalanceService_GetBalances_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"api", "colocations", "colocation_id", "balances"}, ""))
-	pattern_BalanceService_GetSimplifiedDebts_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 2, 4}, []string{"api", "colocations", "colocation_id", "balances", "simplified"}, ""))
-	pattern_BalanceService_GetBalanceHistory_0  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 2, 4}, []string{"api", "colocations", "colocation_id", "balances", "history"}, ""))
+	pattern_BalanceService_GetBalances_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4}, []string{"api", "v1", "colocations", "colocation_id", "balances"}, ""))
+	pattern_BalanceService_GetSimplifiedDebts_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 2, 5}, []string{"api", "v1", "colocations", "colocation_id", "balances", "simplified"}, ""))
+	pattern_BalanceService_GetBalanceHistory_0  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 2, 5}, []string{"api", "v1", "colocations", "colocation_id", "balances", "history"}, ""))
 )
 
 var (

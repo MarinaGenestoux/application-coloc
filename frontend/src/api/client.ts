@@ -2,7 +2,7 @@
 import type { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import type { AuthResponse, ApiError } from '../types';
 
-const API_BASE_URL = '/api';
+const API_BASE_URL = '/api/v1';
 
 export const api = axios.create({
   baseURL: API_BASE_URL,
@@ -75,7 +75,7 @@ api.interceptors.response.use(
 
       try {
         const response = await axios.post<AuthResponse>(`${API_BASE_URL}/auth/refresh`, {
-          refresh_token: refreshToken,
+          refreshToken: refreshToken,
         });
 
         const { access_token, refresh_token } = response.data;

@@ -493,7 +493,7 @@ func RegisterDecisionServiceHandlerServer(ctx context.Context, mux *runtime.Serv
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.DecisionService/CreateDecision", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/decisions"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.DecisionService/CreateDecision", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/decisions"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -513,7 +513,7 @@ func RegisterDecisionServiceHandlerServer(ctx context.Context, mux *runtime.Serv
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.DecisionService/GetDecision", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/decisions/{id}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.DecisionService/GetDecision", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/decisions/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -533,7 +533,7 @@ func RegisterDecisionServiceHandlerServer(ctx context.Context, mux *runtime.Serv
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.DecisionService/ListDecisions", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/decisions"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.DecisionService/ListDecisions", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/decisions"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -553,7 +553,7 @@ func RegisterDecisionServiceHandlerServer(ctx context.Context, mux *runtime.Serv
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.DecisionService/UpdateDecision", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/decisions/{id}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.DecisionService/UpdateDecision", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/decisions/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -573,7 +573,7 @@ func RegisterDecisionServiceHandlerServer(ctx context.Context, mux *runtime.Serv
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.DecisionService/DeleteDecision", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/decisions/{id}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.DecisionService/DeleteDecision", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/decisions/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -593,7 +593,7 @@ func RegisterDecisionServiceHandlerServer(ctx context.Context, mux *runtime.Serv
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.DecisionService/Vote", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/decisions/{decision_id}/vote"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.DecisionService/Vote", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/decisions/{decision_id}/vote"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -613,7 +613,7 @@ func RegisterDecisionServiceHandlerServer(ctx context.Context, mux *runtime.Serv
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.DecisionService/CloseDecision", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/decisions/{id}/close"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.DecisionService/CloseDecision", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/decisions/{id}/close"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -633,7 +633,7 @@ func RegisterDecisionServiceHandlerServer(ctx context.Context, mux *runtime.Serv
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.DecisionService/GetResults", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/decisions/{id}/results"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/coloc.DecisionService/GetResults", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/decisions/{id}/results"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -691,7 +691,7 @@ func RegisterDecisionServiceHandlerClient(ctx context.Context, mux *runtime.Serv
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.DecisionService/CreateDecision", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/decisions"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.DecisionService/CreateDecision", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/decisions"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -708,7 +708,7 @@ func RegisterDecisionServiceHandlerClient(ctx context.Context, mux *runtime.Serv
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.DecisionService/GetDecision", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/decisions/{id}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.DecisionService/GetDecision", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/decisions/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -725,7 +725,7 @@ func RegisterDecisionServiceHandlerClient(ctx context.Context, mux *runtime.Serv
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.DecisionService/ListDecisions", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/decisions"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.DecisionService/ListDecisions", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/decisions"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -742,7 +742,7 @@ func RegisterDecisionServiceHandlerClient(ctx context.Context, mux *runtime.Serv
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.DecisionService/UpdateDecision", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/decisions/{id}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.DecisionService/UpdateDecision", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/decisions/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -759,7 +759,7 @@ func RegisterDecisionServiceHandlerClient(ctx context.Context, mux *runtime.Serv
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.DecisionService/DeleteDecision", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/decisions/{id}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.DecisionService/DeleteDecision", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/decisions/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -776,7 +776,7 @@ func RegisterDecisionServiceHandlerClient(ctx context.Context, mux *runtime.Serv
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.DecisionService/Vote", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/decisions/{decision_id}/vote"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.DecisionService/Vote", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/decisions/{decision_id}/vote"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -793,7 +793,7 @@ func RegisterDecisionServiceHandlerClient(ctx context.Context, mux *runtime.Serv
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.DecisionService/CloseDecision", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/decisions/{id}/close"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.DecisionService/CloseDecision", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/decisions/{id}/close"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -810,7 +810,7 @@ func RegisterDecisionServiceHandlerClient(ctx context.Context, mux *runtime.Serv
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.DecisionService/GetResults", runtime.WithHTTPPathPattern("/api/colocations/{colocation_id}/decisions/{id}/results"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/coloc.DecisionService/GetResults", runtime.WithHTTPPathPattern("/api/v1/colocations/{colocation_id}/decisions/{id}/results"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -827,14 +827,14 @@ func RegisterDecisionServiceHandlerClient(ctx context.Context, mux *runtime.Serv
 }
 
 var (
-	pattern_DecisionService_CreateDecision_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"api", "colocations", "colocation_id", "decisions"}, ""))
-	pattern_DecisionService_GetDecision_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "colocations", "colocation_id", "decisions", "id"}, ""))
-	pattern_DecisionService_ListDecisions_0  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"api", "colocations", "colocation_id", "decisions"}, ""))
-	pattern_DecisionService_UpdateDecision_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "colocations", "colocation_id", "decisions", "id"}, ""))
-	pattern_DecisionService_DeleteDecision_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "colocations", "colocation_id", "decisions", "id"}, ""))
-	pattern_DecisionService_Vote_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5}, []string{"api", "colocations", "colocation_id", "decisions", "decision_id", "vote"}, ""))
-	pattern_DecisionService_CloseDecision_0  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5}, []string{"api", "colocations", "colocation_id", "decisions", "id", "close"}, ""))
-	pattern_DecisionService_GetResults_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5}, []string{"api", "colocations", "colocation_id", "decisions", "id", "results"}, ""))
+	pattern_DecisionService_CreateDecision_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4}, []string{"api", "v1", "colocations", "colocation_id", "decisions"}, ""))
+	pattern_DecisionService_GetDecision_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "colocations", "colocation_id", "decisions", "id"}, ""))
+	pattern_DecisionService_ListDecisions_0  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4}, []string{"api", "v1", "colocations", "colocation_id", "decisions"}, ""))
+	pattern_DecisionService_UpdateDecision_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "colocations", "colocation_id", "decisions", "id"}, ""))
+	pattern_DecisionService_DeleteDecision_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v1", "colocations", "colocation_id", "decisions", "id"}, ""))
+	pattern_DecisionService_Vote_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6}, []string{"api", "v1", "colocations", "colocation_id", "decisions", "decision_id", "vote"}, ""))
+	pattern_DecisionService_CloseDecision_0  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6}, []string{"api", "v1", "colocations", "colocation_id", "decisions", "id", "close"}, ""))
+	pattern_DecisionService_GetResults_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6}, []string{"api", "v1", "colocations", "colocation_id", "decisions", "id", "results"}, ""))
 )
 
 var (
