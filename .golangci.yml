@@ -1,0 +1,113 @@
+# Configuration golangci-lint pour le projet ColocApp
+# Documentation : https://golangci-lint.run/usage/configuration/
+
+run:
+  timeout: 5m
+  tests: true
+  modules-download-mode: readonly
+
+# Liste des linters activés
+linters:
+  enable:
+    # Erreurs et bugs
+    - errcheck          # Vérifie que les erreurs sont gérées
+    - govet             # Détecte les bugs subtils
+    - staticcheck       # Analyse statique avancée
+    - gosimple          # Simplifie le code
+    - ineffassign       # Détecte les assignations inutiles
+
+    # Style et formatage
+    - gofmt             # Vérifie le formatage standard Go
+    - goimports         # Vérifie l'organisation des imports
+    - misspell          # Détecte les fautes d'orthographe
+    - whitespace        # Détecte les espaces inutiles
+
+    # Complexité et maintenabilité
+    - gocyclo           # Complexité cyclomatique
+    - dupl              # Code dupliqué
+    - goconst           # Détecte les constantes répétées
+
+    # Sécurité
+    - gosec             # Vulnérabilités de sécurité
+
+    # Performance
+    - prealloc          # Optimisation des slices
+
+    # Bonnes pratiques
+    - unconvert         # Conversions inutiles
+    - unparam           # Paramètres non utilisés
+    - unused            # Code mort
+    - exportloopref     # Problèmes avec les références de boucle
+
+  disable:
+    - typecheck  # Déjà géré par le compilateur Go
+
+linters-settings:
+  errcheck:
+    # Ne pas vérifier ces fonctions (risque faible)
+    check-blank: true
+    exclude-functions:
+      - (io.Closer).Close
+
+  govet:
+    # Activer toutes les vérifications
+    check-shadowing: true
+    enable-all: true
+
+  gocyclo:
+    # Complexité cyclomatique maximale
+    min-complexity: 15
+
+  dupl:
+    # Seuil pour le code dupliqué
+    threshold: 100
+
+  misspell:
+    locale: US
+    ignore-words:
+      - coloc
+      - dépenses
+
+  staticcheck:
+    checks: ["all"]
+
+  gosec:
+    # Exclure certaines règles trop strictes pour le dev
+    excludes:
+      - G104  # Erreurs non vérifiées (déjà géré par errcheck)
+
+# Exclusions
+issues:
+  # Exclure les fichiers générés
+  exclude-rules:
+    # Code généré par protoc
+    - path: proto/pb/
+      linters:
+        - all
+
+    # Tests : autoriser les erreurs non vérifiées
+    - path: _test\.go
+      linters:
+        - errcheck
+        - gosec
+        - dupl
+
+    # Main : autoriser les exit
+    - path: cmd/
+      text: "os.Exit"
+      linters:
+        - gocritic
+
+  # Nombre maximum d'issues à afficher
+  max-issues-per-linter: 50
+  max-same-issues: 3
+
+  # Ne pas exclure les issues par défaut
+  exclude-use-default: false
+
+# Chemin à analyser
+output:
+  format: colored-line-number
+  print-issued-lines: true
+  print-linter-name: true
+  sort-results: true

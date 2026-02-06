@@ -236,6 +236,20 @@ docker compose logs -f postgres
 docker compose down
 ```
 
+## Linters
+
+Le projet utilise des linters pour améliorer la qualité du code :
+- **Backend** : golangci-lint, gofmt, goimports
+- **Frontend** : ESLint, Prettier
+
+```bash
+make check          # Formate et lint tout le projet
+make lint           # Lint uniquement
+make fmt            # Formate uniquement
+```
+
+Pour plus de détails (installation, configuration, règles), voir [LINTERS.md](LINTERS.md).
+
 ## Développement
 
 1. Ajouter les règles métier dans `internal/domain`

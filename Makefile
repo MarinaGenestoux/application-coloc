@@ -1,4 +1,4 @@
-.PHONY: help migrate-up migrate-down migrate-create run docker-up docker-down
+.PHONY: help migrate-up migrate-down migrate-create run docker-up docker-down lint fmt check
 
 # Variables
 DB_URL=postgresql://coloc_user:coloc_password@localhost:5432/coloc_db?sslmode=disable
@@ -36,3 +36,45 @@ test: ## Lance les tests
 deps: ## Installe les dépendances Go
 	go mod download
 	go mod tidy
+
+# ==============================================================================
+# Linters et formatage
+# ==============================================================================
+
+lint-go: ## Lint le code Go avec golangci-lint
+	@echo "Linting Go..."
+	golangci-lint run
+
+lint-go-fix: ## Lint et corrige automatiquement le code Go
+	@echo "Linting Go avec auto-fix..."
+	golangci-lint run --fix
+
+fmt-go: ## Formate le code Go avec goimports
+	@echo "Formatage Go..."
+	goimports -w .
+
+lint-frontend: ## Lint le code Frontend (React/TS)
+	@echo "Linting Frontend..."
+	cd frontend && npm run lint
+
+lint-frontend-fix: ## Lint et corrige automatiquement le Frontend
+	@echo "Linting Frontend avec auto-fix..."
+	cd frontend && npm run lint:fix
+
+fmt-frontend: ## Formate le code Frontend avec Prettier
+	@echo "Formatage Frontend..."
+	cd frontend && npm run format
+
+fmt-frontend-check: ## Vérifie le formatage Frontend
+	@echo "Verification formatage Frontend..."
+	cd frontend && npm run format:check
+
+check-go: fmt-go lint-go ## Formate et lint le backend Go
+
+check-frontend: fmt-frontend lint-frontend ## Formate et lint le frontend
+
+lint: lint-go lint-frontend ## Lint tout le projet
+
+fmt: fmt-go fmt-frontend ## Formate tout le projet
+
+check: check-go check-frontend ## Formate et lint tout le projet
