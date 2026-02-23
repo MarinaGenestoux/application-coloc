@@ -121,6 +121,34 @@ func (s *AuthService) Logout(ctx context.Context, refreshToken string) error {
 	return s.repo.DeleteRefreshToken(ctx, refreshToken)
 }
 
+// ResetPassword updates a user's password using their email
+func (s *AuthService) ResetPassword(ctx context.Context, email, newPassword string) error {
+	user, err := s.repo.GetUserByEmail(ctx, email)
+	if err != nil {
+		return fmt.Errorf("erreur lors de la recherche de l'utilisateur: %w", err)
+	}
+	if user == nil {
+		return fmt.Errorf("aucun compte associe a cet email")
+	}
+
+	hash, err := s.hasher.HashPassword(newPassword)
+	if err != nil {
+		return fmt.Errorf("erreur lors du hachage du mot de passe: %w", err)
+	}
+
+	user.PasswordHash = &hash
+	if err := s.repo.UpdateUser(ctx, user); err != nil {
+		return fmt.Errorf("erreur lors de la mise a jour du mot de passe: %w", err)
+	}
+
+	// Invalidate all existing refresh tokens for security
+	if err := s.repo.DeleteUserRefreshTokens(ctx, user.ID); err != nil {
+		return fmt.Errorf("erreur lors de l'invalidation des sessions: %w", err)
+	}
+
+	return nil
+}
+
 // GetUserByID retrieves a user by ID
 func (s *AuthService) GetUserByID(ctx context.Context, id string) (*domain.User, error) {
 	return s.repo.GetUserByID(ctx, id)

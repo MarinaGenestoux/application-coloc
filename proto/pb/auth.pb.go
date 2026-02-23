@@ -350,6 +350,110 @@ func (x *LogoutResponse) GetSuccess() bool {
 	return false
 }
 
+type ResetPasswordRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Email         string                 `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
+	NewPassword   string                 `protobuf:"bytes,2,opt,name=new_password,json=newPassword,proto3" json:"new_password,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ResetPasswordRequest) Reset() {
+	*x = ResetPasswordRequest{}
+	mi := &file_auth_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ResetPasswordRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ResetPasswordRequest) ProtoMessage() {}
+
+func (x *ResetPasswordRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_auth_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ResetPasswordRequest.ProtoReflect.Descriptor instead.
+func (*ResetPasswordRequest) Descriptor() ([]byte, []int) {
+	return file_auth_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *ResetPasswordRequest) GetEmail() string {
+	if x != nil {
+		return x.Email
+	}
+	return ""
+}
+
+func (x *ResetPasswordRequest) GetNewPassword() string {
+	if x != nil {
+		return x.NewPassword
+	}
+	return ""
+}
+
+type ResetPasswordResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ResetPasswordResponse) Reset() {
+	*x = ResetPasswordResponse{}
+	mi := &file_auth_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ResetPasswordResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ResetPasswordResponse) ProtoMessage() {}
+
+func (x *ResetPasswordResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_auth_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ResetPasswordResponse.ProtoReflect.Descriptor instead.
+func (*ResetPasswordResponse) Descriptor() ([]byte, []int) {
+	return file_auth_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *ResetPasswordResponse) GetSuccess() bool {
+	if x != nil {
+		return x.Success
+	}
+	return false
+}
+
+func (x *ResetPasswordResponse) GetMessage() string {
+	if x != nil {
+		return x.Message
+	}
+	return ""
+}
+
 type UserInfo struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
@@ -364,7 +468,7 @@ type UserInfo struct {
 
 func (x *UserInfo) Reset() {
 	*x = UserInfo{}
-	mi := &file_auth_proto_msgTypes[6]
+	mi := &file_auth_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -376,7 +480,7 @@ func (x *UserInfo) String() string {
 func (*UserInfo) ProtoMessage() {}
 
 func (x *UserInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_proto_msgTypes[6]
+	mi := &file_auth_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -389,7 +493,7 @@ func (x *UserInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserInfo.ProtoReflect.Descriptor instead.
 func (*UserInfo) Descriptor() ([]byte, []int) {
-	return file_auth_proto_rawDescGZIP(), []int{6}
+	return file_auth_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *UserInfo) GetId() string {
@@ -462,7 +566,13 @@ const file_auth_proto_rawDesc = "" +
 	"expires_in\x18\x03 \x01(\x03R\texpiresIn\x12#\n" +
 	"\x04user\x18\x04 \x01(\v2\x0f.coloc.UserInfoR\x04user\"*\n" +
 	"\x0eLogoutResponse\x12\x18\n" +
-	"\asuccess\x18\x01 \x01(\bR\asuccess\"\xbe\x01\n" +
+	"\asuccess\x18\x01 \x01(\bR\asuccess\"O\n" +
+	"\x14ResetPasswordRequest\x12\x14\n" +
+	"\x05email\x18\x01 \x01(\tR\x05email\x12!\n" +
+	"\fnew_password\x18\x02 \x01(\tR\vnewPassword\"K\n" +
+	"\x15ResetPasswordResponse\x12\x18\n" +
+	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x18\n" +
+	"\amessage\x18\x02 \x01(\tR\amessage\"\xbe\x01\n" +
 	"\bUserInfo\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x14\n" +
 	"\x05email\x18\x02 \x01(\tR\x05email\x12\x10\n" +
@@ -473,12 +583,13 @@ const file_auth_proto_rawDesc = "" +
 	"avatar_url\x18\x06 \x01(\tH\x01R\tavatarUrl\x88\x01\x01B\f\n" +
 	"\n" +
 	"_telephoneB\r\n" +
-	"\v_avatar_url2\xf3\x02\n" +
+	"\v_avatar_url2\xe7\x03\n" +
 	"\vAuthService\x12Y\n" +
 	"\bRegister\x12\x16.coloc.RegisterRequest\x1a\x13.coloc.AuthResponse\" \x82\xd3\xe4\x93\x02\x1a:\x01*\"\x15/api/v1/auth/register\x12P\n" +
 	"\x05Login\x12\x13.coloc.LoginRequest\x1a\x13.coloc.AuthResponse\"\x1d\x82\xd3\xe4\x93\x02\x17:\x01*\"\x12/api/v1/auth/login\x12`\n" +
 	"\fRefreshToken\x12\x1a.coloc.RefreshTokenRequest\x1a\x13.coloc.AuthResponse\"\x1f\x82\xd3\xe4\x93\x02\x19:\x01*\"\x14/api/v1/auth/refresh\x12U\n" +
-	"\x06Logout\x12\x14.coloc.LogoutRequest\x1a\x15.coloc.LogoutResponse\"\x1e\x82\xd3\xe4\x93\x02\x18:\x01*\"\x13/api/v1/auth/logoutB7Z5github.com/MarinaGenestoux/application-coloc/proto/pbb\x06proto3"
+	"\x06Logout\x12\x14.coloc.LogoutRequest\x1a\x15.coloc.LogoutResponse\"\x1e\x82\xd3\xe4\x93\x02\x18:\x01*\"\x13/api/v1/auth/logout\x12r\n" +
+	"\rResetPassword\x12\x1b.coloc.ResetPasswordRequest\x1a\x1c.coloc.ResetPasswordResponse\"&\x82\xd3\xe4\x93\x02 :\x01*\"\x1b/api/v1/auth/reset-passwordB7Z5github.com/MarinaGenestoux/application-coloc/proto/pbb\x06proto3"
 
 var (
 	file_auth_proto_rawDescOnce sync.Once
@@ -492,28 +603,32 @@ func file_auth_proto_rawDescGZIP() []byte {
 	return file_auth_proto_rawDescData
 }
 
-var file_auth_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
+var file_auth_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
 var file_auth_proto_goTypes = []any{
-	(*RegisterRequest)(nil),     // 0: coloc.RegisterRequest
-	(*LoginRequest)(nil),        // 1: coloc.LoginRequest
-	(*RefreshTokenRequest)(nil), // 2: coloc.RefreshTokenRequest
-	(*LogoutRequest)(nil),       // 3: coloc.LogoutRequest
-	(*AuthResponse)(nil),        // 4: coloc.AuthResponse
-	(*LogoutResponse)(nil),      // 5: coloc.LogoutResponse
-	(*UserInfo)(nil),            // 6: coloc.UserInfo
+	(*RegisterRequest)(nil),       // 0: coloc.RegisterRequest
+	(*LoginRequest)(nil),          // 1: coloc.LoginRequest
+	(*RefreshTokenRequest)(nil),   // 2: coloc.RefreshTokenRequest
+	(*LogoutRequest)(nil),         // 3: coloc.LogoutRequest
+	(*AuthResponse)(nil),          // 4: coloc.AuthResponse
+	(*LogoutResponse)(nil),        // 5: coloc.LogoutResponse
+	(*ResetPasswordRequest)(nil),  // 6: coloc.ResetPasswordRequest
+	(*ResetPasswordResponse)(nil), // 7: coloc.ResetPasswordResponse
+	(*UserInfo)(nil),              // 8: coloc.UserInfo
 }
 var file_auth_proto_depIdxs = []int32{
-	6, // 0: coloc.AuthResponse.user:type_name -> coloc.UserInfo
+	8, // 0: coloc.AuthResponse.user:type_name -> coloc.UserInfo
 	0, // 1: coloc.AuthService.Register:input_type -> coloc.RegisterRequest
 	1, // 2: coloc.AuthService.Login:input_type -> coloc.LoginRequest
 	2, // 3: coloc.AuthService.RefreshToken:input_type -> coloc.RefreshTokenRequest
 	3, // 4: coloc.AuthService.Logout:input_type -> coloc.LogoutRequest
-	4, // 5: coloc.AuthService.Register:output_type -> coloc.AuthResponse
-	4, // 6: coloc.AuthService.Login:output_type -> coloc.AuthResponse
-	4, // 7: coloc.AuthService.RefreshToken:output_type -> coloc.AuthResponse
-	5, // 8: coloc.AuthService.Logout:output_type -> coloc.LogoutResponse
-	5, // [5:9] is the sub-list for method output_type
-	1, // [1:5] is the sub-list for method input_type
+	6, // 5: coloc.AuthService.ResetPassword:input_type -> coloc.ResetPasswordRequest
+	4, // 6: coloc.AuthService.Register:output_type -> coloc.AuthResponse
+	4, // 7: coloc.AuthService.Login:output_type -> coloc.AuthResponse
+	4, // 8: coloc.AuthService.RefreshToken:output_type -> coloc.AuthResponse
+	5, // 9: coloc.AuthService.Logout:output_type -> coloc.LogoutResponse
+	7, // 10: coloc.AuthService.ResetPassword:output_type -> coloc.ResetPasswordResponse
+	6, // [6:11] is the sub-list for method output_type
+	1, // [1:6] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name
 	1, // [1:1] is the sub-list for extension extendee
 	0, // [0:1] is the sub-list for field type_name
@@ -525,14 +640,14 @@ func file_auth_proto_init() {
 		return
 	}
 	file_auth_proto_msgTypes[0].OneofWrappers = []any{}
-	file_auth_proto_msgTypes[6].OneofWrappers = []any{}
+	file_auth_proto_msgTypes[8].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_auth_proto_rawDesc), len(file_auth_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   7,
+			NumMessages:   9,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

@@ -50,6 +50,10 @@ export const authApi = {
     }
   },
 
+  async resetPassword(email: string, newPassword: string): Promise<void> {
+    await api.post('/auth/reset-password', { email, new_password: newPassword });
+  },
+
   async refreshToken(token: string): Promise<AuthResponse> {
     const response = await api.post<RawAuthResponse>('/auth/refresh', {
       refreshToken: token,

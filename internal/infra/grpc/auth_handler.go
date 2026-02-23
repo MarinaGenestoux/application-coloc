@@ -84,6 +84,27 @@ func (h *AuthHandler) Logout(ctx context.Context, req *pb.LogoutRequest) (*pb.Lo
 	return &pb.LogoutResponse{Success: true}, nil
 }
 
+// ResetPassword updates a user's password
+func (h *AuthHandler) ResetPassword(ctx context.Context, req *pb.ResetPasswordRequest) (*pb.ResetPasswordResponse, error) {
+	if req.Email == "" || req.NewPassword == "" {
+		return nil, status.Errorf(codes.InvalidArgument, "email et nouveau mot de passe sont obligatoires")
+	}
+
+	const minPasswordLength = 8
+	if len(req.NewPassword) < minPasswordLength {
+		return nil, status.Errorf(codes.InvalidArgument, "le mot de passe doit contenir au moins %d caracteres", minPasswordLength)
+	}
+
+	if err := h.service.ResetPassword(ctx, req.Email, req.NewPassword); err != nil {
+		return nil, status.Errorf(codes.Internal, "%v", err)
+	}
+
+	return &pb.ResetPasswordResponse{
+		Success: true,
+		Message: "Mot de passe mis a jour avec succes",
+	}, nil
+}
+
 func toAuthResponse(result *service.AuthResult) *pb.AuthResponse {
 	user := result.User
 	userInfo := &pb.UserInfo{

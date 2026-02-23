@@ -3,7 +3,7 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import { ColocationProvider } from './context/ColocationContext';
 import { BalanceRefreshProvider } from './context/BalanceRefreshContext';
 import { AppLayout } from './components/layout';
-import { Login, Register, Dashboard, Expenses, Balances, Events } from './pages';
+import { Login, Register, ForgotPassword, Dashboard, Expenses, Balances, Events } from './pages';
 
 function ProtectedRoute() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -60,6 +60,7 @@ function App() {
           <Route element={<PublicRoute />}>
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
           </Route>
 
           <Route element={<ProtectedRoute />}>

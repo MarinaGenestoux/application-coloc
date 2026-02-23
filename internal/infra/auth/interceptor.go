@@ -30,9 +30,10 @@ type AuthInterceptor struct {
 func NewAuthInterceptor(jwtManager *JWTManager) *AuthInterceptor {
 	// Methods that don't require authentication
 	publicMethods := map[string]bool{
-		"/coloc.AuthService/Register":     true,
-		"/coloc.AuthService/Login":        true,
-		"/coloc.AuthService/RefreshToken": true,
+		"/coloc.AuthService/Register":      true,
+		"/coloc.AuthService/Login":         true,
+		"/coloc.AuthService/RefreshToken":  true,
+		"/coloc.AuthService/ResetPassword": true,
 	}
 
 	return &AuthInterceptor{

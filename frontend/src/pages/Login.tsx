@@ -138,9 +138,9 @@ export function Login() {
                   Se souvenir de moi
                 </span>
               </label>
-              <a href="#" className="text-primary hover:text-primary-dark font-medium transition-colors">
+              <Link to="/forgot-password" className="text-primary hover:text-primary-dark font-medium transition-colors">
                 Mot de passe oublié ?
-              </a>
+              </Link>
             </div>
 
             <Button type="submit" isLoading={isLoading} className="w-full" size="lg">
