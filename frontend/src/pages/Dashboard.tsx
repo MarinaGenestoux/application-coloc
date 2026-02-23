@@ -389,9 +389,6 @@ export function Dashboard() {
             Voici un aperçu de votre colocation {currentColocation.name}
           </p>
         </div>
-        <Button size="lg" leftIcon={<Plus className="w-5 h-5" />} className="w-full sm:w-auto">
-          Nouvelle dépense
-        </Button>
       </div>
 
       <Card padding="md" elevation="flat" className="bg-primary/5 border border-primary/10">
