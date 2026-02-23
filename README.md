@@ -1,275 +1,313 @@
-# Backend Colocation - Go + PostgreSQL
+# ColocApp — Gestion de colocation
 
-Projet backend en Go avec PostgreSQL pour la gestion de colocation.
+Application full-stack de gestion de colocation : dépenses partagées, soldes, remboursements, événements, votes et cagnottes.
 
-## Prérequis
+## Fonctionnalités
 
-- Go 1.21 ou supérieur
-- Docker
-- golang-migrate (installé via Homebrew)
+### Implémentées (Frontend + Backend)
 
-## Installation rapide
+| Fonctionnalité | Description |
+|---|---|
+| **Authentification** | Inscription, connexion, JWT (access + refresh token), réinitialisation de mot de passe |
+| **Colocations** | Création, invitation par code unique, rôles admin/membre |
+| **Dépenses** | Ajout, modification, suppression avec 3 modes de partage : égal, pourcentage, personnalisé |
+| **Soldes et dettes** | Calcul automatique de qui doit combien à qui, algorithme min-cash-flow pour simplifier les dettes |
+| **Catégories** | Catégories globales prédéfinies (Loyer, Courses, Électricité, Internet, etc.) |
+| **Dashboard** | Synthèse avec graphiques Recharts (répartition par catégorie, évolution mensuelle, stats globales) |
+| **Événements** | Création d'événements liés à la colocation avec système de RSVP |
+| **Pagination** | Liste des dépenses paginée avec total réel calculé côté serveur (SQL SUM) |
 
-### 1. Installer les dépendances Go
+### Backend prêt, Frontend à développer
 
-```bash
-make deps
+| Fonctionnalité | Description |
+|---|---|
+| **Paiements** | Déclaration de remboursement avec confirmation par le destinataire |
+| **Dépenses récurrentes** | Templates avec génération automatique (quotidien, hebdo, mensuel, annuel) |
+| **Prévisionnels** | Estimation des dépenses futures par mois et par catégorie |
+| **Décisions collectives** | Système de vote avec options multiples, anonymat, deadline |
+| **Fonds communs** | Cagnottes avec objectif, contributions, suivi du montant |
+| **Notifications** | Notifications temps réel via streaming gRPC |
+| **Catégories personnalisées** | Catégories propres à chaque colocation |
+
+### Optionnelles (non commencées)
+
+- **LLM** — Ajout de dépenses en langage naturel (ex: "j'ai payé 230€ de courses Carrefour hier")
+- **Challenges énergétiques** — Gamification de la consommation énergétique
+
+## Stack technique
+
+### Backend
+
+| Composant | Technologie |
+|---|---|
+| Langage | Go 1.25 |
+| API | gRPC + grpc-gateway (REST sur port 8080) |
+| Base de données | PostgreSQL 16 (Docker) |
+| Driver SQL | pgx/v5 (jackc/pgx) |
+| Migrations | golang-migrate (12 migrations) |
+| Authentification | golang-jwt/v5 + bcrypt |
+| Protobuf | protoc + buf (12 fichiers .proto) |
+| Tests | testify + mocks (repositories mockés) |
+| Linting | golangci-lint + goimports |
+| Documentation API | Swagger UI (généré par grpc-gateway) |
+| Infrastructure | Docker Compose |
+
+### Frontend
+
+| Composant | Technologie |
+|---|---|
+| Framework | React 18 + TypeScript |
+| Style | Tailwind CSS |
+| Graphiques | Recharts |
+| Routing | React Router v6 |
+| HTTP | Axios |
+| State | React Context + hooks |
+| Build | Vite |
+| Linting | ESLint + Prettier |
+
+### Design
+
+- Thème blanc (#FFFFFF), cartes avec ombres légères
+- Accents bleu (#5682F2) et orange doré (#F1C086)
+- Sidebar navigation + contenu principal en grille de cartes
+- Style dashboard inspiré de Finary
+- Typo : DM Sans + Instrument Serif
+
+## Architecture
+
+Le projet suit une **Clean Architecture** avec séparation stricte des responsabilités :
+
 ```
-
-### 2. Démarrer PostgreSQL
-
-PostgreSQL tourne déjà sur votre machine. Pour vérifier :
-
-```bash
-docker ps | grep postgres
-```
-
-Si vous devez le redémarrer :
-
-```bash
-make docker-up
-```
-
-### 3. Exécuter les migrations
-
-```bash
-make migrate-up
-```
-
-Cette commande crée la table `users` dans la base de données.
-
-### 4. Lancer l'application
-
-```bash
-make run
-```
-
-## Structure du projet (Clean Architecture)
-
-```
-back_coloc/
+application-coloc/
 ├── cmd/
-│   ├── server/main.go           # Composition root (wire des dépendances)
-│   └── seed/main.go             # Seed de données de démo
+│   ├── server/main.go                # Point d'entrée (gRPC :50051 + REST :8080)
+│   └── seed/main.go                  # Seed de données de démo
 ├── internal/
-│   ├── domain/                  # Coeur métier (entités + algorithmes métier)
-│   │   ├── *.go
-│   │   └── algorithm/
-│   ├── application/             # Cas d'usage / logique applicative
-│   │   ├── service/
-│   │   └── constants/
-│   └── infra/                   # Adaptateurs techniques
-│       ├── grpc/                # Handlers gRPC (entrée)
-│       ├── repository/postgres/ # Persistance PostgreSQL (sortie)
-│       ├── auth/                # JWT/interceptors/password
-│       ├── config/              # Chargement de configuration
-│       └── utils/
-├── migrations/
-├── proto/
-├── docker-compose.yml           # Configuration Docker PostgreSQL
-├── .env                         # Variables d'environnement
-├── Makefile                     # Commandes utiles
-└── go.mod                       # Dépendances Go
+│   ├── domain/                       # Entités métier + interfaces repository
+│   │   └── algorithm/                # Algorithme min-cash-flow
+│   ├── application/
+│   │   ├── service/                  # Logique métier (use cases)
+│   │   └── constants/                # Constantes nommées (pas de nombres magiques)
+│   └── infra/
+│       ├── grpc/                     # Handlers gRPC (11 handlers)
+│       ├── repository/postgres/      # Implémentation PostgreSQL (12 repositories)
+│       ├── auth/                     # JWT, bcrypt, intercepteur d'authentification
+│       └── config/                   # Configuration (variables d'environnement)
+├── proto/                            # 12 définitions Protobuf
+│   └── pb/                           # Code Go généré + Swagger JSON
+├── migrations/                       # 12 migrations SQL (up + down)
+├── frontend/
+│   └── src/
+│       ├── api/                      # 8 clients REST (auth, expense, balance, etc.)
+│       ├── components/               # Composants React (layout, ui)
+│       ├── pages/                    # 7 pages (Dashboard, Expenses, Balances, Events, etc.)
+│       ├── context/                  # AuthContext, ColocationContext
+│       └── types/                    # Types TypeScript
+├── scripts/                          # Génération de certificats TLS, seed SQL
+├── docker-compose.yml
+├── Makefile
+├── .golangci.yml                     # Configuration golangci-lint
+└── go.mod
 ```
 
-## Modèle User
+### Principes appliqués
 
-```go
-type User struct {
-    ID        string    // UUID généré automatiquement
-    Email     string    // Email unique
-    Nom       string    // Nom de famille
-    Prenom    string    // Prénom
-    Telephone *string   // Numéro de téléphone (optionnel)
-    CreatedAt time.Time // Date de création
-    UpdatedAt time.Time // Date de modification
-}
+- **Clean Architecture** — Les dépendances pointent vers l'intérieur : `infra → application → domain`
+- **SOLID** — Interfaces pour les repositories, injection de dépendances, responsabilité unique
+- **Pas de logique métier dans les handlers** — Les handlers gRPC valident les inputs, appellent les services et mappent les réponses
+- **Pas de nombres magiques** — Constantes nommées dans `internal/application/constants/`
+- **Validation backend** — Toute validation est faite côté serveur
+- **API versionnée** — Toutes les routes REST passent par `/api/v1/`
+
+## Schéma de base de données
+
+12 migrations SQL couvrant les tables suivantes :
+
+```
+users                      — Comptes utilisateurs (UUID, email, bcrypt)
+colocations                — Colocations avec code d'invitation unique
+colocation_members         — Membres et rôles (admin/member)
+expense_categories         — Catégories de dépenses (globales + personnalisées)
+expenses                   — Dépenses avec type de partage (equal/percentage/custom)
+expense_splits             — Répartition par utilisateur
+balances                   — Soldes calculés entre utilisateurs
+recurring_expenses         — Templates de dépenses récurrentes
+recurring_expense_splits   — Répartition des dépenses récurrentes
+payments                   — Remboursements entre utilisateurs
+events                     — Événements de colocation
+event_rsvps                — Réponses des participants (going/not_going/maybe)
 ```
 
-## Commandes disponibles (Makefile)
+### Optimisations de performance
+
+- **Index B-tree stratégiques** (migration `000012`) sur les foreign keys, filtres de recherche et tris
+- **pg_stat_statements** activé (migration `000011`) pour le monitoring des requêtes SQL
+- **postgresql.conf optimisé** avec PgTune (shared_buffers, work_mem, effective_cache_size)
+- **Cache in-memory** des soldes avec invalidation automatique sur chaque opération de dépense
+
+## Installation
+
+### Pré-requis
+
+- Go 1.25+
+- Node.js 18+ et npm
+- Docker et Docker Compose
+- golang-migrate CLI
+- golangci-lint (optionnel, pour le linting)
+
+### Démarrage rapide
 
 ```bash
-make help          # Affiche toutes les commandes disponibles
-make docker-up     # Démarre PostgreSQL avec Docker
-make docker-down   # Arrête PostgreSQL
-make migrate-up    # Applique les migrations
-make migrate-down  # Annule la dernière migration
-make run           # Lance l'application
-make build         # Compile l'application
-make test          # Lance les tests
-make deps          # Installe les dépendances
+# 1. Cloner le projet
+git clone https://github.com/MarinaGenestoux/application-coloc.git
+cd application-coloc
+
+# 2. Lancer PostgreSQL
+docker compose up -d
+
+# 3. Appliquer les migrations
+make migrate-up
+
+# 4. Lancer le backend (gRPC :50051 + REST :8080)
+make run
+
+# 5. Dans un autre terminal, lancer le frontend
+cd frontend && npm install && npm run dev
 ```
 
-## Données de démonstration
+L'API REST est disponible sur `http://localhost:8080/api/v1/` et le Swagger UI sur `http://localhost:8080/swagger/`.
 
-Vous pouvez remplir rapidement la dernière colocation créée (ou une colocation précise) avec des membres, catégories et dépenses de test :
+### Données de démonstration
 
 ```bash
-# utilise la dernière colocation créée
+# Seed automatique sur la dernière colocation créée
 go run cmd/seed/main.go
 
-# cible une colocation précise (ID visible dans la base/API)
-go run cmd/seed/main.go --colocation-id=<ID_DE_LA_COLOCATION>
+# Ou cibler une colocation précise
+go run cmd/seed/main.go --colocation-id=<UUID>
 ```
 
-Le script lit la configuration `DB_*`, ajoute des membres démo si besoin puis crée des dépenses `[DEMO]` cohérentes. Il nettoie d'abord les anciennes dépenses marquées `[DEMO]` pour éviter les doublons.
-
-## Migrations
-
-### Créer une nouvelle migration
+## Commandes
 
 ```bash
-make migrate-create NAME=nom_de_la_migration
+# Infrastructure
+docker compose up -d                # Lancer PostgreSQL
+docker compose down                 # Arrêter
+
+# Migrations
+make migrate-up                     # Appliquer les migrations
+make migrate-down                   # Rollback d'une migration
+make migrate-create NAME=xxx        # Créer une nouvelle migration
+
+# Backend
+make run                            # Lancer le serveur
+make build                          # Compiler le binaire
+make test                           # Lancer les tests
+
+# Linting et formatage
+make check                          # Formater + lint tout le projet
+make lint                           # Lint backend + frontend
+make fmt                            # Formater backend + frontend
+
+# Frontend
+cd frontend && npm run dev          # Dev server (port 5173)
+cd frontend && npm run build        # Build production
 ```
 
-### Appliquer les migrations
+## Sécurité TLS
 
-```bash
-make migrate-up
-```
-
-### Annuler une migration
-
-```bash
-make migrate-down
-```
-
-## Variables d'environnement
-
-Le fichier `.env` contient :
-
-```env
-# Base de données
-DB_HOST=localhost
-DB_PORT=5432
-DB_USER=coloc_user
-DB_PASSWORD=coloc_password
-DB_NAME=coloc_db
-DB_SSLMODE=disable
-
-# Serveur
-GRPC_PORT=50051
-HTTP_PORT=8080
-
-# JWT
-JWT_SECRET=change-me-in-production
-JWT_EXPIRY=24h
-REFRESH_TOKEN_EXPIRY=168h
-
-# TLS/HTTPS (optionnel)
-TLS_ENABLED=false
-TLS_CERT_FILE=./certs/server-cert.pem
-TLS_KEY_FILE=./certs/server-key.pem
-```
-
-## Sécurité TLS/HTTPS
-
-Le projet supporte le chiffrement TLS pour sécuriser toutes les connexions (HTTP, gRPC, WebSocket).
-
-### Activation en développement
-
-```bash
-# 1. Générer les certificats auto-signés
-.\scripts\generate-certs.ps1        # Windows
-./scripts/generate-certs.sh         # Linux/macOS
-
-# 2. Activer TLS dans .env
-TLS_ENABLED=true
-
-# 3. Activer TLS dans le frontend (frontend/.env)
-VITE_TLS_ENABLED=true
-
-# 4. Démarrer l'application
-go run cmd/server/main.go           # Backend sur https://localhost:8080
-cd frontend && npm run dev          # Frontend sur http://localhost:5173
-```
-
-### Production (Let's Encrypt)
-
-```bash
-# Générer un certificat gratuit
-sudo certbot certonly --standalone -d votredomaine.com
-
-# Configurer .env
-TLS_ENABLED=true
-TLS_CERT_FILE=/etc/letsencrypt/live/votredomaine.com/fullchain.pem
-TLS_KEY_FILE=/etc/letsencrypt/live/votredomaine.com/privkey.pem
-```
-
-### Connexions sécurisées
+Le projet supporte le chiffrement TLS pour toutes les connexions :
 
 | Service | Sans TLS | Avec TLS |
 |---------|----------|----------|
 | API REST | `http://localhost:8080` | `https://localhost:8080` |
 | gRPC | `grpc://localhost:50051` | `grpcs://localhost:50051` |
-| WebSocket | `ws://` | `wss://` |
 
-## Connexion à la base de données
-
-Pour vous connecter manuellement à PostgreSQL :
+### Activation
 
 ```bash
-docker compose exec postgres psql -U coloc_user -d coloc_db
+# 1. Générer les certificats auto-signés
+./scripts/generate-certs.ps1       # Windows
+./scripts/generate-certs.sh        # Linux/macOS
+
+# 2. Configurer .env
+TLS_ENABLED=true
+TLS_CERT_FILE=./certs/server-cert.pem
+TLS_KEY_FILE=./certs/server-key.pem
+
+# 3. Configurer le frontend (frontend/.env)
+VITE_TLS_ENABLED=true
+
+# 4. Relancer
+make run
 ```
 
-Ou avec psql local :
+Pour la production, utiliser Let's Encrypt avec `certbot`.
+
+## Variables d'environnement
+
+| Variable | Défaut | Description |
+|---|---|---|
+| `DB_HOST` | `localhost` | Hôte PostgreSQL |
+| `DB_PORT` | `5432` | Port PostgreSQL |
+| `DB_USER` | `coloc_user` | Utilisateur BDD |
+| `DB_PASSWORD` | `coloc_password` | Mot de passe BDD |
+| `DB_NAME` | `coloc_db` | Nom de la base |
+| `DB_SSLMODE` | `disable` | Mode SSL PostgreSQL |
+| `GRPC_PORT` | `50051` | Port du serveur gRPC |
+| `HTTP_PORT` | `8080` | Port de la gateway REST |
+| `JWT_SECRET` | — | Clé secrète JWT |
+| `JWT_EXPIRY` | `24h` | Durée du token d'accès |
+| `REFRESH_TOKEN_EXPIRY` | `168h` | Durée du refresh token (7 jours) |
+| `TLS_ENABLED` | `false` | Active le chiffrement TLS |
+| `TLS_CERT_FILE` | `./certs/server-cert.pem` | Chemin du certificat TLS |
+| `TLS_KEY_FILE` | `./certs/server-key.pem` | Chemin de la clé privée TLS |
+
+## Tests
+
+Les tests unitaires utilisent des **mocks** des interfaces repository (injection de dépendances) :
 
 ```bash
-psql -h localhost -p 5432 -U coloc_user -d coloc_db
+make test
 ```
 
-## Docker (sans Docker Desktop)
+Services testés : `auth_service`, `expense_service` — couverture des cas nominaux et d'erreur.
 
-Si Docker Desktop ne fonctionne pas, Docker CLI fonctionne quand même :
+## Ce qui a été fait
 
-```bash
-# Vérifier que Docker tourne
-docker ps
+- [x] Clean Architecture (domain / application / infra)
+- [x] Principes SOLID avec injection de dépendances
+- [x] Authentification JWT (access + refresh tokens)
+- [x] Chiffrement TLS (HTTP + gRPC)
+- [x] Linters (golangci-lint, ESLint, Prettier, goimports)
+- [x] Swagger UI généré automatiquement par grpc-gateway
+- [x] API versionnée (`/api/v1/`)
+- [x] Tests unitaires avec mocks
+- [x] Validation côté serveur (pas de confiance au frontend)
+- [x] Constantes nommées (pas de nombres magiques)
+- [x] 12 migrations SQL avec up + down
+- [x] Index de performance B-tree
+- [x] pg_stat_statements pour monitoring SQL
+- [x] postgresql.conf optimisé (PgTune)
+- [x] Cache in-memory des soldes avec invalidation
+- [x] Algorithme min-cash-flow pour simplification des dettes
+- [x] 12 fichiers .proto, 11 handlers gRPC, 12 repositories
 
-# Démarrer PostgreSQL
-docker compose up -d
+## Ce qui reste à faire
 
-# Voir les logs
-docker compose logs -f postgres
-
-# Arrêter
-docker compose down
-```
-
-## Linters
-
-Le projet utilise des linters pour améliorer la qualité du code :
-- **Backend** : golangci-lint, gofmt, goimports
-- **Frontend** : ESLint, Prettier
-
-```bash
-make check          # Formate et lint tout le projet
-make lint           # Lint uniquement
-make fmt            # Formate uniquement
-```
-
-Pour plus de détails (installation, configuration, règles), voir [LINTERS.md](LINTERS.md).
-
-## Optimisations de performance
-
-Le projet inclut plusieurs optimisations PostgreSQL pour améliorer les performances :
-- **PgTune** : Configuration PostgreSQL optimisée (shared_buffers, work_mem, etc.)
-- **Index stratégiques** : Index Btree sur colonnes fréquemment utilisées (jointures, filtres)
-- **Cache in-memory** : Cache des soldes (5 min TTL) pour éviter recalculs
-- **Monitoring** : pg_stat_statements pour surveiller les requêtes lentes
-
-```bash
-# Analyser les performances
-docker compose exec postgres psql -U coloc_user -d coloc_db -f analyze_queries.sql
-```
-
-Pour plus de détails (impact, configuration, monitoring), voir [PERFORMANCE.md](PERFORMANCE.md).
+- [ ] Changelog automatique (conventional commits)
+- [ ] Analyse approfondie des requêtes lentes (`EXPLAIN ANALYZE`)
+- [ ] Frontend pour les fonctionnalités backend restantes (paiements, récurrences, votes, fonds, notifications)
+- [ ] Dockerfile pour déploiement complet (template présent dans `docker-compose.yml`)
+- [ ] Index GIN pour recherche full-text (si nécessaire)
+- [ ] Catégories personnalisées par colocation (frontend)
 
 ## Développement
 
-1. Ajouter les règles métier dans `internal/domain`
-2. Implémenter les cas d'usage dans `internal/application/service`
-3. Brancher les entrées/sorties techniques dans `internal/infra` (gRPC, postgres, auth, config)
-4. Câbler dans `cmd/server/main.go`
-5. Lancer avec `make run`
-6. Pour ajouter une nouvelle table, créer une migration avec `make migrate-create`
+1. Ajouter les entités dans `internal/domain/`
+2. Définir les interfaces repository dans `internal/domain/repositories.go`
+3. Implémenter la logique métier dans `internal/application/service/`
+4. Implémenter le repository PostgreSQL dans `internal/infra/repository/postgres/`
+5. Créer le handler gRPC dans `internal/infra/grpc/`
+6. Câbler dans `cmd/server/main.go`
+7. Ajouter les routes frontend dans `frontend/src/`
