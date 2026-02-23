@@ -314,10 +314,12 @@ func (s *server) runHTTPGateway() error {
 	return http.ListenAndServe(":"+s.cfg.Server.HTTPPort, httpMux)
 }
 
-// customHeaderMatcher allows Authorization header to pass through
+// customHeaderMatcher allows specific headers to pass through to gRPC metadata
 func customHeaderMatcher(key string) (string, bool) {
 	switch key {
 	case "Authorization":
+		return key, true
+	case "X-Paid-By":
 		return key, true
 	default:
 		return runtime.DefaultHeaderMatcher(key)
@@ -329,7 +331,7 @@ func corsMiddleware(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Paid-By")
 
 		if r.Method == "OPTIONS" {
 			w.WriteHeader(http.StatusOK)

@@ -116,8 +116,9 @@ message CreateExpenseRequest {
   double amount = 4;
   string category_id = 5;
   SplitType split_type = 6;
-  repeated ExpenseSplitInput splits = 7;  // Required for percentage/custom
+  repeated ExpenseSplitInput splits = 7;  // Required for percentage/custom; user_ids for partial equal
   string expense_date = 8;  // Format: YYYY-MM-DD
+  optional string paid_by = 9;  // User ID of the payer (defaults to authenticated user)
 }
 
 message ExpenseSplitInput {
@@ -159,6 +160,7 @@ message UpdateExpenseRequest {
   optional SplitType split_type = 7;
   repeated ExpenseSplitInput splits = 8;
   optional string expense_date = 9;
+  optional string paid_by = 10;  // User ID of the payer (overrides current payer)
 }
 
 message DeleteExpenseRequest {

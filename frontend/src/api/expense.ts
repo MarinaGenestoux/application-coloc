@@ -50,6 +50,7 @@ interface CreateExpenseRequest {
   split_type: SplitType;
   expense_date: string;
   splits?: SplitInput[];
+  paid_by?: string; // User ID of the payer (sent as X-Paid-By header)
 }
 
 interface UpdateExpenseRequest {
@@ -60,6 +61,7 @@ interface UpdateExpenseRequest {
   split_type?: SplitType;
   expense_date?: string;
   splits?: SplitInput[];
+  paid_by?: string; // User ID of the payer (sent as X-Paid-By header)
 }
 
 interface ListExpensesParams {
@@ -160,22 +162,32 @@ export const expenseApi = {
   },
 
   async create(data: CreateExpenseRequest): Promise<Expense> {
-    const { colocation_id, split_type, ...body } = data;
+    const { colocation_id, split_type, paid_by, ...body } = data;
     const payload = {
       ...body,
       splitType: clientToProtoSplitType(split_type),
     };
-    const response = await api.post<Record<string, unknown>>(`/colocations/${colocation_id}/expenses`, payload);
+    const headers = paid_by ? { 'X-Paid-By': paid_by } : undefined;
+    const response = await api.post<Record<string, unknown>>(
+      `/colocations/${colocation_id}/expenses`,
+      payload,
+      { headers }
+    );
     return mapExpense(response.data);
   },
 
   async update(colocationId: string, id: string, data: UpdateExpenseRequest): Promise<Expense> {
-    const { split_type, ...body } = data;
+    const { split_type, paid_by, ...body } = data;
     const payload = {
       ...body,
       ...(split_type ? { splitType: clientToProtoSplitType(split_type) } : {}),
     };
-    const response = await api.put<Record<string, unknown>>(`/colocations/${colocationId}/expenses/${id}`, payload);
+    const headers = paid_by ? { 'X-Paid-By': paid_by } : undefined;
+    const response = await api.put<Record<string, unknown>>(
+      `/colocations/${colocationId}/expenses/${id}`,
+      payload,
+      { headers }
+    );
     return mapExpense(response.data);
   },
 

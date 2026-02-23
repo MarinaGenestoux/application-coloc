@@ -9,6 +9,7 @@ import (
 	"github.com/MarinaGenestoux/application-coloc/internal/infra/utils"
 	pb "github.com/MarinaGenestoux/application-coloc/proto/pb"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 )
 
@@ -21,6 +22,19 @@ type ExpenseHandler struct {
 // NewExpenseHandler creates a new ExpenseHandler
 func NewExpenseHandler(service *service.ExpenseService) *ExpenseHandler {
 	return &ExpenseHandler{service: service}
+}
+
+// paidByFromMetadata extracts the X-Paid-By user ID from gRPC incoming metadata.
+func paidByFromMetadata(ctx context.Context) string {
+	md, ok := metadata.FromIncomingContext(ctx)
+	if !ok {
+		return ""
+	}
+	values := md.Get("x-paid-by")
+	if len(values) == 0 {
+		return ""
+	}
+	return values[0]
 }
 
 // CreateExpense creates a new expense
@@ -45,6 +59,7 @@ func (h *ExpenseHandler) CreateExpense(ctx context.Context, req *pb.CreateExpens
 
 	expense, err := h.service.Create(ctx, service.CreateExpenseInput{
 		ColocationID: req.ColocationId,
+		PaidBy:       paidByFromMetadata(ctx),
 		Title:        req.Title,
 		Description:  req.Description,
 		Amount:       req.Amount,
@@ -165,6 +180,7 @@ func (h *ExpenseHandler) UpdateExpense(ctx context.Context, req *pb.UpdateExpens
 	expense, err := h.service.Update(ctx, service.UpdateExpenseInput{
 		ColocationID: req.ColocationId,
 		ExpenseID:    req.Id,
+		PaidBy:       paidByFromMetadata(ctx),
 		Title:        req.Title,
 		Description:  req.Description,
 		Amount:       req.Amount,

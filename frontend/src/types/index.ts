@@ -56,9 +56,14 @@ export interface Colocation {
 export interface ColocationMember {
   id: string;
   user_id: string;
+  userId?: string; // camelCase alias from API
   colocation_id: string;
   role: 'admin' | 'member';
   joined_at: string;
+  nom?: string;
+  prenom?: string;
+  email?: string;
+  avatar_url?: string;
   user?: User;
 }
 

@@ -20,8 +20,14 @@ export const colocationApi = {
   },
 
   async get(id: string): Promise<ColocationWithMembers> {
-    const response = await api.get<ColocationWithMembers>(`/colocations/${id}`);
-    return response.data;
+    const [colResponse, membersResponse] = await Promise.all([
+      api.get<ColocationWithMembers>(`/colocations/${id}`),
+      api.get<{ members: ColocationMember[] }>(`/colocations/${id}/members`),
+    ]);
+    return {
+      ...colResponse.data,
+      members: membersResponse.data.members || [],
+    };
   },
 
   async create(data: CreateColocationRequest): Promise<Colocation> {

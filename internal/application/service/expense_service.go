@@ -32,6 +32,7 @@ func NewExpenseService(repo domain.ExpenseRepository, colocationRepo domain.Colo
 // CreateExpenseInput contains input for creating an expense
 type CreateExpenseInput struct {
 	ColocationID string
+	PaidBy       string // Optional: user ID of payer; defaults to authenticated user
 	Title        string
 	Description  *string
 	Amount       float64
@@ -43,7 +44,12 @@ type CreateExpenseInput struct {
 
 // Create creates a new expense
 func (s *ExpenseService) Create(ctx context.Context, input CreateExpenseInput) (*domain.Expense, error) {
-	userID, err := s.ensureMembership(ctx, input.ColocationID)
+	callerID, err := s.ensureMembership(ctx, input.ColocationID)
+	if err != nil {
+		return nil, err
+	}
+
+	paidBy, err := s.resolvePayer(ctx, input.ColocationID, input.PaidBy, callerID)
 	if err != nil {
 		return nil, err
 	}
@@ -59,7 +65,7 @@ func (s *ExpenseService) Create(ctx context.Context, input CreateExpenseInput) (
 
 	expense := &domain.Expense{
 		ColocationID: input.ColocationID,
-		PaidBy:       userID,
+		PaidBy:       paidBy,
 		CategoryID:   input.CategoryID,
 		Title:        input.Title,
 		Description:  input.Description,
@@ -76,6 +82,22 @@ func (s *ExpenseService) Create(ctx context.Context, input CreateExpenseInput) (
 	s.balanceCache.Invalidate(input.ColocationID)
 
 	return s.repo.GetByID(ctx, expense.ID)
+}
+
+// resolvePayer returns the effective payer user ID.
+// Uses overridePaidBy if provided and is a valid member, otherwise falls back to callerID.
+func (s *ExpenseService) resolvePayer(ctx context.Context, colocationID, overridePaidBy, callerID string) (string, error) {
+	if overridePaidBy == "" || overridePaidBy == callerID {
+		return callerID, nil
+	}
+	isMember, err := s.colocationRepo.IsMember(ctx, colocationID, overridePaidBy)
+	if err != nil {
+		return "", fmt.Errorf("erreur lors de la verification du payeur: %w", err)
+	}
+	if !isMember {
+		return "", fmt.Errorf("le payeur designe n'est pas membre de cette colocation")
+	}
+	return overridePaidBy, nil
 }
 
 // ensureMembership verifies user is a member and returns the userID
@@ -124,7 +146,12 @@ func (s *ExpenseService) calculateSplits(ctx context.Context, colocationID strin
 
 	switch splitType {
 	case domain.SplitTypeEqual:
-		splits = s.calculateEqualSplits(members, amount, percentageOnly)
+		if len(inputSplits) > 0 {
+			// Partial equal: split only among the specified members
+			splits = s.calculateEqualSplitsForUsers(inputSplits, amount, percentageOnly)
+		} else {
+			splits = s.calculateEqualSplits(members, amount, percentageOnly)
+		}
 
 	case domain.SplitTypePercentage:
 		splits, err = s.calculatePercentageSplits(inputSplits, amount, percentageOnly)
@@ -162,6 +189,25 @@ func (s *ExpenseService) calculateEqualSplits(members []domain.ColocationMember,
 		}
 		if !percentageOnly {
 			split.Amount = amount / memberCount
+		}
+		splits = append(splits, split)
+	}
+	return splits
+}
+
+// calculateEqualSplitsForUsers divides amount equally among a specified subset of users
+func (s *ExpenseService) calculateEqualSplitsForUsers(inputSplits []domain.ExpenseSplitInput, amount float64, percentageOnly bool) []domain.ExpenseSplitInput {
+	userCount := float64(len(inputSplits))
+	percentage := constants.PercentageBase / userCount
+
+	var splits []domain.ExpenseSplitInput
+	for _, input := range inputSplits {
+		split := domain.ExpenseSplitInput{
+			UserID:     input.UserID,
+			Percentage: percentage,
+		}
+		if !percentageOnly {
+			split.Amount = amount / userCount
 		}
 		splits = append(splits, split)
 	}
@@ -295,6 +341,7 @@ func (s *ExpenseService) List(ctx context.Context, input ListExpensesInput) ([]d
 type UpdateExpenseInput struct {
 	ColocationID string
 	ExpenseID    string
+	PaidBy       string // Optional: new payer user ID
 	Title        *string
 	Description  *string
 	Amount       *float64
@@ -304,9 +351,9 @@ type UpdateExpenseInput struct {
 	ExpenseDate  *time.Time
 }
 
-// Update updates an expense
+// Update updates an expense. Any member of the colocation can update any expense.
 func (s *ExpenseService) Update(ctx context.Context, input UpdateExpenseInput) (*domain.Expense, error) {
-	userID, err := s.ensureMembership(ctx, input.ColocationID)
+	callerID, err := s.ensureMembership(ctx, input.ColocationID)
 	if err != nil {
 		return nil, err
 	}
@@ -319,8 +366,12 @@ func (s *ExpenseService) Update(ctx context.Context, input UpdateExpenseInput) (
 		return nil, fmt.Errorf("depense introuvable")
 	}
 
-	if expense.PaidBy != userID {
-		return nil, fmt.Errorf("seul le payeur peut modifier cette depense")
+	if input.PaidBy != "" {
+		newPayer, err := s.resolvePayer(ctx, input.ColocationID, input.PaidBy, callerID)
+		if err != nil {
+			return nil, err
+		}
+		expense.PaidBy = newPayer
 	}
 
 	s.applyExpenseUpdates(expense, input)
@@ -366,10 +417,9 @@ func (s *ExpenseService) applyExpenseUpdates(expense *domain.Expense, input Upda
 	}
 }
 
-// Delete deletes an expense
+// Delete deletes an expense. Any member of the colocation can delete any expense.
 func (s *ExpenseService) Delete(ctx context.Context, colocationID, expenseID string) error {
-	userID, err := s.ensureMembership(ctx, colocationID)
-	if err != nil {
+	if _, err := s.ensureMembership(ctx, colocationID); err != nil {
 		return err
 	}
 
@@ -379,10 +429,6 @@ func (s *ExpenseService) Delete(ctx context.Context, colocationID, expenseID str
 	}
 	if expense == nil || expense.ColocationID != colocationID {
 		return fmt.Errorf("depense introuvable")
-	}
-
-	if expense.PaidBy != userID {
-		return fmt.Errorf("seul le payeur peut supprimer cette depense")
 	}
 
 	if err := s.repo.Delete(ctx, expenseID); err != nil {

@@ -10,8 +10,10 @@ import {
   Edit2,
   ChevronLeft,
   ChevronRight,
+  Check,
 } from 'lucide-react';
 import { useColocation } from '../context/ColocationContext';
+import { useAuth } from '../context/AuthContext';
 import { useBalanceRefresh } from '../context/BalanceRefreshContext';
 import { expenseApi, categoryApi } from '../api';
 import {
@@ -26,7 +28,7 @@ import {
   SkeletonList,
   EmptyState,
 } from '../components/ui';
-import type { Expense, Category, SplitType } from '../types';
+import type { ColocationMember, Expense, Category, SplitType } from '../types';
 
 const getInitialExpenseForm = () => ({
   title: '',
@@ -44,8 +46,24 @@ const normalizeDateValue = (value: string) => {
   return value.includes('T') ? value.split('T')[0] : value;
 };
 
+// Helpers to safely extract member fields from API response (handles camelCase from protojson)
+const getMemberId = (member: ColocationMember): string => {
+  return member.userId || member.user_id || '';
+};
+
+const getMemberName = (member: ColocationMember): string => {
+  const prenom = member.prenom || member.user?.prenom || '';
+  const nom = member.nom || member.user?.nom || '';
+  return prenom || nom ? `${prenom} ${nom}`.trim() : 'Membre';
+};
+
+const getMemberPrenom = (member: ColocationMember): string => {
+  return member.prenom || member.user?.prenom || 'Membre';
+};
+
 export function Expenses() {
   const { currentColocation } = useColocation();
+  const { user } = useAuth();
   const { triggerRefresh, refreshKey } = useBalanceRefresh();
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -59,25 +77,48 @@ export function Expenses() {
   const [totalExpenses, setTotalExpenses] = useState(0);
   const [totalAmount, setTotalAmount] = useState(0);
   const perPage = 20;
+
+  // New expense modal state
   const [showNewExpenseModal, setShowNewExpenseModal] = useState(false);
   const [categoryFieldError, setCategoryFieldError] = useState('');
   const [newExpense, setNewExpense] = useState(getInitialExpenseForm);
+  const [newPaidById, setNewPaidById] = useState<string>('');
+  const [newSelectedMemberIds, setNewSelectedMemberIds] = useState<string[]>([]);
+
+  // Edit expense modal state
   const [showEditExpenseModal, setShowEditExpenseModal] = useState(false);
   const [editingExpense, setEditingExpense] = useState<Expense | null>(null);
   const [editExpense, setEditExpense] = useState(getInitialExpenseForm);
   const [editCategoryFieldError, setEditCategoryFieldError] = useState('');
   const [isUpdatingExpense, setIsUpdatingExpense] = useState(false);
+  const [editPaidById, setEditPaidById] = useState<string>('');
+  const [editSelectedMemberIds, setEditSelectedMemberIds] = useState<string[]>([]);
+
+  const members = currentColocation?.members ?? [];
+  const allMemberIds = members.map(getMemberId).filter(Boolean);
 
   const resetExpenseForm = () => {
     setNewExpense(getInitialExpenseForm());
+    setNewPaidById(user?.id ?? '');
+    setNewSelectedMemberIds(allMemberIds);
     setCategoryFieldError('');
   };
 
   const resetEditExpenseForm = () => {
     setEditExpense(getInitialExpenseForm());
     setEditingExpense(null);
+    setEditPaidById(user?.id ?? '');
+    setEditSelectedMemberIds(allMemberIds);
     setEditCategoryFieldError('');
   };
+
+  // Initialize payer and member selection when modal opens
+  useEffect(() => {
+    if (showNewExpenseModal) {
+      setNewPaidById(user?.id ?? '');
+      setNewSelectedMemberIds(allMemberIds);
+    }
+  }, [showNewExpenseModal]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const loadCategories = useCallback(async () => {
     const colocationId = currentColocation?.id;
@@ -126,6 +167,18 @@ export function Expenses() {
 
   const totalPages = Math.ceil(totalExpenses / perPage);
 
+  // Build splits payload for equal split with member selection
+  const buildEqualSplitPayload = (
+    splitType: SplitType,
+    selectedIds: string[]
+  ): { splits?: { user_id: string }[] } => {
+    if (splitType !== 'equal') return {};
+    // If all members selected, let backend compute equal splits automatically
+    if (selectedIds.length === allMemberIds.length) return {};
+    // Partial selection: send user IDs so backend splits only among them
+    return { splits: selectedIds.map((id) => ({ user_id: id })) };
+  };
+
   const handleCreateExpense = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!currentColocation || isSavingExpenseRef.current) return;
@@ -137,6 +190,7 @@ export function Expenses() {
     isSavingExpenseRef.current = true;
     setIsSavingExpense(true);
     try {
+      const { splits } = buildEqualSplitPayload(newExpense.split_type, newSelectedMemberIds);
       const expense = await expenseApi.create({
         colocation_id: currentColocation.id,
         title: newExpense.title,
@@ -145,6 +199,8 @@ export function Expenses() {
         split_type: newExpense.split_type,
         expense_date: newExpense.expense_date,
         description: newExpense.description || undefined,
+        splits: splits as { user_id: string; amount?: number; percentage?: number }[] | undefined,
+        paid_by: newPaidById !== user?.id ? newPaidById : undefined,
       });
       setCategoryFieldError('');
       setExpenses((prev) => {
@@ -172,6 +228,13 @@ export function Expenses() {
       expense_date: normalizeDateValue(expense.expense_date),
       description: expense.description || '',
     });
+    setEditPaidById(expense.paid_by || user?.id || '');
+    // For equal split, initialize with the members from the current splits
+    if (expense.split_type === 'equal' && expense.splits && expense.splits.length > 0) {
+      setEditSelectedMemberIds(expense.splits.map((s) => s.user_id));
+    } else {
+      setEditSelectedMemberIds(allMemberIds);
+    }
     setEditCategoryFieldError('');
     setShowEditExpenseModal(true);
   };
@@ -186,6 +249,7 @@ export function Expenses() {
 
     setIsUpdatingExpense(true);
     try {
+      const { splits } = buildEqualSplitPayload(editExpense.split_type, editSelectedMemberIds);
       const updatedExpense = await expenseApi.update(currentColocation.id, editingExpense.id, {
         title: editExpense.title,
         amount: parseFloat(editExpense.amount),
@@ -193,6 +257,8 @@ export function Expenses() {
         split_type: editExpense.split_type,
         expense_date: editExpense.expense_date,
         description: editExpense.description || undefined,
+        splits: splits as { user_id: string; amount?: number; percentage?: number }[] | undefined,
+        paid_by: editPaidById !== editingExpense.paid_by ? editPaidById : undefined,
       });
 
       setExpenses((prev) => prev.map((exp) => (exp.id === updatedExpense.id ? updatedExpense : exp)));
@@ -242,6 +308,16 @@ export function Expenses() {
     { value: '', label: 'Toutes les catégories' },
     ...categories.map((cat) => ({ value: cat.id, label: cat.name })),
   ];
+
+  const toggleMember = (memberId: string, selectedIds: string[], setSelectedIds: (ids: string[]) => void) => {
+    if (selectedIds.includes(memberId)) {
+      if (selectedIds.length > 1) {
+        setSelectedIds(selectedIds.filter((id) => id !== memberId));
+      }
+    } else {
+      setSelectedIds([...selectedIds, memberId]);
+    }
+  };
 
   // Loading state
   if (isLoading) {
@@ -455,7 +531,7 @@ export function Expenses() {
         title="Nouvelle dépense"
         size="lg"
       >
-        <form onSubmit={handleCreateExpense} className="space-y-4">
+        <form onSubmit={handleCreateExpense} className="space-y-5">
           <Input
             label="Titre"
             placeholder="Ex: Courses Carrefour"
@@ -463,6 +539,7 @@ export function Expenses() {
             onChange={(e) => setNewExpense({ ...newExpense, title: e.target.value })}
             required
           />
+
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Input
               label="Montant (€)"
@@ -490,31 +567,58 @@ export function Expenses() {
               hint={categories.length === 0 ? 'Aucune catégorie disponible pour le moment.' : undefined}
             />
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Input
-              label="Date"
-              type="date"
-              value={newExpense.expense_date}
-              onChange={(e) => setNewExpense({ ...newExpense, expense_date: e.target.value })}
-              required
-            />
-            <Select
-              label="Mode de partage"
-              options={[
-                { value: 'equal', label: 'Égal entre tous' },
-                { value: 'percentage', label: 'Par pourcentage' },
-                { value: 'custom', label: 'Montants personnalisés' },
-                { value: 'payer_only', label: 'Je paie seul (pas de partage)' },
-              ]}
-              value={newExpense.split_type}
-              onChange={(value) => setNewExpense({ ...newExpense, split_type: value as SplitType })}
-            />
+
+          <Input
+            label="Date"
+            type="date"
+            value={newExpense.expense_date}
+            onChange={(e) => setNewExpense({ ...newExpense, expense_date: e.target.value })}
+            required
+          />
+
+          {/* Payé par */}
+          <PayerSelector
+            members={members}
+            selectedId={newPaidById}
+            onSelect={setNewPaidById}
+            currentUserId={user?.id ?? ''}
+          />
+
+          {/* Mode de partage + sélection des membres */}
+          <div className="space-y-3">
+            <label className="block text-sm font-medium text-slate-700">Mode de partage</label>
+            <div className="flex gap-2">
+              {(['equal', 'payer_only'] as SplitType[]).map((type) => (
+                <button
+                  key={type}
+                  type="button"
+                  onClick={() => setNewExpense({ ...newExpense, split_type: type })}
+                  className={`flex-1 py-2.5 px-4 rounded-xl text-sm font-medium border transition-all duration-200 ${
+                    newExpense.split_type === type
+                      ? 'bg-primary text-white border-primary shadow-sm'
+                      : 'bg-white text-slate-600 border-slate-200 hover:border-primary/40 hover:text-primary'
+                  }`}
+                >
+                  {type === 'equal' ? 'Égal entre tous' : 'Je paie seul'}
+                </button>
+              ))}
+            </div>
+
+            {newExpense.split_type === 'equal' && members.length > 0 && (
+              <MemberCheckboxList
+                members={members}
+                selectedIds={newSelectedMemberIds}
+                onToggle={(id) => toggleMember(id, newSelectedMemberIds, setNewSelectedMemberIds)}
+              />
+            )}
+
+            {newExpense.split_type === 'payer_only' && (
+              <p className="text-xs text-slate-500">
+                Cette dépense ne crée aucune dette pour les autres membres.
+              </p>
+            )}
           </div>
-          {newExpense.split_type === 'payer_only' && (
-            <p className="text-xs text-slate-500 -mt-2">
-              Cette dépense ne crée aucune dette pour les autres membres et réduit uniquement votre propre solde.
-            </p>
-          )}
+
           <div className="space-y-2">
             <label className="block text-sm font-medium text-slate-700">Description (optionnel)</label>
             <textarea
@@ -525,7 +629,8 @@ export function Expenses() {
               onChange={(e) => setNewExpense({ ...newExpense, description: e.target.value })}
             />
           </div>
-          <div className="flex justify-end gap-3 pt-4">
+
+          <div className="flex justify-end gap-3 pt-2">
             <Button
               type="button"
               variant="secondary"
@@ -542,6 +647,8 @@ export function Expenses() {
           </div>
         </form>
       </Modal>
+
+      {/* Edit Expense Modal */}
       <Modal
         isOpen={showEditExpenseModal}
         onClose={() => {
@@ -551,7 +658,7 @@ export function Expenses() {
         title="Modifier la dépense"
         size="lg"
       >
-        <form onSubmit={handleUpdateExpense} className="space-y-4">
+        <form onSubmit={handleUpdateExpense} className="space-y-5">
           <Input
             label="Titre"
             placeholder="Ex: Courses Carrefour"
@@ -559,6 +666,7 @@ export function Expenses() {
             onChange={(e) => setEditExpense({ ...editExpense, title: e.target.value })}
             required
           />
+
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Input
               label="Montant (€)"
@@ -586,31 +694,58 @@ export function Expenses() {
               hint={categories.length === 0 ? 'Aucune catégorie disponible pour le moment.' : undefined}
             />
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Input
-              label="Date"
-              type="date"
-              value={editExpense.expense_date}
-              onChange={(e) => setEditExpense({ ...editExpense, expense_date: e.target.value })}
-              required
-            />
-            <Select
-              label="Mode de partage"
-              options={[
-                { value: 'equal', label: 'Égal entre tous' },
-                { value: 'percentage', label: 'Par pourcentage' },
-                { value: 'custom', label: 'Montants personnalisés' },
-                { value: 'payer_only', label: 'Je paie seul (pas de partage)' },
-              ]}
-              value={editExpense.split_type}
-              onChange={(value) => setEditExpense({ ...editExpense, split_type: value as SplitType })}
-            />
+
+          <Input
+            label="Date"
+            type="date"
+            value={editExpense.expense_date}
+            onChange={(e) => setEditExpense({ ...editExpense, expense_date: e.target.value })}
+            required
+          />
+
+          {/* Payé par */}
+          <PayerSelector
+            members={members}
+            selectedId={editPaidById}
+            onSelect={setEditPaidById}
+            currentUserId={user?.id ?? ''}
+          />
+
+          {/* Mode de partage + sélection des membres */}
+          <div className="space-y-3">
+            <label className="block text-sm font-medium text-slate-700">Mode de partage</label>
+            <div className="flex gap-2">
+              {(['equal', 'payer_only'] as SplitType[]).map((type) => (
+                <button
+                  key={type}
+                  type="button"
+                  onClick={() => setEditExpense({ ...editExpense, split_type: type })}
+                  className={`flex-1 py-2.5 px-4 rounded-xl text-sm font-medium border transition-all duration-200 ${
+                    editExpense.split_type === type
+                      ? 'bg-primary text-white border-primary shadow-sm'
+                      : 'bg-white text-slate-600 border-slate-200 hover:border-primary/40 hover:text-primary'
+                  }`}
+                >
+                  {type === 'equal' ? 'Égal entre tous' : 'Je paie seul'}
+                </button>
+              ))}
+            </div>
+
+            {editExpense.split_type === 'equal' && members.length > 0 && (
+              <MemberCheckboxList
+                members={members}
+                selectedIds={editSelectedMemberIds}
+                onToggle={(id) => toggleMember(id, editSelectedMemberIds, setEditSelectedMemberIds)}
+              />
+            )}
+
+            {editExpense.split_type === 'payer_only' && (
+              <p className="text-xs text-slate-500">
+                Cette dépense ne crée aucune dette pour les autres membres.
+              </p>
+            )}
           </div>
-          {editExpense.split_type === 'payer_only' && (
-            <p className="text-xs text-slate-500 -mt-2">
-              Cette dépense ne crée aucune dette pour les autres membres et réduit uniquement votre propre solde.
-            </p>
-          )}
+
           <div className="space-y-2">
             <label className="block text-sm font-medium text-slate-700">Description (optionnel)</label>
             <textarea
@@ -621,7 +756,8 @@ export function Expenses() {
               onChange={(e) => setEditExpense({ ...editExpense, description: e.target.value })}
             />
           </div>
-          <div className="flex justify-end gap-3 pt-4">
+
+          <div className="flex justify-end gap-3 pt-2">
             <Button
               type="button"
               variant="secondary"
@@ -638,6 +774,93 @@ export function Expenses() {
           </div>
         </form>
       </Modal>
+    </div>
+  );
+}
+
+// ── Sub-components ────────────────────────────────────────────────────────────
+
+interface PayerSelectorProps {
+  members: ColocationMember[];
+  selectedId: string;
+  onSelect: (id: string) => void;
+  currentUserId: string;
+}
+
+function PayerSelector({ members, selectedId, onSelect, currentUserId }: PayerSelectorProps) {
+  if (members.length === 0) return null;
+
+  return (
+    <div className="space-y-2">
+      <label className="block text-sm font-medium text-slate-700">Payé par</label>
+      <div className="flex flex-wrap gap-2">
+        {members.map((member) => {
+          const id = getMemberId(member);
+          const isSelected = selectedId === id || (selectedId === '' && id === currentUserId);
+          const prenom = getMemberPrenom(member);
+          const fullName = getMemberName(member);
+
+          return (
+            <button
+              key={id}
+              type="button"
+              onClick={() => onSelect(id)}
+              className={`flex items-center gap-2 px-3 py-2 rounded-xl border text-sm font-medium transition-all duration-200 ${
+                isSelected
+                  ? 'bg-primary/10 border-primary text-primary'
+                  : 'bg-white border-slate-200 text-slate-600 hover:border-primary/40 hover:text-primary'
+              }`}
+            >
+              <Avatar name={fullName} size="sm" className="w-6 h-6 text-[10px]" />
+              <span>{prenom}</span>
+              {id === currentUserId && <span className="text-xs opacity-60">(moi)</span>}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+interface MemberCheckboxListProps {
+  members: ColocationMember[];
+  selectedIds: string[];
+  onToggle: (id: string) => void;
+}
+
+function MemberCheckboxList({ members, selectedIds, onToggle }: MemberCheckboxListProps) {
+  return (
+    <div className="bg-slate-50 rounded-xl p-3 space-y-2">
+      <p className="text-xs text-slate-500 font-medium mb-2">Répartir entre :</p>
+      {members.map((member) => {
+        const id = getMemberId(member);
+        const isSelected = selectedIds.includes(id);
+        const fullName = getMemberName(member);
+        const prenom = getMemberPrenom(member);
+
+        return (
+          <button
+            key={id}
+            type="button"
+            onClick={() => onToggle(id)}
+            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg border transition-all duration-200 ${
+              isSelected
+                ? 'bg-white border-primary/30 text-slate-800'
+                : 'bg-white/50 border-transparent text-slate-400'
+            }`}
+          >
+            <div
+              className={`w-5 h-5 rounded-md border-2 flex items-center justify-center shrink-0 transition-all duration-200 ${
+                isSelected ? 'bg-primary border-primary' : 'border-slate-300'
+              }`}
+            >
+              {isSelected && <Check className="w-3 h-3 text-white" strokeWidth={3} />}
+            </div>
+            <Avatar name={fullName} size="sm" className="w-7 h-7 text-[10px]" />
+            <span className="text-sm font-medium">{prenom}</span>
+          </button>
+        );
+      })}
     </div>
   );
 }
