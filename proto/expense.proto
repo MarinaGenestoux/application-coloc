@@ -146,6 +146,7 @@ message ListExpensesResponse {
   int32 total_count = 2;
   int32 page = 3;
   int32 page_size = 4;
+  double total_amount = 5;
 }
 
 message UpdateExpenseRequest {

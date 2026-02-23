@@ -144,7 +144,7 @@ func (r *ExpenseRepository) GetSplits(ctx context.Context, expenseID string) ([]
 }
 
 // ListByColocation lists expenses for a colocation with filters
-func (r *ExpenseRepository) ListByColocation(ctx context.Context, colocationID string, categoryID, paidBy *string, startDate, endDate *time.Time, page, pageSize int) ([]domain.Expense, int, error) {
+func (r *ExpenseRepository) ListByColocation(ctx context.Context, colocationID string, categoryID, paidBy *string, startDate, endDate *time.Time, page, pageSize int) ([]domain.Expense, int, float64, error) {
 	// Base query
 	baseQuery := `
 		FROM expenses e
@@ -180,12 +180,13 @@ func (r *ExpenseRepository) ListByColocation(ctx context.Context, colocationID s
 		argIndex++
 	}
 
-	// Count total
-	countQuery := "SELECT COUNT(*) " + baseQuery
+	// Count total and sum amount
+	countQuery := "SELECT COUNT(*), COALESCE(SUM(e.amount), 0) " + baseQuery
 	var totalCount int
-	err := r.pool.QueryRow(ctx, countQuery, args...).Scan(&totalCount)
+	var totalAmount float64
+	err := r.pool.QueryRow(ctx, countQuery, args...).Scan(&totalCount, &totalAmount)
 	if err != nil {
-		return nil, 0, fmt.Errorf("erreur lors du comptage des depenses: %w", err)
+		return nil, 0, 0, fmt.Errorf("erreur lors du comptage des depenses: %w", err)
 	}
 
 	// Get expenses
@@ -199,7 +200,7 @@ func (r *ExpenseRepository) ListByColocation(ctx context.Context, colocationID s
 
 	rows, err := r.pool.Query(ctx, selectQuery, args...)
 	if err != nil {
-		return nil, 0, fmt.Errorf("erreur lors de la recuperation des depenses: %w", err)
+		return nil, 0, 0, fmt.Errorf("erreur lors de la recuperation des depenses: %w", err)
 	}
 	defer rows.Close()
 
@@ -211,20 +212,20 @@ func (r *ExpenseRepository) ListByColocation(ctx context.Context, colocationID s
 			&e.Amount, &e.SplitType, &e.ExpenseDate, &e.RecurringID, &e.CreatedAt,
 			&e.PaidByNom, &e.PaidByPrenom, &e.CategoryName,
 		); err != nil {
-			return nil, 0, fmt.Errorf("erreur lors du scan de la depense: %w", err)
+			return nil, 0, 0, fmt.Errorf("erreur lors du scan de la depense: %w", err)
 		}
 
 		// Get splits for each expense
 		splits, err := r.GetSplits(ctx, e.ID)
 		if err != nil {
-			return nil, 0, err
+			return nil, 0, 0, err
 		}
 		e.Splits = splits
 
 		expenses = append(expenses, e)
 	}
 
-	return expenses, totalCount, rows.Err()
+	return expenses, totalCount, totalAmount, rows.Err()
 }
 
 // Update updates an expense and its splits

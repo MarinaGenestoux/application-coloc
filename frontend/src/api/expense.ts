@@ -69,7 +69,7 @@ interface ListExpensesParams {
   start_date?: string;
   end_date?: string;
   page?: number;
-  per_page?: number;
+  page_size?: number;
 }
 
 // Helper to get field with snake_case or camelCase fallback
@@ -141,14 +141,17 @@ function mapExpense(data: Record<string, unknown>): Expense {
 }
 
 export const expenseApi = {
-  async list(params: ListExpensesParams): Promise<{ expenses: Expense[]; total: number }> {
+  async list(params: ListExpensesParams): Promise<{ expenses: Expense[]; total: number; totalAmount: number }> {
     const { colocation_id, ...queryParams } = params;
-    const response = await api.get<{ expenses: Record<string, unknown>[]; total: number }>(
+    const response = await api.get<Record<string, unknown>>(
       `/colocations/${colocation_id}/expenses`,
       { params: queryParams }
     );
-    const expenses = (response.data.expenses || []).map(mapExpense);
-    return { expenses, total: response.data.total || 0 };
+    const data = response.data;
+    const expenses = (Array.isArray(data.expenses) ? data.expenses : []).map(mapExpense);
+    const total = (data.total_count ?? data.totalCount ?? 0) as number;
+    const totalAmount = (data.total_amount ?? data.totalAmount ?? 0) as number;
+    return { expenses, total, totalAmount };
   },
 
   async get(colocationId: string, id: string): Promise<Expense> {

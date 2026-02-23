@@ -105,7 +105,7 @@ func (h *ExpenseHandler) ListExpenses(ctx context.Context, req *pb.ListExpensesR
 		pageSize = *req.PageSize
 	}
 
-	expenses, totalCount, err := h.service.List(ctx, service.ListExpensesInput{
+	expenses, totalCount, totalAmount, err := h.service.List(ctx, service.ListExpensesInput{
 		ColocationID: req.ColocationId,
 		CategoryID:   req.CategoryId,
 		PaidBy:       req.PaidBy,
@@ -124,10 +124,11 @@ func (h *ExpenseHandler) ListExpenses(ctx context.Context, req *pb.ListExpensesR
 	}
 
 	return &pb.ListExpensesResponse{
-		Expenses:   pbExpenses,
-		TotalCount: int32(totalCount),
-		Page:       page,
-		PageSize:   pageSize,
+		Expenses:    pbExpenses,
+		TotalCount:  int32(totalCount),
+		Page:        page,
+		PageSize:    pageSize,
+		TotalAmount: totalAmount,
 	}, nil
 }
 

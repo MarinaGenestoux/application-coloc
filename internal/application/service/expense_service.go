@@ -281,9 +281,9 @@ type ListExpensesInput struct {
 }
 
 // List lists expenses for a colocation
-func (s *ExpenseService) List(ctx context.Context, input ListExpensesInput) ([]domain.Expense, int, error) {
+func (s *ExpenseService) List(ctx context.Context, input ListExpensesInput) ([]domain.Expense, int, float64, error) {
 	if _, err := s.ensureMembership(ctx, input.ColocationID); err != nil {
-		return nil, 0, err
+		return nil, 0, 0, err
 	}
 
 	input.Page, input.PageSize = normalizePagination(input.Page, input.PageSize)

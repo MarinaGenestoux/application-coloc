@@ -134,12 +134,12 @@ func (m *MockExpenseRepository) GetByID(ctx context.Context, id string) (*domain
 	return args.Get(0).(*domain.Expense), args.Error(1)
 }
 
-func (m *MockExpenseRepository) ListByColocation(ctx context.Context, colocationID string, categoryID, paidBy *string, startDate, endDate *time.Time, page, pageSize int) ([]domain.Expense, int, error) {
+func (m *MockExpenseRepository) ListByColocation(ctx context.Context, colocationID string, categoryID, paidBy *string, startDate, endDate *time.Time, page, pageSize int) ([]domain.Expense, int, float64, error) {
 	args := m.Called(ctx, colocationID, categoryID, paidBy, startDate, endDate, page, pageSize)
 	if args.Get(0) == nil {
-		return nil, args.Int(1), args.Error(2)
+		return nil, args.Int(1), args.Get(2).(float64), args.Error(3)
 	}
-	return args.Get(0).([]domain.Expense), args.Int(1), args.Error(2)
+	return args.Get(0).([]domain.Expense), args.Int(1), args.Get(2).(float64), args.Error(3)
 }
 
 func (m *MockExpenseRepository) Update(ctx context.Context, expense *domain.Expense, splits []domain.ExpenseSplitInput) error {

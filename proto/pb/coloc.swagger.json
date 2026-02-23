@@ -178,6 +178,39 @@
         ]
       }
     },
+    "/api/v1/auth/reset-password": {
+      "post": {
+        "summary": "Reset password using email",
+        "operationId": "AuthService_ResetPassword",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/colocResetPasswordResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/colocResetPasswordRequest"
+            }
+          }
+        ],
+        "tags": [
+          "AuthService"
+        ]
+      }
+    },
     "/api/v1/colocations": {
       "get": {
         "summary": "List user's colocations",
@@ -3776,9 +3809,6 @@
         "fundId": {
           "type": "string"
         },
-        "fundName": {
-          "type": "string"
-        },
         "status": {
           "$ref": "#/definitions/colocEventStatus"
         },
@@ -4296,6 +4326,10 @@
         "pageSize": {
           "type": "integer",
           "format": "int32"
+        },
+        "totalAmount": {
+          "type": "number",
+          "format": "double"
         }
       }
     },
@@ -4775,6 +4809,28 @@
       "properties": {
         "success": {
           "type": "boolean"
+        }
+      }
+    },
+    "colocResetPasswordRequest": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "newPassword": {
+          "type": "string"
+        }
+      }
+    },
+    "colocResetPasswordResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
         }
       }
     },

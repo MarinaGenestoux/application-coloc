@@ -23,7 +23,7 @@ type AuthRepository interface {
 type ExpenseRepository interface {
 	Create(ctx context.Context, expense *Expense, splits []ExpenseSplitInput) error
 	GetByID(ctx context.Context, id string) (*Expense, error)
-	ListByColocation(ctx context.Context, colocationID string, categoryID, paidBy *string, startDate, endDate *time.Time, page, pageSize int) ([]Expense, int, error)
+	ListByColocation(ctx context.Context, colocationID string, categoryID, paidBy *string, startDate, endDate *time.Time, page, pageSize int) ([]Expense, int, float64, error)
 	Update(ctx context.Context, expense *Expense, splits []ExpenseSplitInput) error
 	Delete(ctx context.Context, id string) error
 	CreateRecurring(ctx context.Context, recurring *RecurringExpense, splits []ExpenseSplitInput) error

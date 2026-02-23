@@ -527,6 +527,7 @@ type ListExpensesResponse struct {
 	TotalCount    int32                  `protobuf:"varint,2,opt,name=total_count,json=totalCount,proto3" json:"total_count,omitempty"`
 	Page          int32                  `protobuf:"varint,3,opt,name=page,proto3" json:"page,omitempty"`
 	PageSize      int32                  `protobuf:"varint,4,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	TotalAmount   float64                `protobuf:"fixed64,5,opt,name=total_amount,json=totalAmount,proto3" json:"total_amount,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -585,6 +586,13 @@ func (x *ListExpensesResponse) GetPage() int32 {
 func (x *ListExpensesResponse) GetPageSize() int32 {
 	if x != nil {
 		return x.PageSize
+	}
+	return 0
+}
+
+func (x *ListExpensesResponse) GetTotalAmount() float64 {
+	if x != nil {
+		return x.TotalAmount
 	}
 	return 0
 }
@@ -1883,13 +1891,14 @@ const file_expense_proto_rawDesc = "" +
 	"\t_end_dateB\a\n" +
 	"\x05_pageB\f\n" +
 	"\n" +
-	"_page_size\"\x94\x01\n" +
+	"_page_size\"\xb7\x01\n" +
 	"\x14ListExpensesResponse\x12*\n" +
 	"\bexpenses\x18\x01 \x03(\v2\x0e.coloc.ExpenseR\bexpenses\x12\x1f\n" +
 	"\vtotal_count\x18\x02 \x01(\x05R\n" +
 	"totalCount\x12\x12\n" +
 	"\x04page\x18\x03 \x01(\x05R\x04page\x12\x1b\n" +
-	"\tpage_size\x18\x04 \x01(\x05R\bpageSize\"\xb5\x03\n" +
+	"\tpage_size\x18\x04 \x01(\x05R\bpageSize\x12!\n" +
+	"\ftotal_amount\x18\x05 \x01(\x01R\vtotalAmount\"\xb5\x03\n" +
 	"\x14UpdateExpenseRequest\x12#\n" +
 	"\rcolocation_id\x18\x01 \x01(\tR\fcolocationId\x12\x0e\n" +
 	"\x02id\x18\x02 \x01(\tR\x02id\x12\x19\n" +

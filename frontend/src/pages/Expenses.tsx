@@ -8,6 +8,8 @@ import {
   Calendar,
   Trash2,
   Edit2,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react';
 import { useColocation } from '../context/ColocationContext';
 import { useBalanceRefresh } from '../context/BalanceRefreshContext';
@@ -53,6 +55,10 @@ export function Expenses() {
   const isSavingExpenseRef = useRef(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalExpenses, setTotalExpenses] = useState(0);
+  const [totalAmount, setTotalAmount] = useState(0);
+  const perPage = 20;
   const [showNewExpenseModal, setShowNewExpenseModal] = useState(false);
   const [categoryFieldError, setCategoryFieldError] = useState('');
   const [newExpense, setNewExpense] = useState(getInitialExpenseForm);
@@ -73,41 +79,52 @@ export function Expenses() {
     setEditCategoryFieldError('');
   };
 
-  const loadExpensesAndCategories = useCallback(async () => {
+  const loadCategories = useCallback(async () => {
+    const colocationId = currentColocation?.id;
+    if (!colocationId) return;
+    try {
+      const result = await categoryApi.list(colocationId);
+      setCategories(result);
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    }
+  }, [currentColocation?.id]);
+
+  const loadExpenses = useCallback(async () => {
     const colocationId = currentColocation?.id;
     if (!colocationId) return;
     setIsLoading(true);
     try {
-      const [expensesResult, categoriesResult] = await Promise.allSettled([
-        expenseApi.list({ colocation_id: colocationId }),
-        categoryApi.list(colocationId),
-      ]);
-
-      if (expensesResult.status === 'fulfilled') {
-        setExpenses(expensesResult.value.expenses);
-      } else {
-        console.error('Error fetching expenses:', expensesResult.reason);
-      }
-
-      if (categoriesResult.status === 'fulfilled') {
-        setCategories(categoriesResult.value);
-      } else {
-        console.error('Error fetching categories:', categoriesResult.reason);
-      }
+      const result = await expenseApi.list({
+        colocation_id: colocationId,
+        page: currentPage,
+        page_size: perPage,
+        category_id: selectedCategory || undefined,
+      });
+      setExpenses(result.expenses);
+      setTotalExpenses(result.total);
+      setTotalAmount(result.totalAmount);
+    } catch (error) {
+      console.error('Error fetching expenses:', error);
     } finally {
       setIsLoading(false);
     }
-  }, [currentColocation?.id]);
+  }, [currentColocation?.id, currentPage, selectedCategory]);
 
   useEffect(() => {
-    loadExpensesAndCategories();
-  }, [loadExpensesAndCategories, refreshKey]);
+    loadCategories();
+  }, [loadCategories]);
 
+  useEffect(() => {
+    loadExpenses();
+  }, [loadExpenses, refreshKey]);
+
+  // Search is client-side on current page, category filter is server-side
   const filteredExpenses = expenses.filter((expense) => {
-    const matchesSearch = expense.title.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = !selectedCategory || expense.category_id === selectedCategory;
-    return matchesSearch && matchesCategory;
+    return expense.title.toLowerCase().includes(searchQuery.toLowerCase());
   });
+
+  const totalPages = Math.ceil(totalExpenses / perPage);
 
   const handleCreateExpense = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -216,7 +233,10 @@ export function Expenses() {
     }
   };
 
-  const totalAmount = filteredExpenses.reduce((sum, e) => sum + e.amount, 0);
+  const handleCategoryChange = (value: string) => {
+    setSelectedCategory(value);
+    setCurrentPage(1);
+  };
 
   const categoryOptions = [
     { value: '', label: 'Toutes les catégories' },
@@ -289,7 +309,7 @@ export function Expenses() {
             <Select
               options={categoryOptions}
               value={selectedCategory}
-              onChange={setSelectedCategory}
+              onChange={handleCategoryChange}
               leftIcon={<Filter className="w-4 h-4" />}
               placeholder="Catégorie"
             />
@@ -306,7 +326,7 @@ export function Expenses() {
         <div className="w-px h-12 bg-primary/20" />
         <div>
           <p className="text-sm text-primary font-medium mb-1">Nombre de dépenses</p>
-          <p className="text-xl sm:text-2xl lg:text-3xl font-semibold text-primary">{filteredExpenses.length}</p>
+          <p className="text-xl sm:text-2xl lg:text-3xl font-semibold text-primary">{totalExpenses}</p>
         </div>
       </div>
 
@@ -395,6 +415,35 @@ export function Expenses() {
           </AnimatePresence>
         </div>
       </Card>
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between px-2">
+          <p className="text-sm text-slate-500">
+            Page {currentPage} sur {totalPages}
+          </p>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+            >
+              <ChevronLeft className="w-4 h-4" />
+              Précédent
+            </Button>
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+              disabled={currentPage === totalPages}
+            >
+              Suivant
+              <ChevronRight className="w-4 h-4" />
+            </Button>
+          </div>
+        </div>
+      )}
 
       {/* New Expense Modal */}
       <Modal

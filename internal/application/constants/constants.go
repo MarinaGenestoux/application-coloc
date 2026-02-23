@@ -7,7 +7,7 @@ import "time"
 // Pagination defaults and limits
 const (
 	DefaultPageSize = 20
-	MaxPageSize     = 100
+	MaxPageSize     = 10000
 )
 
 // JWT token expiry defaults

@@ -52,6 +52,8 @@ export function Dashboard() {
   const { currentColocation, refreshColocations, refreshCurrentColocation } = useColocation();
   const { refreshKey } = useBalanceRefresh();
   const [expenses, setExpenses] = useState<Expense[]>([]);
+  const [allExpenses, setAllExpenses] = useState<Expense[]>([]);
+  const [totalExpensesAmount, setTotalExpensesAmount] = useState(0);
   const [balances, setBalances] = useState<UserBalance[]>([]);
   const [categoryStats, setCategoryStats] = useState<CategoryStat[]>([]);
   const [debts, setDebts] = useState<SimplifiedDebt[]>([]);
@@ -81,12 +83,15 @@ export function Dashboard() {
       if (!colocationId) return;
       setIsLoading(true);
       try {
-        // Fetch expenses and categories (these work)
-        const [expensesRes, statsRes] = await Promise.all([
-          expenseApi.list({ colocation_id: colocationId, per_page: 5 }),
+        // Fetch recent expenses, all expenses for chart, and category stats
+        const [recentRes, allRes, statsRes] = await Promise.all([
+          expenseApi.list({ colocation_id: colocationId, page_size: 5 }),
+          expenseApi.list({ colocation_id: colocationId, page_size: 1000 }),
           categoryApi.getStats({ colocation_id: colocationId }),
         ]);
-        setExpenses(expensesRes.expenses);
+        setExpenses(recentRes.expenses);
+        setAllExpenses(allRes.expenses);
+        setTotalExpensesAmount(allRes.totalAmount);
         setCategoryStats(statsRes);
 
         // Try to fetch balances (may fail if payments table missing)
@@ -112,16 +117,27 @@ export function Dashboard() {
   }, [colocationId, refreshKey]);
 
   const userBalance = balances.find((b) => b.user_id === user?.id);
-  const totalExpenses = expenses.reduce((sum, e) => sum + e.amount, 0);
 
-  const monthlyData = [
-    { month: 'Jan', amount: 450 },
-    { month: 'Fév', amount: 520 },
-    { month: 'Mar', amount: 380 },
-    { month: 'Avr', amount: 610 },
-    { month: 'Mai', amount: 490 },
-    { month: 'Juin', amount: 430 },
-  ];
+  // Calculate monthly expenses from all data (last 6 months)
+  const monthlyData = (() => {
+    const now = new Date();
+    const months = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'];
+    const data = [];
+
+    for (let i = 5; i >= 0; i--) {
+      const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      const monthName = months[date.getMonth()];
+      const monthExpenses = allExpenses.filter(expense => {
+        const expenseDate = new Date(expense.expense_date);
+        return expenseDate.getMonth() === date.getMonth() &&
+               expenseDate.getFullYear() === date.getFullYear();
+      });
+      const totalAmount = monthExpenses.reduce((sum, e) => sum + e.amount, 0);
+      data.push({ month: monthName, amount: Math.round(totalAmount * 100) / 100 });
+    }
+
+    return data;
+  })();
 
   const COLORS = ['#5682F2', '#F1C086', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6'];
 
@@ -491,7 +507,7 @@ export function Dashboard() {
         />
         <StatCard
           label="Total des dépenses"
-          value={`${totalExpenses.toFixed(2)} €`}
+          value={`${totalExpensesAmount.toFixed(2)} €`}
           icon={<Receipt className="w-6 h-6" />}
           color="primary"
           change={{ value: 12, isPositive: false }}
