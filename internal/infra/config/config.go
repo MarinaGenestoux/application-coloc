@@ -17,10 +17,10 @@ const (
 
 // Config holds all application configuration
 type Config struct {
-	Database DatabaseConfig
-	Server   ServerConfig
-	JWT      JWTConfig
-	TLS      TLSConfig
+	Database  DatabaseConfig
+	Server    ServerConfig
+	JWT       JWTConfig
+	TLS    TLSConfig
 }
 
 // DatabaseConfig holds database connection settings

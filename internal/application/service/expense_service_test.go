@@ -7,6 +7,7 @@ import (
 
 	"github.com/MarinaGenestoux/application-coloc/internal/domain"
 	"github.com/MarinaGenestoux/application-coloc/internal/infra/auth"
+	"github.com/MarinaGenestoux/application-coloc/internal/infra/cache"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
@@ -27,7 +28,7 @@ func newExpenseMocks() (*MockExpenseRepository, *MockColocationRepository, *Mock
 	expRepo := new(MockExpenseRepository)
 	colocRepo := new(MockColocationRepository)
 	catRepo := new(MockCategoryRepository)
-	return expRepo, colocRepo, catRepo, NewExpenseService(expRepo, colocRepo, catRepo)
+	return expRepo, colocRepo, catRepo, NewExpenseService(expRepo, colocRepo, catRepo, cache.NewBalanceCache(time.Minute))
 }
 
 func sampleExpense() *domain.Expense {

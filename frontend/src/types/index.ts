@@ -151,7 +151,6 @@ export interface Event {
   location?: string;
   budget?: number;
   fund_id?: string;
-  fund_name?: string;
   status: EventStatus;
   created_at: string;
   user_rsvp: RSVPStatus;
@@ -186,6 +185,34 @@ export interface UpdateEventRequest {
   budget?: number;
   fund_id?: string;
   status?: EventStatus;
+}
+
+// Event Discovery types
+export type DiscoverEventType =
+  | 'CONCERT'
+  | 'EXPOSITION'
+  | 'FESTIVAL'
+  | 'SPORT'
+  | 'THEATRE'
+  | 'GASTRONOMIE'
+  | 'MARCHE'
+  | 'CINEMA'
+  | 'CONFERENCE'
+  | 'SOIREE';
+
+export interface DiscoveredEvent {
+  title: string;
+  description: string;
+  date: string;
+  location: string;
+  price?: number;
+  url?: string;
+  source: string;
+}
+
+export interface DiscoverEventsResponse {
+  events: DiscoveredEvent[];
+  search_summary: string;
 }
 
 // API Response types

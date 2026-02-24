@@ -3,24 +3,48 @@ package service
 import (
 	"context"
 	"fmt"
+	"sync"
 	"time"
 
+	"github.com/MarinaGenestoux/application-coloc/internal/application/constants"
 	"github.com/MarinaGenestoux/application-coloc/internal/domain"
 	"github.com/MarinaGenestoux/application-coloc/internal/infra/auth"
-	"github.com/MarinaGenestoux/application-coloc/internal/infra/repository/postgres"
 )
+
+// eventTypeLabels maps event type keys to French search terms
+var eventTypeLabels = map[string]string{
+	"CONCERT":     "concerts",
+	"EXPOSITION":  "expositions",
+	"FESTIVAL":    "festivals",
+	"SPORT":       "evenements sportifs",
+	"THEATRE":     "spectacles et theatre",
+	"GASTRONOMIE": "evenements gastronomiques",
+	"MARCHE":      "marches et brocantes",
+	"CINEMA":      "seances de cinema et avant-premieres",
+	"CONFERENCE":  "conferences et meetups",
+	"SOIREE":      "soirees et nightlife",
+}
 
 // EventService handles event business logic
 type EventService struct {
-	repo           *postgres.EventRepository
+	repo           domain.EventRepository
 	colocationRepo domain.ColocationRepository
+	discoverer     domain.EventDiscoverer
+
+	// Rate limiting for discovery
+	discoverySem      chan struct{}
+	discoveryCooldown map[string]time.Time
+	cooldownMu        sync.Mutex
 }
 
 // NewEventService creates a new EventService
-func NewEventService(repo *postgres.EventRepository, colocationRepo domain.ColocationRepository) *EventService {
+func NewEventService(repo domain.EventRepository, colocationRepo domain.ColocationRepository, discoverer domain.EventDiscoverer) *EventService {
 	return &EventService{
-		repo:           repo,
-		colocationRepo: colocationRepo,
+		repo:              repo,
+		colocationRepo:    colocationRepo,
+		discoverer:        discoverer,
+		discoverySem:      make(chan struct{}, constants.DiscoveryRateLimit),
+		discoveryCooldown: make(map[string]time.Time),
 	}
 }
 
@@ -49,6 +73,12 @@ func (s *EventService) Create(ctx context.Context, colocationID, title string, d
 		return nil, err
 	}
 
+	if len(title) > constants.EventTitleMaxLength {
+		return nil, fmt.Errorf("le titre ne doit pas depasser %d caracteres", constants.EventTitleMaxLength)
+	}
+	if budget != nil && *budget < constants.MinEventBudget {
+		return nil, fmt.Errorf("le budget ne peut pas etre negatif")
+	}
 	if eventDate.Before(time.Now()) {
 		return nil, fmt.Errorf("la date de l'evenement ne peut pas etre dans le passe")
 	}
@@ -122,6 +152,9 @@ func (s *EventService) Update(ctx context.Context, colocationID, eventID string,
 	}
 
 	if title != nil {
+		if len(*title) > constants.EventTitleMaxLength {
+			return nil, fmt.Errorf("le titre ne doit pas depasser %d caracteres", constants.EventTitleMaxLength)
+		}
 		event.Title = *title
 	}
 	if description != nil {
@@ -137,6 +170,9 @@ func (s *EventService) Update(ctx context.Context, colocationID, eventID string,
 		event.Location = location
 	}
 	if budget != nil {
+		if *budget < constants.MinEventBudget {
+			return nil, fmt.Errorf("le budget ne peut pas etre negatif")
+		}
 		event.Budget = budget
 	}
 	if fundID != nil {
@@ -233,4 +269,48 @@ func (s *EventService) GetParticipants(ctx context.Context, colocationID, eventI
 	}
 
 	return participants, goingCount, maybeCount, notGoingCount, nil
+}
+
+// Discover searches for real events using Claude AI with web search
+func (s *EventService) Discover(ctx context.Context, city, eventType string) (*domain.DiscoverResult, error) {
+	if city == "" {
+		return nil, fmt.Errorf("la ville est obligatoire")
+	}
+	if len(city) > constants.EventCityMaxLength {
+		return nil, fmt.Errorf("le nom de la ville ne doit pas depasser %d caracteres", constants.EventCityMaxLength)
+	}
+
+	// Per-user cooldown
+	userID, _ := auth.GetUserIDFromContext(ctx)
+	if userID != "" {
+		s.cooldownMu.Lock()
+		if lastCall, ok := s.discoveryCooldown[userID]; ok && time.Since(lastCall) < constants.DiscoveryCooldown {
+			remaining := constants.DiscoveryCooldown - time.Since(lastCall)
+			s.cooldownMu.Unlock()
+			return nil, fmt.Errorf("veuillez patienter %d secondes avant une nouvelle recherche", int(remaining.Seconds()))
+		}
+		s.cooldownMu.Unlock()
+	}
+
+	// Concurrency limiter
+	select {
+	case s.discoverySem <- struct{}{}:
+		defer func() { <-s.discoverySem }()
+	default:
+		return nil, fmt.Errorf("trop de recherches en cours, veuillez reessayer")
+	}
+
+	// Record cooldown after acquiring the semaphore
+	if userID != "" {
+		s.cooldownMu.Lock()
+		s.discoveryCooldown[userID] = time.Now()
+		s.cooldownMu.Unlock()
+	}
+
+	label, ok := eventTypeLabels[eventType]
+	if !ok {
+		label = "evenements"
+	}
+
+	return s.discoverer.DiscoverEvents(ctx, city, label)
 }

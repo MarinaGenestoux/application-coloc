@@ -16,6 +16,7 @@ import (
 	"github.com/MarinaGenestoux/application-coloc/internal/infra/auth"
 	"github.com/MarinaGenestoux/application-coloc/internal/infra/cache"
 	"github.com/MarinaGenestoux/application-coloc/internal/infra/config"
+	"github.com/MarinaGenestoux/application-coloc/internal/infra/llm"
 	handler "github.com/MarinaGenestoux/application-coloc/internal/infra/grpc"
 	"github.com/MarinaGenestoux/application-coloc/internal/infra/repository/postgres"
 	"github.com/MarinaGenestoux/application-coloc/internal/application/service"
@@ -79,6 +80,10 @@ func main() {
 	// Initialize cache (TTL de 5 minutes pour les soldes)
 	balanceCache := cache.NewBalanceCache(5 * time.Minute)
 
+	// Initialize LLM client (uses Claude CLI with user's subscription)
+	llmClient := llm.NewClient()
+	log.Println("Client Claude CLI initialise pour la decouverte d'evenements")
+
 	// Initialize services
 	hasher := auth.NewBcryptPasswordHasher()
 	authService := service.NewAuthService(authRepo, jwtManager, hasher)
@@ -91,7 +96,7 @@ func main() {
 	decisionService := service.NewDecisionService(decisionRepo, colocationRepo)
 	fundService := service.NewFundService(fundRepo, colocationRepo)
 	notificationService := service.NewNotificationService(notificationRepo)
-	eventService := service.NewEventService(eventRepo, colocationRepo)
+	eventService := service.NewEventService(eventRepo, colocationRepo, llmClient)
 
 	// Initialize handlers
 	authHandler := handler.NewAuthHandler(authService)

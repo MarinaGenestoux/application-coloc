@@ -59,6 +59,14 @@ service EventService {
       get: "/api/v1/colocations/{colocation_id}/events/{event_id}/participants"
     };
   }
+
+  // Discover real events in a city using AI web search
+  rpc DiscoverEvents(DiscoverEventsRequest) returns (DiscoverEventsResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/events/discover"
+      body: "*"
+    };
+  }
 }
 
 enum EventStatus {
@@ -67,6 +75,21 @@ enum EventStatus {
   EVENT_STATUS_ONGOING = 2;
   EVENT_STATUS_COMPLETED = 3;
   EVENT_STATUS_CANCELLED = 4;
+}
+
+// Event type for AI discovery search
+enum DiscoverEventType {
+  DISCOVER_EVENT_TYPE_UNSPECIFIED = 0;
+  DISCOVER_EVENT_TYPE_CONCERT = 1;
+  DISCOVER_EVENT_TYPE_EXPOSITION = 2;
+  DISCOVER_EVENT_TYPE_FESTIVAL = 3;
+  DISCOVER_EVENT_TYPE_SPORT = 4;
+  DISCOVER_EVENT_TYPE_THEATRE = 5;
+  DISCOVER_EVENT_TYPE_GASTRONOMIE = 6;
+  DISCOVER_EVENT_TYPE_MARCHE = 7;
+  DISCOVER_EVENT_TYPE_CINEMA = 8;
+  DISCOVER_EVENT_TYPE_CONFERENCE = 9;
+  DISCOVER_EVENT_TYPE_SOIREE = 10;
 }
 
 enum RSVPStatus {
@@ -171,7 +194,6 @@ message Event {
   optional string location = 9;
   optional double budget = 10;
   optional string fund_id = 11;
-  optional string fund_name = 12;
   EventStatus status = 13;
   string created_at = 14;
   // Current user's RSVP
@@ -180,4 +202,25 @@ message Event {
   int32 going_count = 16;
   int32 maybe_count = 17;
   int32 not_going_count = 18;
+}
+
+// AI Event Discovery messages
+message DiscoverEventsRequest {
+  string city = 1;
+  DiscoverEventType event_type = 2;
+}
+
+message DiscoveredEvent {
+  string title = 1;
+  string description = 2;
+  string date = 3;
+  string location = 4;
+  optional double price = 5;
+  optional string url = 6;
+  string source = 7;
+}
+
+message DiscoverEventsResponse {
+  repeated DiscoveredEvent events = 1;
+  string search_summary = 2;
 }

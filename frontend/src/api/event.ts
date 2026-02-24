@@ -6,6 +6,8 @@ import type {
   CreateEventRequest,
   UpdateEventRequest,
   EventParticipant,
+  DiscoverEventType,
+  DiscoverEventsResponse,
 } from '../types';
 
 interface ListEventsParams {
@@ -74,6 +76,14 @@ export const eventApi = {
     const response = await api.get<GetParticipantsResponse>(
       `/colocations/${colocationId}/events/${eventId}/participants`
     );
+    return response.data;
+  },
+
+  async discover(city: string, eventType: DiscoverEventType): Promise<DiscoverEventsResponse> {
+    const response = await api.post<DiscoverEventsResponse>('/events/discover', {
+      city,
+      event_type: `DISCOVER_EVENT_TYPE_${eventType}`,
+    });
     return response.data;
   },
 };

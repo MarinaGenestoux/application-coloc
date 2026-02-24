@@ -13,8 +13,11 @@ import {
   Check,
   X,
   HelpCircle,
+  Compass,
+  ExternalLink,
 } from 'lucide-react';
 import { useColocation } from '../context/ColocationContext';
+import { useAuth } from '../context/AuthContext';
 import { eventApi } from '../api';
 import {
   Card,
@@ -28,7 +31,7 @@ import {
   SkeletonList,
   EmptyState,
 } from '../components/ui';
-import type { Event, EventStatus, RSVPStatus } from '../types';
+import type { Event, EventStatus, RSVPStatus, DiscoveredEvent, DiscoverEventType } from '../types';
 
 const getInitialEventForm = () => ({
   title: '',
@@ -38,8 +41,39 @@ const getInitialEventForm = () => ({
   budget: '',
 });
 
+const discoverEventTypeOptions = [
+  { value: '', label: "Type d'evenement" },
+  { value: 'CONCERT', label: 'Concert' },
+  { value: 'EXPOSITION', label: 'Exposition' },
+  { value: 'FESTIVAL', label: 'Festival' },
+  { value: 'SPORT', label: 'Sport' },
+  { value: 'THEATRE', label: 'Theatre / Spectacle' },
+  { value: 'GASTRONOMIE', label: 'Gastronomie' },
+  { value: 'MARCHE', label: 'Marche / Brocante' },
+  { value: 'CINEMA', label: 'Cinema' },
+  { value: 'CONFERENCE', label: 'Conference / Meetup' },
+  { value: 'SOIREE', label: 'Soiree / Nightlife' },
+];
+
+// Convert backend date format "YYYY-MM-DD HH:MM" to JavaScript Date
+const parseEventDate = (dateStr: string | undefined | null): Date => {
+  if (!dateStr || typeof dateStr !== 'string') {
+    console.warn('Invalid date string:', dateStr);
+    return new Date();
+  }
+  // Backend sends "2026-02-15 19:00", convert to "2026-02-15T19:00"
+  const isoStr = dateStr.replace(' ', 'T');
+  const date = new Date(isoStr);
+  if (isNaN(date.getTime())) {
+    console.warn('Could not parse date:', dateStr);
+    return new Date();
+  }
+  return date;
+};
+
 export function Events() {
   const { currentColocation } = useColocation();
+  const { user } = useAuth();
   const [events, setEvents] = useState<Event[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSavingEvent, setIsSavingEvent] = useState(false);
@@ -54,6 +88,17 @@ export function Events() {
   const [editEvent, setEditEvent] = useState(getInitialEventForm);
   const [isUpdatingEvent, setIsUpdatingEvent] = useState(false);
   const [rsvpingEventId, setRsvpingEventId] = useState<string | null>(null);
+  const [expandedEventId, setExpandedEventId] = useState<string | null>(null);
+  const [participantsData, setParticipantsData] = useState<Record<string, any>>({});
+
+  // Discovery state
+  const [showDiscovery, setShowDiscovery] = useState(false);
+  const [discoveryCity, setDiscoveryCity] = useState('');
+  const [discoveryEventType, setDiscoveryEventType] = useState('');
+  const [discoveredEvents, setDiscoveredEvents] = useState<DiscoveredEvent[]>([]);
+  const [isDiscovering, setIsDiscovering] = useState(false);
+  const [discoverySummary, setDiscoverySummary] = useState('');
+  const [discoveryError, setDiscoveryError] = useState('');
 
   const resetEventForm = () => {
     setNewEvent(getInitialEventForm());
@@ -95,10 +140,13 @@ export function Events() {
     isSavingEventRef.current = true;
     setIsSavingEvent(true);
     try {
+      // Convert datetime-local format (YYYY-MM-DDTHH:MM) to backend format (YYYY-MM-DD HH:MM)
+      const formattedDate = newEvent.event_date.replace('T', ' ');
+
       const event = await eventApi.create(currentColocation.id, {
         title: newEvent.title,
         description: newEvent.description || undefined,
-        event_date: newEvent.event_date,
+        event_date: formattedDate,
         location: newEvent.location || undefined,
         budget: newEvent.budget ? parseFloat(newEvent.budget) : undefined,
       });
@@ -115,9 +163,9 @@ export function Events() {
 
   const handleEditEventClick = (event: Event) => {
     setEditingEvent(event);
-    // Parse event_date from "2026-02-15T19:00:00Z" to "2026-02-15T19:00"
+    // Parse event_date from "2026-02-15 19:00" to "2026-02-15T19:00" for datetime-local input
     const eventDate = event.event_date
-      ? new Date(event.event_date).toISOString().slice(0, 16)
+      ? event.event_date.replace(' ', 'T')
       : '';
     setEditEvent({
       title: event.title,
@@ -135,10 +183,13 @@ export function Events() {
 
     setIsUpdatingEvent(true);
     try {
+      // Convert datetime-local format (YYYY-MM-DDTHH:MM) to backend format (YYYY-MM-DD HH:MM)
+      const formattedDate = editEvent.event_date.replace('T', ' ');
+
       const updatedEvent = await eventApi.update(currentColocation.id, editingEvent.id, {
         title: editEvent.title,
         description: editEvent.description || undefined,
-        event_date: editEvent.event_date,
+        event_date: formattedDate,
         location: editEvent.location || undefined,
         budget: editEvent.budget ? parseFloat(editEvent.budget) : undefined,
       });
@@ -173,11 +224,69 @@ export function Events() {
       await eventApi.rsvp(currentColocation.id, eventId, status);
       // Refresh events to get updated counts
       await loadEvents();
+      // Refresh participants if expanded
+      if (expandedEventId === eventId) {
+        await loadParticipants(eventId);
+      }
     } catch (error) {
       console.error('Error updating RSVP:', error);
     } finally {
       setRsvpingEventId(null);
     }
+  };
+
+  const loadParticipants = async (eventId: string) => {
+    if (!currentColocation) return;
+    try {
+      const data = await eventApi.getParticipants(currentColocation.id, eventId);
+      setParticipantsData((prev) => ({ ...prev, [eventId]: data.participants }));
+    } catch (error) {
+      console.error('Error loading participants:', error);
+    }
+  };
+
+  const toggleParticipants = async (eventId: string) => {
+    if (expandedEventId === eventId) {
+      setExpandedEventId(null);
+    } else {
+      setExpandedEventId(eventId);
+      if (!participantsData[eventId]) {
+        await loadParticipants(eventId);
+      }
+    }
+  };
+
+  const handleDiscover = async () => {
+    if (!discoveryCity || !discoveryEventType || isDiscovering) return;
+    setIsDiscovering(true);
+    setDiscoveredEvents([]);
+    setDiscoverySummary('');
+    setDiscoveryError('');
+    try {
+      const result = await eventApi.discover(discoveryCity, discoveryEventType as DiscoverEventType);
+      setDiscoveredEvents(result.events || []);
+      setDiscoverySummary(result.search_summary || '');
+    } catch (error: any) {
+      console.error('Error discovering events:', error);
+      const msg = error?.response?.data?.message || error?.message || 'Erreur inconnue';
+      setDiscoveryError(`Erreur: ${msg}`);
+    } finally {
+      setIsDiscovering(false);
+    }
+  };
+
+  const handleAddDiscoveredEvent = (discovered: DiscoveredEvent) => {
+    const eventDate = discovered.date.includes(' ')
+      ? discovered.date.replace(' ', 'T')
+      : discovered.date + 'T20:00';
+    setNewEvent({
+      title: discovered.title,
+      description: discovered.description || '',
+      event_date: eventDate,
+      location: discovered.location || '',
+      budget: discovered.price?.toString() || '',
+    });
+    setShowNewEventModal(true);
   };
 
   const getStatusColor = (status: EventStatus) => {
@@ -290,6 +399,133 @@ export function Events() {
         </Button>
       </div>
 
+      {/* Discovery Section */}
+      <Card elevation="elevated" padding="md">
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Compass className="w-5 h-5 text-primary" />
+              <h2 className="font-semibold text-slate-800">Decouvrir des evenements</h2>
+            </div>
+            <button
+              onClick={() => setShowDiscovery(!showDiscovery)}
+              className="text-sm text-primary hover:underline font-medium"
+            >
+              {showDiscovery ? 'Masquer' : 'Rechercher'}
+            </button>
+          </div>
+
+          {showDiscovery && (
+            <div className="space-y-4">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:gap-4">
+                <div className="flex-1">
+                  <Input
+                    label="Ville"
+                    placeholder="Ex: Lyon, Paris, Marseille..."
+                    value={discoveryCity}
+                    onChange={(e) => setDiscoveryCity(e.target.value)}
+                    leftIcon={<MapPin className="w-5 h-5" />}
+                  />
+                </div>
+                <div className="flex-1">
+                  <Select
+                    label="Type d'evenement"
+                    options={discoverEventTypeOptions}
+                    value={discoveryEventType}
+                    onChange={setDiscoveryEventType}
+                    placeholder="Choisir un type"
+                  />
+                </div>
+                <Button
+                  onClick={handleDiscover}
+                  isLoading={isDiscovering}
+                  disabled={!discoveryCity || !discoveryEventType || isDiscovering}
+                  leftIcon={<Search className="w-4 h-4" />}
+                  className="sm:w-auto w-full"
+                >
+                  Rechercher
+                </Button>
+              </div>
+
+              {/* Error state */}
+              {discoveryError && !isDiscovering && (
+                <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-sm text-red-700">
+                  {discoveryError}
+                </div>
+              )}
+
+              {/* Loading state */}
+              {isDiscovering && (
+                <div className="flex items-center gap-3 py-8 justify-center">
+                  <div className="w-5 h-5 rounded-full border-2 border-primary border-t-transparent animate-spin" />
+                  <span className="text-sm text-slate-500">Recherche en cours avec l'IA...</span>
+                </div>
+              )}
+
+              {/* Summary */}
+              {discoverySummary && !isDiscovering && (
+                <p className="text-sm text-slate-500 italic">{discoverySummary}</p>
+              )}
+
+              {/* Results */}
+              {discoveredEvents.length > 0 && !isDiscovering && (
+                <div className="space-y-3">
+                  {discoveredEvents.map((event, index) => (
+                    <div
+                      key={index}
+                      className="flex items-start gap-4 p-4 rounded-xl border border-slate-200 hover:border-primary/30 hover:bg-primary/5 transition-all duration-200"
+                    >
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-semibold text-slate-800">{event.title}</h3>
+                        <p className="text-sm text-slate-500 mt-1 line-clamp-2">{event.description}</p>
+                        <div className="flex flex-wrap items-center gap-3 mt-2 text-sm text-slate-400">
+                          <span className="flex items-center gap-1.5">
+                            <Calendar className="w-4 h-4" />
+                            {event.date}
+                          </span>
+                          <span className="flex items-center gap-1.5">
+                            <MapPin className="w-4 h-4" />
+                            {event.location}
+                          </span>
+                          {event.price != null && (
+                            <span className="flex items-center gap-1.5">
+                              <Euro className="w-4 h-4" />
+                              {event.price.toFixed(2)} EUR
+                            </span>
+                          )}
+                        </div>
+                        <div className="flex items-center gap-2 mt-2">
+                          <Badge variant="default" size="sm">{event.source}</Badge>
+                          {event.url && (
+                            <a
+                              href={event.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1 text-xs text-primary hover:underline"
+                            >
+                              <ExternalLink className="w-3 h-3" />
+                              Voir le site
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                      <Button
+                        size="sm"
+                        variant="secondary"
+                        leftIcon={<Plus className="w-4 h-4" />}
+                        onClick={() => handleAddDiscoveredEvent(event)}
+                      >
+                        Ajouter
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </Card>
+
       {/* Filters */}
       <Card elevation="elevated" padding="sm">
         <div className="flex flex-col gap-3 p-1 sm:flex-row sm:items-center sm:gap-4">
@@ -357,7 +593,7 @@ export function Events() {
                           <div className="flex flex-wrap items-center gap-3 mt-2 text-sm text-slate-400">
                             <span className="flex items-center gap-1.5">
                               <Calendar className="w-4 h-4" />
-                              {new Date(event.event_date).toLocaleDateString('fr-FR', {
+                              {parseEventDate(event.event_date).toLocaleDateString('fr-FR', {
                                 day: 'numeric',
                                 month: 'long',
                                 year: 'numeric',
@@ -378,31 +614,52 @@ export function Events() {
                               </span>
                             )}
                           </div>
-                          <div className="flex items-center gap-2 mt-3 text-sm">
-                            <Users className="w-4 h-4 text-slate-400" />
-                            <span className="text-green-600 font-medium">{event.going_count} oui</span>
-                            <span className="text-slate-300">•</span>
-                            <span className="text-amber-600 font-medium">{event.maybe_count} peut-être</span>
-                            <span className="text-slate-300">•</span>
-                            <span className="text-red-600 font-medium">{event.not_going_count} non</span>
+                          <div className="flex flex-col gap-2 mt-3">
+                            <button
+                              onClick={() => toggleParticipants(event.id)}
+                              className="flex items-center gap-2 text-sm hover:bg-slate-50 rounded-lg px-2 py-1 -ml-2 transition-colors w-fit"
+                            >
+                              <Users className="w-4 h-4 text-slate-400" />
+                              <span className="text-green-600 font-medium">{event.going_count} oui</span>
+                              <span className="text-slate-300">•</span>
+                              <span className="text-amber-600 font-medium">{event.maybe_count} peut-être</span>
+                              <span className="text-slate-300">•</span>
+                              <span className="text-red-600 font-medium">{event.not_going_count} non</span>
+                            </button>
+                            {event.user_rsvp && (event.user_rsvp as string) !== '' && (
+                              <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium w-fit ${
+                                event.user_rsvp === 'going' ? 'bg-green-100 text-green-700' :
+                                event.user_rsvp === 'maybe' ? 'bg-amber-100 text-amber-700' :
+                                'bg-red-100 text-red-700'
+                              }`}>
+                                {getRSVPIcon(event.user_rsvp)}
+                                <span>
+                                  Vous : {event.user_rsvp === 'going' ? 'Je participe' :
+                                         event.user_rsvp === 'maybe' ? 'Peut-être' :
+                                         'Non'}
+                                </span>
+                              </div>
+                            )}
                           </div>
                         </div>
-                        <div className="flex items-center gap-0.5 sm:gap-1">
-                          <button
-                            className="p-2 sm:p-3 rounded-lg sm:rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-all duration-200"
-                            onClick={() => handleEditEventClick(event)}
-                            type="button"
-                          >
-                            <Edit2 className="w-4 h-4 sm:w-5 sm:h-5" />
-                          </button>
-                          <button
-                            className="p-2 sm:p-3 rounded-lg sm:rounded-xl text-slate-400 hover:text-red-500 hover:bg-red-50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                            onClick={() => handleDeleteEvent(event.id)}
-                            disabled={deletingEventId === event.id}
-                          >
-                            <Trash2 className="w-4 h-4 sm:w-5 sm:h-5" />
-                          </button>
-                        </div>
+                        {user?.id === event.created_by && (
+                          <div className="flex items-center gap-0.5 sm:gap-1">
+                            <button
+                              className="p-2 sm:p-3 rounded-lg sm:rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-all duration-200"
+                              onClick={() => handleEditEventClick(event)}
+                              type="button"
+                            >
+                              <Edit2 className="w-4 h-4 sm:w-5 sm:h-5" />
+                            </button>
+                            <button
+                              className="p-2 sm:p-3 rounded-lg sm:rounded-xl text-slate-400 hover:text-red-500 hover:bg-red-50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                              onClick={() => handleDeleteEvent(event.id)}
+                              disabled={deletingEventId === event.id}
+                            >
+                              <Trash2 className="w-4 h-4 sm:w-5 sm:h-5" />
+                            </button>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -446,6 +703,47 @@ export function Events() {
                         {getRSVPIcon('not_going')}
                         Non
                       </button>
+                    </div>
+                  )}
+
+                  {/* Participants List */}
+                  {expandedEventId === event.id && (
+                    <div className="ml-16 mt-4 p-4 bg-slate-50 rounded-lg">
+                      <h4 className="text-sm font-semibold text-slate-700 mb-3">Participants</h4>
+                      {participantsData[event.id] ? (
+                        <div className="space-y-2">
+                          {participantsData[event.id].length === 0 ? (
+                            <p className="text-sm text-slate-400">Aucune réponse pour le moment</p>
+                          ) : (
+                            participantsData[event.id].map((participant: any) => (
+                              <div key={participant.userId} className="flex items-center gap-3">
+                                <Avatar
+                                  name={`${participant.userPrenom} ${participant.userNom}`}
+                                  src={participant.avatarUrl}
+                                  size="sm"
+                                />
+                                <span className="text-sm text-slate-700">
+                                  {participant.userPrenom} {participant.userNom}
+                                </span>
+                                <div className={`flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ml-auto ${
+                                  participant.rsvpStatus === 'going' ? 'bg-green-100 text-green-700' :
+                                  participant.rsvpStatus === 'maybe' ? 'bg-amber-100 text-amber-700' :
+                                  'bg-red-100 text-red-700'
+                                }`}>
+                                  {getRSVPIcon(participant.rsvpStatus)}
+                                  <span>
+                                    {participant.rsvpStatus === 'going' ? 'Participe' :
+                                     participant.rsvpStatus === 'maybe' ? 'Peut-être' :
+                                     'Non'}
+                                  </span>
+                                </div>
+                              </div>
+                            ))
+                          )}
+                        </div>
+                      ) : (
+                        <div className="text-sm text-slate-400">Chargement...</div>
+                      )}
                     </div>
                   )}
                 </motion.div>

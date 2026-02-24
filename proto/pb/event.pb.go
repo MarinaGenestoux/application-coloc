@@ -77,6 +77,80 @@ func (EventStatus) EnumDescriptor() ([]byte, []int) {
 	return file_event_proto_rawDescGZIP(), []int{0}
 }
 
+// Event type for AI discovery search
+type DiscoverEventType int32
+
+const (
+	DiscoverEventType_DISCOVER_EVENT_TYPE_UNSPECIFIED DiscoverEventType = 0
+	DiscoverEventType_DISCOVER_EVENT_TYPE_CONCERT     DiscoverEventType = 1
+	DiscoverEventType_DISCOVER_EVENT_TYPE_EXPOSITION  DiscoverEventType = 2
+	DiscoverEventType_DISCOVER_EVENT_TYPE_FESTIVAL    DiscoverEventType = 3
+	DiscoverEventType_DISCOVER_EVENT_TYPE_SPORT       DiscoverEventType = 4
+	DiscoverEventType_DISCOVER_EVENT_TYPE_THEATRE     DiscoverEventType = 5
+	DiscoverEventType_DISCOVER_EVENT_TYPE_GASTRONOMIE DiscoverEventType = 6
+	DiscoverEventType_DISCOVER_EVENT_TYPE_MARCHE      DiscoverEventType = 7
+	DiscoverEventType_DISCOVER_EVENT_TYPE_CINEMA      DiscoverEventType = 8
+	DiscoverEventType_DISCOVER_EVENT_TYPE_CONFERENCE  DiscoverEventType = 9
+	DiscoverEventType_DISCOVER_EVENT_TYPE_SOIREE      DiscoverEventType = 10
+)
+
+// Enum value maps for DiscoverEventType.
+var (
+	DiscoverEventType_name = map[int32]string{
+		0:  "DISCOVER_EVENT_TYPE_UNSPECIFIED",
+		1:  "DISCOVER_EVENT_TYPE_CONCERT",
+		2:  "DISCOVER_EVENT_TYPE_EXPOSITION",
+		3:  "DISCOVER_EVENT_TYPE_FESTIVAL",
+		4:  "DISCOVER_EVENT_TYPE_SPORT",
+		5:  "DISCOVER_EVENT_TYPE_THEATRE",
+		6:  "DISCOVER_EVENT_TYPE_GASTRONOMIE",
+		7:  "DISCOVER_EVENT_TYPE_MARCHE",
+		8:  "DISCOVER_EVENT_TYPE_CINEMA",
+		9:  "DISCOVER_EVENT_TYPE_CONFERENCE",
+		10: "DISCOVER_EVENT_TYPE_SOIREE",
+	}
+	DiscoverEventType_value = map[string]int32{
+		"DISCOVER_EVENT_TYPE_UNSPECIFIED": 0,
+		"DISCOVER_EVENT_TYPE_CONCERT":     1,
+		"DISCOVER_EVENT_TYPE_EXPOSITION":  2,
+		"DISCOVER_EVENT_TYPE_FESTIVAL":    3,
+		"DISCOVER_EVENT_TYPE_SPORT":       4,
+		"DISCOVER_EVENT_TYPE_THEATRE":     5,
+		"DISCOVER_EVENT_TYPE_GASTRONOMIE": 6,
+		"DISCOVER_EVENT_TYPE_MARCHE":      7,
+		"DISCOVER_EVENT_TYPE_CINEMA":      8,
+		"DISCOVER_EVENT_TYPE_CONFERENCE":  9,
+		"DISCOVER_EVENT_TYPE_SOIREE":      10,
+	}
+)
+
+func (x DiscoverEventType) Enum() *DiscoverEventType {
+	p := new(DiscoverEventType)
+	*p = x
+	return p
+}
+
+func (x DiscoverEventType) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (DiscoverEventType) Descriptor() protoreflect.EnumDescriptor {
+	return file_event_proto_enumTypes[1].Descriptor()
+}
+
+func (DiscoverEventType) Type() protoreflect.EnumType {
+	return &file_event_proto_enumTypes[1]
+}
+
+func (x DiscoverEventType) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use DiscoverEventType.Descriptor instead.
+func (DiscoverEventType) EnumDescriptor() ([]byte, []int) {
+	return file_event_proto_rawDescGZIP(), []int{1}
+}
+
 type RSVPStatus int32
 
 const (
@@ -113,11 +187,11 @@ func (x RSVPStatus) String() string {
 }
 
 func (RSVPStatus) Descriptor() protoreflect.EnumDescriptor {
-	return file_event_proto_enumTypes[1].Descriptor()
+	return file_event_proto_enumTypes[2].Descriptor()
 }
 
 func (RSVPStatus) Type() protoreflect.EnumType {
-	return &file_event_proto_enumTypes[1]
+	return &file_event_proto_enumTypes[2]
 }
 
 func (x RSVPStatus) Number() protoreflect.EnumNumber {
@@ -126,7 +200,7 @@ func (x RSVPStatus) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use RSVPStatus.Descriptor instead.
 func (RSVPStatus) EnumDescriptor() ([]byte, []int) {
-	return file_event_proto_rawDescGZIP(), []int{1}
+	return file_event_proto_rawDescGZIP(), []int{2}
 }
 
 type CreateEventRequest struct {
@@ -950,7 +1024,6 @@ type Event struct {
 	Location        *string                `protobuf:"bytes,9,opt,name=location,proto3,oneof" json:"location,omitempty"`
 	Budget          *float64               `protobuf:"fixed64,10,opt,name=budget,proto3,oneof" json:"budget,omitempty"`
 	FundId          *string                `protobuf:"bytes,11,opt,name=fund_id,json=fundId,proto3,oneof" json:"fund_id,omitempty"`
-	FundName        *string                `protobuf:"bytes,12,opt,name=fund_name,json=fundName,proto3,oneof" json:"fund_name,omitempty"`
 	Status          EventStatus            `protobuf:"varint,13,opt,name=status,proto3,enum=coloc.EventStatus" json:"status,omitempty"`
 	CreatedAt       string                 `protobuf:"bytes,14,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
 	// Current user's RSVP
@@ -1070,13 +1143,6 @@ func (x *Event) GetFundId() string {
 	return ""
 }
 
-func (x *Event) GetFundName() string {
-	if x != nil && x.FundName != nil {
-		return *x.FundName
-	}
-	return ""
-}
-
 func (x *Event) GetStatus() EventStatus {
 	if x != nil {
 		return x.Status
@@ -1117,6 +1183,203 @@ func (x *Event) GetNotGoingCount() int32 {
 		return x.NotGoingCount
 	}
 	return 0
+}
+
+// AI Event Discovery messages
+type DiscoverEventsRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	City          string                 `protobuf:"bytes,1,opt,name=city,proto3" json:"city,omitempty"`
+	EventType     DiscoverEventType      `protobuf:"varint,2,opt,name=event_type,json=eventType,proto3,enum=coloc.DiscoverEventType" json:"event_type,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DiscoverEventsRequest) Reset() {
+	*x = DiscoverEventsRequest{}
+	mi := &file_event_proto_msgTypes[13]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DiscoverEventsRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DiscoverEventsRequest) ProtoMessage() {}
+
+func (x *DiscoverEventsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_event_proto_msgTypes[13]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DiscoverEventsRequest.ProtoReflect.Descriptor instead.
+func (*DiscoverEventsRequest) Descriptor() ([]byte, []int) {
+	return file_event_proto_rawDescGZIP(), []int{13}
+}
+
+func (x *DiscoverEventsRequest) GetCity() string {
+	if x != nil {
+		return x.City
+	}
+	return ""
+}
+
+func (x *DiscoverEventsRequest) GetEventType() DiscoverEventType {
+	if x != nil {
+		return x.EventType
+	}
+	return DiscoverEventType_DISCOVER_EVENT_TYPE_UNSPECIFIED
+}
+
+type DiscoveredEvent struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Title         string                 `protobuf:"bytes,1,opt,name=title,proto3" json:"title,omitempty"`
+	Description   string                 `protobuf:"bytes,2,opt,name=description,proto3" json:"description,omitempty"`
+	Date          string                 `protobuf:"bytes,3,opt,name=date,proto3" json:"date,omitempty"`
+	Location      string                 `protobuf:"bytes,4,opt,name=location,proto3" json:"location,omitempty"`
+	Price         *float64               `protobuf:"fixed64,5,opt,name=price,proto3,oneof" json:"price,omitempty"`
+	Url           *string                `protobuf:"bytes,6,opt,name=url,proto3,oneof" json:"url,omitempty"`
+	Source        string                 `protobuf:"bytes,7,opt,name=source,proto3" json:"source,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DiscoveredEvent) Reset() {
+	*x = DiscoveredEvent{}
+	mi := &file_event_proto_msgTypes[14]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DiscoveredEvent) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DiscoveredEvent) ProtoMessage() {}
+
+func (x *DiscoveredEvent) ProtoReflect() protoreflect.Message {
+	mi := &file_event_proto_msgTypes[14]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DiscoveredEvent.ProtoReflect.Descriptor instead.
+func (*DiscoveredEvent) Descriptor() ([]byte, []int) {
+	return file_event_proto_rawDescGZIP(), []int{14}
+}
+
+func (x *DiscoveredEvent) GetTitle() string {
+	if x != nil {
+		return x.Title
+	}
+	return ""
+}
+
+func (x *DiscoveredEvent) GetDescription() string {
+	if x != nil {
+		return x.Description
+	}
+	return ""
+}
+
+func (x *DiscoveredEvent) GetDate() string {
+	if x != nil {
+		return x.Date
+	}
+	return ""
+}
+
+func (x *DiscoveredEvent) GetLocation() string {
+	if x != nil {
+		return x.Location
+	}
+	return ""
+}
+
+func (x *DiscoveredEvent) GetPrice() float64 {
+	if x != nil && x.Price != nil {
+		return *x.Price
+	}
+	return 0
+}
+
+func (x *DiscoveredEvent) GetUrl() string {
+	if x != nil && x.Url != nil {
+		return *x.Url
+	}
+	return ""
+}
+
+func (x *DiscoveredEvent) GetSource() string {
+	if x != nil {
+		return x.Source
+	}
+	return ""
+}
+
+type DiscoverEventsResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Events        []*DiscoveredEvent     `protobuf:"bytes,1,rep,name=events,proto3" json:"events,omitempty"`
+	SearchSummary string                 `protobuf:"bytes,2,opt,name=search_summary,json=searchSummary,proto3" json:"search_summary,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DiscoverEventsResponse) Reset() {
+	*x = DiscoverEventsResponse{}
+	mi := &file_event_proto_msgTypes[15]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DiscoverEventsResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DiscoverEventsResponse) ProtoMessage() {}
+
+func (x *DiscoverEventsResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_event_proto_msgTypes[15]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DiscoverEventsResponse.ProtoReflect.Descriptor instead.
+func (*DiscoverEventsResponse) Descriptor() ([]byte, []int) {
+	return file_event_proto_rawDescGZIP(), []int{15}
+}
+
+func (x *DiscoverEventsResponse) GetEvents() []*DiscoveredEvent {
+	if x != nil {
+		return x.Events
+	}
+	return nil
+}
+
+func (x *DiscoverEventsResponse) GetSearchSummary() string {
+	if x != nil {
+		return x.SearchSummary
+	}
+	return ""
 }
 
 var File_event_proto protoreflect.FileDescriptor
@@ -1211,7 +1474,7 @@ const file_event_proto_rawDesc = "" +
 	"\vrsvp_status\x18\x05 \x01(\x0e2\x11.coloc.RSVPStatusR\n" +
 	"rsvpStatus\x12!\n" +
 	"\fresponded_at\x18\x06 \x01(\tR\vrespondedAtB\r\n" +
-	"\v_avatar_url\"\xae\x05\n" +
+	"\v_avatar_url\"\xfe\x04\n" +
 	"\x05Event\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12#\n" +
 	"\rcolocation_id\x18\x02 \x01(\tR\fcolocationId\x12\x1d\n" +
@@ -1226,8 +1489,7 @@ const file_event_proto_rawDesc = "" +
 	"\blocation\x18\t \x01(\tH\x01R\blocation\x88\x01\x01\x12\x1b\n" +
 	"\x06budget\x18\n" +
 	" \x01(\x01H\x02R\x06budget\x88\x01\x01\x12\x1c\n" +
-	"\afund_id\x18\v \x01(\tH\x03R\x06fundId\x88\x01\x01\x12 \n" +
-	"\tfund_name\x18\f \x01(\tH\x04R\bfundName\x88\x01\x01\x12*\n" +
+	"\afund_id\x18\v \x01(\tH\x03R\x06fundId\x88\x01\x01\x12*\n" +
 	"\x06status\x18\r \x01(\x0e2\x12.coloc.EventStatusR\x06status\x12\x1d\n" +
 	"\n" +
 	"created_at\x18\x0e \x01(\tR\tcreatedAt\x12.\n" +
@@ -1241,21 +1503,49 @@ const file_event_proto_rawDesc = "" +
 	"\t_locationB\t\n" +
 	"\a_budgetB\n" +
 	"\n" +
-	"\b_fund_idB\f\n" +
+	"\b_fund_id\"d\n" +
+	"\x15DiscoverEventsRequest\x12\x12\n" +
+	"\x04city\x18\x01 \x01(\tR\x04city\x127\n" +
 	"\n" +
-	"_fund_name*\x98\x01\n" +
+	"event_type\x18\x02 \x01(\x0e2\x18.coloc.DiscoverEventTypeR\teventType\"\xd5\x01\n" +
+	"\x0fDiscoveredEvent\x12\x14\n" +
+	"\x05title\x18\x01 \x01(\tR\x05title\x12 \n" +
+	"\vdescription\x18\x02 \x01(\tR\vdescription\x12\x12\n" +
+	"\x04date\x18\x03 \x01(\tR\x04date\x12\x1a\n" +
+	"\blocation\x18\x04 \x01(\tR\blocation\x12\x19\n" +
+	"\x05price\x18\x05 \x01(\x01H\x00R\x05price\x88\x01\x01\x12\x15\n" +
+	"\x03url\x18\x06 \x01(\tH\x01R\x03url\x88\x01\x01\x12\x16\n" +
+	"\x06source\x18\a \x01(\tR\x06sourceB\b\n" +
+	"\x06_priceB\x06\n" +
+	"\x04_url\"o\n" +
+	"\x16DiscoverEventsResponse\x12.\n" +
+	"\x06events\x18\x01 \x03(\v2\x16.coloc.DiscoveredEventR\x06events\x12%\n" +
+	"\x0esearch_summary\x18\x02 \x01(\tR\rsearchSummary*\x98\x01\n" +
 	"\vEventStatus\x12\x1c\n" +
 	"\x18EVENT_STATUS_UNSPECIFIED\x10\x00\x12\x19\n" +
 	"\x15EVENT_STATUS_UPCOMING\x10\x01\x12\x18\n" +
 	"\x14EVENT_STATUS_ONGOING\x10\x02\x12\x1a\n" +
 	"\x16EVENT_STATUS_COMPLETED\x10\x03\x12\x1a\n" +
-	"\x16EVENT_STATUS_CANCELLED\x10\x04*r\n" +
+	"\x16EVENT_STATUS_CANCELLED\x10\x04*\x88\x03\n" +
+	"\x11DiscoverEventType\x12#\n" +
+	"\x1fDISCOVER_EVENT_TYPE_UNSPECIFIED\x10\x00\x12\x1f\n" +
+	"\x1bDISCOVER_EVENT_TYPE_CONCERT\x10\x01\x12\"\n" +
+	"\x1eDISCOVER_EVENT_TYPE_EXPOSITION\x10\x02\x12 \n" +
+	"\x1cDISCOVER_EVENT_TYPE_FESTIVAL\x10\x03\x12\x1d\n" +
+	"\x19DISCOVER_EVENT_TYPE_SPORT\x10\x04\x12\x1f\n" +
+	"\x1bDISCOVER_EVENT_TYPE_THEATRE\x10\x05\x12#\n" +
+	"\x1fDISCOVER_EVENT_TYPE_GASTRONOMIE\x10\x06\x12\x1e\n" +
+	"\x1aDISCOVER_EVENT_TYPE_MARCHE\x10\a\x12\x1e\n" +
+	"\x1aDISCOVER_EVENT_TYPE_CINEMA\x10\b\x12\"\n" +
+	"\x1eDISCOVER_EVENT_TYPE_CONFERENCE\x10\t\x12\x1e\n" +
+	"\x1aDISCOVER_EVENT_TYPE_SOIREE\x10\n" +
+	"*r\n" +
 	"\n" +
 	"RSVPStatus\x12\x1b\n" +
 	"\x17RSVP_STATUS_UNSPECIFIED\x10\x00\x12\x15\n" +
 	"\x11RSVP_STATUS_GOING\x10\x01\x12\x15\n" +
 	"\x11RSVP_STATUS_MAYBE\x10\x02\x12\x19\n" +
-	"\x15RSVP_STATUS_NOT_GOING\x10\x032\xe9\x06\n" +
+	"\x15RSVP_STATUS_NOT_GOING\x10\x032\xdc\a\n" +
 	"\fEventService\x12m\n" +
 	"\vCreateEvent\x12\x19.coloc.CreateEventRequest\x1a\f.coloc.Event\"5\x82\xd3\xe4\x93\x02/:\x01*\"*/api/v1/colocations/{colocation_id}/events\x12i\n" +
 	"\bGetEvent\x12\x16.coloc.GetEventRequest\x1a\f.coloc.Event\"7\x82\xd3\xe4\x93\x021\x12//api/v1/colocations/{colocation_id}/events/{id}\x12u\n" +
@@ -1264,7 +1554,8 @@ const file_event_proto_rawDesc = "" +
 	"\vUpdateEvent\x12\x19.coloc.UpdateEventRequest\x1a\f.coloc.Event\":\x82\xd3\xe4\x93\x024:\x01*\x1a//api/v1/colocations/{colocation_id}/events/{id}\x12}\n" +
 	"\vDeleteEvent\x12\x19.coloc.DeleteEventRequest\x1a\x1a.coloc.DeleteEventResponse\"7\x82\xd3\xe4\x93\x021*//api/v1/colocations/{colocation_id}/events/{id}\x12v\n" +
 	"\x04RSVP\x12\x12.coloc.RSVPRequest\x1a\x13.coloc.RSVPResponse\"E\x82\xd3\xe4\x93\x02?:\x01*\":/api/v1/colocations/{colocation_id}/events/{event_id}/rsvp\x12\x9c\x01\n" +
-	"\x0fGetParticipants\x12\x1d.coloc.GetParticipantsRequest\x1a\x1e.coloc.GetParticipantsResponse\"J\x82\xd3\xe4\x93\x02D\x12B/api/v1/colocations/{colocation_id}/events/{event_id}/participantsB7Z5github.com/MarinaGenestoux/application-coloc/proto/pbb\x06proto3"
+	"\x0fGetParticipants\x12\x1d.coloc.GetParticipantsRequest\x1a\x1e.coloc.GetParticipantsResponse\"J\x82\xd3\xe4\x93\x02D\x12B/api/v1/colocations/{colocation_id}/events/{event_id}/participants\x12q\n" +
+	"\x0eDiscoverEvents\x12\x1c.coloc.DiscoverEventsRequest\x1a\x1d.coloc.DiscoverEventsResponse\"\"\x82\xd3\xe4\x93\x02\x1c:\x01*\"\x17/api/v1/events/discoverB7Z5github.com/MarinaGenestoux/application-coloc/proto/pbb\x06proto3"
 
 var (
 	file_event_proto_rawDescOnce sync.Once
@@ -1278,53 +1569,61 @@ func file_event_proto_rawDescGZIP() []byte {
 	return file_event_proto_rawDescData
 }
 
-var file_event_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
-var file_event_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
+var file_event_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
+var file_event_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
 var file_event_proto_goTypes = []any{
 	(EventStatus)(0),                // 0: coloc.EventStatus
-	(RSVPStatus)(0),                 // 1: coloc.RSVPStatus
-	(*CreateEventRequest)(nil),      // 2: coloc.CreateEventRequest
-	(*GetEventRequest)(nil),         // 3: coloc.GetEventRequest
-	(*ListEventsRequest)(nil),       // 4: coloc.ListEventsRequest
-	(*ListEventsResponse)(nil),      // 5: coloc.ListEventsResponse
-	(*UpdateEventRequest)(nil),      // 6: coloc.UpdateEventRequest
-	(*DeleteEventRequest)(nil),      // 7: coloc.DeleteEventRequest
-	(*DeleteEventResponse)(nil),     // 8: coloc.DeleteEventResponse
-	(*RSVPRequest)(nil),             // 9: coloc.RSVPRequest
-	(*RSVPResponse)(nil),            // 10: coloc.RSVPResponse
-	(*GetParticipantsRequest)(nil),  // 11: coloc.GetParticipantsRequest
-	(*GetParticipantsResponse)(nil), // 12: coloc.GetParticipantsResponse
-	(*EventParticipant)(nil),        // 13: coloc.EventParticipant
-	(*Event)(nil),                   // 14: coloc.Event
+	(DiscoverEventType)(0),          // 1: coloc.DiscoverEventType
+	(RSVPStatus)(0),                 // 2: coloc.RSVPStatus
+	(*CreateEventRequest)(nil),      // 3: coloc.CreateEventRequest
+	(*GetEventRequest)(nil),         // 4: coloc.GetEventRequest
+	(*ListEventsRequest)(nil),       // 5: coloc.ListEventsRequest
+	(*ListEventsResponse)(nil),      // 6: coloc.ListEventsResponse
+	(*UpdateEventRequest)(nil),      // 7: coloc.UpdateEventRequest
+	(*DeleteEventRequest)(nil),      // 8: coloc.DeleteEventRequest
+	(*DeleteEventResponse)(nil),     // 9: coloc.DeleteEventResponse
+	(*RSVPRequest)(nil),             // 10: coloc.RSVPRequest
+	(*RSVPResponse)(nil),            // 11: coloc.RSVPResponse
+	(*GetParticipantsRequest)(nil),  // 12: coloc.GetParticipantsRequest
+	(*GetParticipantsResponse)(nil), // 13: coloc.GetParticipantsResponse
+	(*EventParticipant)(nil),        // 14: coloc.EventParticipant
+	(*Event)(nil),                   // 15: coloc.Event
+	(*DiscoverEventsRequest)(nil),   // 16: coloc.DiscoverEventsRequest
+	(*DiscoveredEvent)(nil),         // 17: coloc.DiscoveredEvent
+	(*DiscoverEventsResponse)(nil),  // 18: coloc.DiscoverEventsResponse
 }
 var file_event_proto_depIdxs = []int32{
 	0,  // 0: coloc.ListEventsRequest.status:type_name -> coloc.EventStatus
-	14, // 1: coloc.ListEventsResponse.events:type_name -> coloc.Event
+	15, // 1: coloc.ListEventsResponse.events:type_name -> coloc.Event
 	0,  // 2: coloc.UpdateEventRequest.status:type_name -> coloc.EventStatus
-	1,  // 3: coloc.RSVPRequest.status:type_name -> coloc.RSVPStatus
-	13, // 4: coloc.GetParticipantsResponse.participants:type_name -> coloc.EventParticipant
-	1,  // 5: coloc.EventParticipant.rsvp_status:type_name -> coloc.RSVPStatus
+	2,  // 3: coloc.RSVPRequest.status:type_name -> coloc.RSVPStatus
+	14, // 4: coloc.GetParticipantsResponse.participants:type_name -> coloc.EventParticipant
+	2,  // 5: coloc.EventParticipant.rsvp_status:type_name -> coloc.RSVPStatus
 	0,  // 6: coloc.Event.status:type_name -> coloc.EventStatus
-	1,  // 7: coloc.Event.user_rsvp:type_name -> coloc.RSVPStatus
-	2,  // 8: coloc.EventService.CreateEvent:input_type -> coloc.CreateEventRequest
-	3,  // 9: coloc.EventService.GetEvent:input_type -> coloc.GetEventRequest
-	4,  // 10: coloc.EventService.ListEvents:input_type -> coloc.ListEventsRequest
-	6,  // 11: coloc.EventService.UpdateEvent:input_type -> coloc.UpdateEventRequest
-	7,  // 12: coloc.EventService.DeleteEvent:input_type -> coloc.DeleteEventRequest
-	9,  // 13: coloc.EventService.RSVP:input_type -> coloc.RSVPRequest
-	11, // 14: coloc.EventService.GetParticipants:input_type -> coloc.GetParticipantsRequest
-	14, // 15: coloc.EventService.CreateEvent:output_type -> coloc.Event
-	14, // 16: coloc.EventService.GetEvent:output_type -> coloc.Event
-	5,  // 17: coloc.EventService.ListEvents:output_type -> coloc.ListEventsResponse
-	14, // 18: coloc.EventService.UpdateEvent:output_type -> coloc.Event
-	8,  // 19: coloc.EventService.DeleteEvent:output_type -> coloc.DeleteEventResponse
-	10, // 20: coloc.EventService.RSVP:output_type -> coloc.RSVPResponse
-	12, // 21: coloc.EventService.GetParticipants:output_type -> coloc.GetParticipantsResponse
-	15, // [15:22] is the sub-list for method output_type
-	8,  // [8:15] is the sub-list for method input_type
-	8,  // [8:8] is the sub-list for extension type_name
-	8,  // [8:8] is the sub-list for extension extendee
-	0,  // [0:8] is the sub-list for field type_name
+	2,  // 7: coloc.Event.user_rsvp:type_name -> coloc.RSVPStatus
+	1,  // 8: coloc.DiscoverEventsRequest.event_type:type_name -> coloc.DiscoverEventType
+	17, // 9: coloc.DiscoverEventsResponse.events:type_name -> coloc.DiscoveredEvent
+	3,  // 10: coloc.EventService.CreateEvent:input_type -> coloc.CreateEventRequest
+	4,  // 11: coloc.EventService.GetEvent:input_type -> coloc.GetEventRequest
+	5,  // 12: coloc.EventService.ListEvents:input_type -> coloc.ListEventsRequest
+	7,  // 13: coloc.EventService.UpdateEvent:input_type -> coloc.UpdateEventRequest
+	8,  // 14: coloc.EventService.DeleteEvent:input_type -> coloc.DeleteEventRequest
+	10, // 15: coloc.EventService.RSVP:input_type -> coloc.RSVPRequest
+	12, // 16: coloc.EventService.GetParticipants:input_type -> coloc.GetParticipantsRequest
+	16, // 17: coloc.EventService.DiscoverEvents:input_type -> coloc.DiscoverEventsRequest
+	15, // 18: coloc.EventService.CreateEvent:output_type -> coloc.Event
+	15, // 19: coloc.EventService.GetEvent:output_type -> coloc.Event
+	6,  // 20: coloc.EventService.ListEvents:output_type -> coloc.ListEventsResponse
+	15, // 21: coloc.EventService.UpdateEvent:output_type -> coloc.Event
+	9,  // 22: coloc.EventService.DeleteEvent:output_type -> coloc.DeleteEventResponse
+	11, // 23: coloc.EventService.RSVP:output_type -> coloc.RSVPResponse
+	13, // 24: coloc.EventService.GetParticipants:output_type -> coloc.GetParticipantsResponse
+	18, // 25: coloc.EventService.DiscoverEvents:output_type -> coloc.DiscoverEventsResponse
+	18, // [18:26] is the sub-list for method output_type
+	10, // [10:18] is the sub-list for method input_type
+	10, // [10:10] is the sub-list for extension type_name
+	10, // [10:10] is the sub-list for extension extendee
+	0,  // [0:10] is the sub-list for field type_name
 }
 
 func init() { file_event_proto_init() }
@@ -1337,13 +1636,14 @@ func file_event_proto_init() {
 	file_event_proto_msgTypes[4].OneofWrappers = []any{}
 	file_event_proto_msgTypes[11].OneofWrappers = []any{}
 	file_event_proto_msgTypes[12].OneofWrappers = []any{}
+	file_event_proto_msgTypes[14].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_event_proto_rawDesc), len(file_event_proto_rawDesc)),
-			NumEnums:      2,
-			NumMessages:   13,
+			NumEnums:      3,
+			NumMessages:   16,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

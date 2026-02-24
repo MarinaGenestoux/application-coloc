@@ -2619,6 +2619,39 @@
         ]
       }
     },
+    "/api/v1/events/discover": {
+      "post": {
+        "summary": "Discover real events in a city using AI web search",
+        "operationId": "EventService_DiscoverEvents",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/colocDiscoverEventsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/colocDiscoverEventsRequest"
+            }
+          }
+        ],
+        "tags": [
+          "EventService"
+        ]
+      }
+    },
     "/api/v1/me": {
       "get": {
         "summary": "Get current user profile",
@@ -3769,6 +3802,78 @@
       "properties": {
         "success": {
           "type": "boolean"
+        }
+      }
+    },
+    "colocDiscoverEventType": {
+      "type": "string",
+      "enum": [
+        "DISCOVER_EVENT_TYPE_UNSPECIFIED",
+        "DISCOVER_EVENT_TYPE_CONCERT",
+        "DISCOVER_EVENT_TYPE_EXPOSITION",
+        "DISCOVER_EVENT_TYPE_FESTIVAL",
+        "DISCOVER_EVENT_TYPE_SPORT",
+        "DISCOVER_EVENT_TYPE_THEATRE",
+        "DISCOVER_EVENT_TYPE_GASTRONOMIE",
+        "DISCOVER_EVENT_TYPE_MARCHE",
+        "DISCOVER_EVENT_TYPE_CINEMA",
+        "DISCOVER_EVENT_TYPE_CONFERENCE",
+        "DISCOVER_EVENT_TYPE_SOIREE"
+      ],
+      "default": "DISCOVER_EVENT_TYPE_UNSPECIFIED",
+      "title": "Event type for AI discovery search"
+    },
+    "colocDiscoverEventsRequest": {
+      "type": "object",
+      "properties": {
+        "city": {
+          "type": "string"
+        },
+        "eventType": {
+          "$ref": "#/definitions/colocDiscoverEventType"
+        }
+      },
+      "title": "AI Event Discovery messages"
+    },
+    "colocDiscoverEventsResponse": {
+      "type": "object",
+      "properties": {
+        "events": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/colocDiscoveredEvent"
+          }
+        },
+        "searchSummary": {
+          "type": "string"
+        }
+      }
+    },
+    "colocDiscoveredEvent": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "date": {
+          "type": "string"
+        },
+        "location": {
+          "type": "string"
+        },
+        "price": {
+          "type": "number",
+          "format": "double"
+        },
+        "url": {
+          "type": "string"
+        },
+        "source": {
+          "type": "string"
         }
       }
     },

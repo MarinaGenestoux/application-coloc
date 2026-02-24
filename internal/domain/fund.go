@@ -42,34 +42,3 @@ type FundContribution struct {
 	UserNom    string `json:"user_nom,omitempty"`
 	UserPrenom string `json:"user_prenom,omitempty"`
 }
-
-// Event represents an event linked to a fund
-type Event struct {
-	ID           string     `json:"id" db:"id"`
-	ColocationID string     `json:"colocation_id" db:"colocation_id"`
-	FundID       *string    `json:"fund_id,omitempty" db:"fund_id"`
-	CreatedBy    string     `json:"created_by" db:"created_by"`
-	Title        string     `json:"title" db:"title"`
-	Description  *string    `json:"description,omitempty" db:"description"`
-	Budget       *float64   `json:"budget,omitempty" db:"budget"`
-	EventDate    *time.Time `json:"event_date,omitempty" db:"event_date"`
-	Location     *string    `json:"location,omitempty" db:"location"`
-	Status       string     `json:"status" db:"status"`
-	CreatedAt    time.Time  `json:"created_at" db:"created_at"`
-
-	// Joined fields
-	CreatedByNom    string             `json:"created_by_nom,omitempty"`
-	CreatedByPrenom string             `json:"created_by_prenom,omitempty"`
-	Participants    []EventParticipant `json:"participants,omitempty"`
-}
-
-// EventParticipant represents a participant in an event
-type EventParticipant struct {
-	ID         string    `json:"id" db:"id"`
-	EventID    string    `json:"event_id" db:"event_id"`
-	UserID     string    `json:"user_id" db:"user_id"`
-	RSVP       string    `json:"rsvp" db:"rsvp"` // "yes", "no", "maybe"
-	CreatedAt  time.Time `json:"created_at" db:"created_at"`
-	UserNom    string    `json:"user_nom,omitempty"`
-	UserPrenom string    `json:"user_prenom,omitempty"`
-}

@@ -26,6 +26,7 @@ const (
 	EventService_DeleteEvent_FullMethodName     = "/coloc.EventService/DeleteEvent"
 	EventService_RSVP_FullMethodName            = "/coloc.EventService/RSVP"
 	EventService_GetParticipants_FullMethodName = "/coloc.EventService/GetParticipants"
+	EventService_DiscoverEvents_FullMethodName  = "/coloc.EventService/DiscoverEvents"
 )
 
 // EventServiceClient is the client API for EventService service.
@@ -48,6 +49,8 @@ type EventServiceClient interface {
 	RSVP(ctx context.Context, in *RSVPRequest, opts ...grpc.CallOption) (*RSVPResponse, error)
 	// Get event participants
 	GetParticipants(ctx context.Context, in *GetParticipantsRequest, opts ...grpc.CallOption) (*GetParticipantsResponse, error)
+	// Discover real events in a city using AI web search
+	DiscoverEvents(ctx context.Context, in *DiscoverEventsRequest, opts ...grpc.CallOption) (*DiscoverEventsResponse, error)
 }
 
 type eventServiceClient struct {
@@ -128,6 +131,16 @@ func (c *eventServiceClient) GetParticipants(ctx context.Context, in *GetPartici
 	return out, nil
 }
 
+func (c *eventServiceClient) DiscoverEvents(ctx context.Context, in *DiscoverEventsRequest, opts ...grpc.CallOption) (*DiscoverEventsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DiscoverEventsResponse)
+	err := c.cc.Invoke(ctx, EventService_DiscoverEvents_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // EventServiceServer is the server API for EventService service.
 // All implementations must embed UnimplementedEventServiceServer
 // for forward compatibility.
@@ -148,6 +161,8 @@ type EventServiceServer interface {
 	RSVP(context.Context, *RSVPRequest) (*RSVPResponse, error)
 	// Get event participants
 	GetParticipants(context.Context, *GetParticipantsRequest) (*GetParticipantsResponse, error)
+	// Discover real events in a city using AI web search
+	DiscoverEvents(context.Context, *DiscoverEventsRequest) (*DiscoverEventsResponse, error)
 	mustEmbedUnimplementedEventServiceServer()
 }
 
@@ -178,6 +193,9 @@ func (UnimplementedEventServiceServer) RSVP(context.Context, *RSVPRequest) (*RSV
 }
 func (UnimplementedEventServiceServer) GetParticipants(context.Context, *GetParticipantsRequest) (*GetParticipantsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetParticipants not implemented")
+}
+func (UnimplementedEventServiceServer) DiscoverEvents(context.Context, *DiscoverEventsRequest) (*DiscoverEventsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method DiscoverEvents not implemented")
 }
 func (UnimplementedEventServiceServer) mustEmbedUnimplementedEventServiceServer() {}
 func (UnimplementedEventServiceServer) testEmbeddedByValue()                      {}
@@ -326,6 +344,24 @@ func _EventService_GetParticipants_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
+func _EventService_DiscoverEvents_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DiscoverEventsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(EventServiceServer).DiscoverEvents(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: EventService_DiscoverEvents_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(EventServiceServer).DiscoverEvents(ctx, req.(*DiscoverEventsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // EventService_ServiceDesc is the grpc.ServiceDesc for EventService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -360,6 +396,10 @@ var EventService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetParticipants",
 			Handler:    _EventService_GetParticipants_Handler,
+		},
+		{
+			MethodName: "DiscoverEvents",
+			Handler:    _EventService_DiscoverEvents_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

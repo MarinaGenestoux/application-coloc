@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/MarinaGenestoux/application-coloc/internal/domain"
-	"github.com/MarinaGenestoux/application-coloc/internal/application/constants"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -36,18 +35,17 @@ func (r *EventRepository) GetByID(ctx context.Context, eventID, userID string) (
 			e.id, e.colocation_id, e.created_by,
 			u.nom as created_by_nom, u.prenom as created_by_prenom,
 			e.title, e.description, e.event_date, e.location, e.budget,
-			e.fund_id, f.name as fund_name, e.status, e.created_at,
+			e.fund_id, e.status, e.created_at,
 			COALESCE(er.rsvp_status, '') as user_rsvp,
 			COUNT(CASE WHEN er2.rsvp_status = 'going' THEN 1 END)::int as going_count,
 			COUNT(CASE WHEN er2.rsvp_status = 'maybe' THEN 1 END)::int as maybe_count,
 			COUNT(CASE WHEN er2.rsvp_status = 'not_going' THEN 1 END)::int as not_going_count
 		FROM events e
 		INNER JOIN users u ON e.created_by = u.id
-		LEFT JOIN funds f ON e.fund_id = f.id
 		LEFT JOIN event_rsvps er ON e.id = er.event_id AND er.user_id = $2
 		LEFT JOIN event_rsvps er2 ON e.id = er2.event_id
 		WHERE e.id = $1
-		GROUP BY e.id, u.nom, u.prenom, f.name, er.rsvp_status
+		GROUP BY e.id, u.nom, u.prenom, er.rsvp_status
 	`
 	var event domain.Event
 	var userRSVP string
@@ -55,7 +53,7 @@ func (r *EventRepository) GetByID(ctx context.Context, eventID, userID string) (
 		&event.ID, &event.ColocationID, &event.CreatedBy,
 		&event.CreatedByNom, &event.CreatedByPrenom,
 		&event.Title, &event.Description, &event.EventDate, &event.Location, &event.Budget,
-		&event.FundID, &event.FundName, &event.Status, &event.CreatedAt,
+		&event.FundID, &event.Status, &event.CreatedAt,
 		&userRSVP, &event.GoingCount, &event.MaybeCount, &event.NotGoingCount,
 	)
 	if err != nil {
@@ -75,14 +73,13 @@ func (r *EventRepository) ListByColocation(ctx context.Context, colocationID, us
 			e.id, e.colocation_id, e.created_by,
 			u.nom as created_by_nom, u.prenom as created_by_prenom,
 			e.title, e.description, e.event_date, e.location, e.budget,
-			e.fund_id, f.name as fund_name, e.status, e.created_at,
+			e.fund_id, e.status, e.created_at,
 			COALESCE(er.rsvp_status, '') as user_rsvp,
 			COUNT(CASE WHEN er2.rsvp_status = 'going' THEN 1 END)::int as going_count,
 			COUNT(CASE WHEN er2.rsvp_status = 'maybe' THEN 1 END)::int as maybe_count,
 			COUNT(CASE WHEN er2.rsvp_status = 'not_going' THEN 1 END)::int as not_going_count
 		FROM events e
 		INNER JOIN users u ON e.created_by = u.id
-		LEFT JOIN funds f ON e.fund_id = f.id
 		LEFT JOIN event_rsvps er ON e.id = er.event_id AND er.user_id = $2
 		LEFT JOIN event_rsvps er2 ON e.id = er2.event_id
 		WHERE e.colocation_id = $1
@@ -106,7 +103,33 @@ func (r *EventRepository) ListByColocation(ctx context.Context, colocationID, us
 		args = append(args, *endDate)
 	}
 
-	query += " GROUP BY e.id, u.nom, u.prenom, f.name, er.rsvp_status ORDER BY e.event_date ASC"
+	// Build count query with same filters (before adding GROUP BY / LIMIT)
+	countQuery := "SELECT COUNT(*) FROM events e WHERE e.colocation_id = $1"
+	countArgs := []interface{}{colocationID}
+	countArgIdx := 1
+
+	if status != nil {
+		countArgIdx++
+		countQuery += fmt.Sprintf(" AND e.status = $%d", countArgIdx)
+		countArgs = append(countArgs, *status)
+	}
+	if startDate != nil {
+		countArgIdx++
+		countQuery += fmt.Sprintf(" AND e.event_date >= $%d", countArgIdx)
+		countArgs = append(countArgs, *startDate)
+	}
+	if endDate != nil {
+		countArgIdx++
+		countQuery += fmt.Sprintf(" AND e.event_date <= $%d", countArgIdx)
+		countArgs = append(countArgs, *endDate)
+	}
+
+	var total int
+	if err := r.pool.QueryRow(ctx, countQuery, countArgs...).Scan(&total); err != nil {
+		return nil, 0, err
+	}
+
+	query += " GROUP BY e.id, u.nom, u.prenom, er.rsvp_status ORDER BY e.event_date ASC"
 
 	argCount++
 	query += fmt.Sprintf(" LIMIT $%d OFFSET $%d", argCount, argCount+1)
@@ -126,7 +149,7 @@ func (r *EventRepository) ListByColocation(ctx context.Context, colocationID, us
 			&event.ID, &event.ColocationID, &event.CreatedBy,
 			&event.CreatedByNom, &event.CreatedByPrenom,
 			&event.Title, &event.Description, &event.EventDate, &event.Location, &event.Budget,
-			&event.FundID, &event.FundName, &event.Status, &event.CreatedAt,
+			&event.FundID, &event.Status, &event.CreatedAt,
 			&userRSVP, &event.GoingCount, &event.MaybeCount, &event.NotGoingCount,
 		)
 		if err != nil {
@@ -136,14 +159,6 @@ func (r *EventRepository) ListByColocation(ctx context.Context, colocationID, us
 			event.UserRSVP = domain.RSVPStatus(userRSVP)
 		}
 		events = append(events, event)
-	}
-
-	// Count total
-	countQuery := "SELECT COUNT(*) FROM events WHERE colocation_id = $1"
-	var total int
-	err = r.pool.QueryRow(ctx, countQuery, colocationID).Scan(&total)
-	if err != nil {
-		return nil, 0, err
 	}
 
 	return events, total, nil

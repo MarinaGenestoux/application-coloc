@@ -30,6 +30,19 @@ const (
 	MinPositiveAmount   = 0.01 // Minimum amount for debt/payment
 )
 
+// Event validation constraints
+const (
+	EventTitleMaxLength = 200
+	EventCityMaxLength  = 100
+	MinEventBudget      = 0.0
+)
+
+// Discovery rate limiting
+const (
+	DiscoveryRateLimit    = 3               // max concurrent discovery requests
+	DiscoveryCooldown     = 30 * time.Second // cooldown between requests per user
+)
+
 // Forecast defaults
 const (
 	DefaultForecastMonths = 3

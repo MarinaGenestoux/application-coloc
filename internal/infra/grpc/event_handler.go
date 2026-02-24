@@ -4,8 +4,9 @@ import (
 	"context"
 	"time"
 
-	"github.com/MarinaGenestoux/application-coloc/internal/domain"
+	"github.com/MarinaGenestoux/application-coloc/internal/application/constants"
 	"github.com/MarinaGenestoux/application-coloc/internal/application/service"
+	"github.com/MarinaGenestoux/application-coloc/internal/domain"
 	"github.com/MarinaGenestoux/application-coloc/internal/infra/utils"
 	pb "github.com/MarinaGenestoux/application-coloc/proto/pb"
 	"google.golang.org/grpc/codes"
@@ -86,7 +87,7 @@ func (h *EventHandler) ListEvents(ctx context.Context, req *pb.ListEventsRequest
 	}
 
 	page := int32(1)
-	pageSize := int32(20)
+	pageSize := int32(constants.DefaultPageSize)
 	if req.Page != nil && *req.Page > 0 {
 		page = *req.Page
 	}
@@ -199,7 +200,70 @@ func (h *EventHandler) GetParticipants(ctx context.Context, req *pb.GetParticipa
 	}, nil
 }
 
+// DiscoverEvents searches for real events using AI web search
+func (h *EventHandler) DiscoverEvents(ctx context.Context, req *pb.DiscoverEventsRequest) (*pb.DiscoverEventsResponse, error) {
+	if req.City == "" {
+		return nil, status.Errorf(codes.InvalidArgument, "city est obligatoire")
+	}
+	if req.EventType == pb.DiscoverEventType_DISCOVER_EVENT_TYPE_UNSPECIFIED {
+		return nil, status.Errorf(codes.InvalidArgument, "event_type est obligatoire")
+	}
+
+	eventTypeStr := protoDiscoverEventTypeToString(req.EventType)
+
+	result, err := h.service.Discover(ctx, req.City, eventTypeStr)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "%v", err)
+	}
+
+	var pbEvents []*pb.DiscoveredEvent
+	for _, e := range result.Events {
+		pbEvent := &pb.DiscoveredEvent{
+			Title:       e.Title,
+			Description: e.Description,
+			Date:        e.Date,
+			Location:    e.Location,
+			Price:       e.Price,
+			Url:         e.URL,
+			Source:      e.Source,
+		}
+		pbEvents = append(pbEvents, pbEvent)
+	}
+
+	return &pb.DiscoverEventsResponse{
+		Events:        pbEvents,
+		SearchSummary: result.Summary,
+	}, nil
+}
+
 // Helper functions
+
+func protoDiscoverEventTypeToString(t pb.DiscoverEventType) string {
+	switch t {
+	case pb.DiscoverEventType_DISCOVER_EVENT_TYPE_CONCERT:
+		return "CONCERT"
+	case pb.DiscoverEventType_DISCOVER_EVENT_TYPE_EXPOSITION:
+		return "EXPOSITION"
+	case pb.DiscoverEventType_DISCOVER_EVENT_TYPE_FESTIVAL:
+		return "FESTIVAL"
+	case pb.DiscoverEventType_DISCOVER_EVENT_TYPE_SPORT:
+		return "SPORT"
+	case pb.DiscoverEventType_DISCOVER_EVENT_TYPE_THEATRE:
+		return "THEATRE"
+	case pb.DiscoverEventType_DISCOVER_EVENT_TYPE_GASTRONOMIE:
+		return "GASTRONOMIE"
+	case pb.DiscoverEventType_DISCOVER_EVENT_TYPE_MARCHE:
+		return "MARCHE"
+	case pb.DiscoverEventType_DISCOVER_EVENT_TYPE_CINEMA:
+		return "CINEMA"
+	case pb.DiscoverEventType_DISCOVER_EVENT_TYPE_CONFERENCE:
+		return "CONFERENCE"
+	case pb.DiscoverEventType_DISCOVER_EVENT_TYPE_SOIREE:
+		return "SOIREE"
+	default:
+		return ""
+	}
+}
 
 func eventToProto(e *domain.Event) *pb.Event {
 	event := &pb.Event{
@@ -214,7 +278,6 @@ func eventToProto(e *domain.Event) *pb.Event {
 		Location:        e.Location,
 		Budget:          e.Budget,
 		FundId:          e.FundID,
-		FundName:        e.FundName,
 		Status:          domainEventStatusToProto(e.Status),
 		CreatedAt:       utils.FormatFrenchDateTime(e.CreatedAt),
 		UserRsvp:        domainRSVPStatusToProto(e.UserRSVP),

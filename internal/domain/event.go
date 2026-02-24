@@ -37,7 +37,6 @@ type Event struct {
 	Location        *string      `json:"location,omitempty" db:"location"`
 	Budget          *float64     `json:"budget,omitempty" db:"budget"`
 	FundID          *string      `json:"fund_id,omitempty" db:"fund_id"`
-	FundName        *string      `json:"fund_name,omitempty" db:"fund_name"`
 	Status          EventStatus  `json:"status" db:"status"`
 	CreatedAt       time.Time    `json:"created_at" db:"created_at"`
 	UserRSVP        RSVPStatus   `json:"user_rsvp" db:"user_rsvp"`
@@ -54,6 +53,28 @@ type EventParticipant struct {
 	AvatarURL    *string    `json:"avatar_url,omitempty" db:"avatar_url"`
 	RSVPStatus   RSVPStatus `json:"rsvp_status" db:"rsvp_status"`
 	RespondedAt  time.Time  `json:"responded_at" db:"responded_at"`
+}
+
+// DiscoveredEvent represents an event found by the AI discovery service
+type DiscoveredEvent struct {
+	Title       string   `json:"title"`
+	Description string   `json:"description"`
+	Date        string   `json:"date"`
+	Location    string   `json:"location"`
+	Price       *float64 `json:"price,omitempty"`
+	URL         *string  `json:"url,omitempty"`
+	Source      string   `json:"source"`
+}
+
+// DiscoverResult holds the result from the AI discovery service
+type DiscoverResult struct {
+	Events  []DiscoveredEvent `json:"events"`
+	Summary string            `json:"summary"`
+}
+
+// EventDiscoverer defines the interface for AI-powered event discovery
+type EventDiscoverer interface {
+	DiscoverEvents(ctx context.Context, city, eventType string) (*DiscoverResult, error)
 }
 
 // EventRepository defines the interface for event persistence
