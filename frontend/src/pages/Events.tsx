@@ -20,6 +20,7 @@ import { useColocation } from '../context/ColocationContext';
 import { useAuth } from '../context/AuthContext';
 import { eventApi } from '../api';
 import {
+  Autocomplete,
   Card,
   Button,
   Input,
@@ -31,6 +32,7 @@ import {
   SkeletonList,
   EmptyState,
 } from '../components/ui';
+import type { AutocompleteOption } from '../components/ui/Autocomplete';
 import type { Event, EventStatus, RSVPStatus, DiscoveredEvent, DiscoverEventType } from '../types';
 
 const getInitialEventForm = () => ({
@@ -54,6 +56,26 @@ const discoverEventTypeOptions = [
   { value: 'CONFERENCE', label: 'Conference / Meetup' },
   { value: 'SOIREE', label: 'Soiree / Nightlife' },
 ];
+
+// City autocomplete via geo.api.gouv.fr
+const CITY_API_BASE = 'https://geo.api.gouv.fr/communes';
+const CITY_SEARCH_LIMIT = 10;
+
+const fetchCityOptions = async (query: string): Promise<AutocompleteOption[]> => {
+  const params = new URLSearchParams({
+    nom: query,
+    fields: 'nom,departement',
+    limit: String(CITY_SEARCH_LIMIT),
+    boost: 'population',
+  });
+  const response = await fetch(`${CITY_API_BASE}?${params}`);
+  if (!response.ok) return [];
+  const data: Array<{ nom: string; departement: { code: string; nom: string } }> = await response.json();
+  return data.map((commune) => ({
+    value: commune.nom,
+    label: `${commune.nom} (${commune.departement.code} - ${commune.departement.nom})`,
+  }));
+};
 
 // Convert backend date format "YYYY-MM-DD HH:MM" to JavaScript Date
 const parseEventDate = (dateStr: string | undefined | null): Date => {
@@ -419,12 +441,14 @@ export function Events() {
             <div className="space-y-4">
               <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:gap-4">
                 <div className="flex-1">
-                  <Input
+                  <Autocomplete
                     label="Ville"
-                    placeholder="Ex: Lyon, Paris, Marseille..."
+                    placeholder="Tapez le nom d'une ville..."
                     value={discoveryCity}
-                    onChange={(e) => setDiscoveryCity(e.target.value)}
+                    onSelect={setDiscoveryCity}
+                    fetchOptions={fetchCityOptions}
                     leftIcon={<MapPin className="w-5 h-5" />}
+                    noResultsText="Aucune ville trouvee"
                   />
                 </div>
                 <div className="flex-1">

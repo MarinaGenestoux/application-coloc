@@ -1,3 +1,4 @@
+export { Autocomplete } from './Autocomplete';
 export { Button } from './Button';
 export { Input } from './Input';
 export { Select } from './Select';
